@@ -1,0 +1,46 @@
+name: gis-suit
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  # core
+  - numpy
+  - pandas
+  - pyyaml
+  - pyarrow
+  # raster
+  - rasterio
+  - rioxarray
+  - xarray
+  # vector
+  - geopandas
+  - shapely>=2
+  - pyproj
+  - pyogrio
+  # data access
+  - pystac-client
+  - planetary-computer
+  - osmnx
+  - requests
+  # analysis
+  - scipy
+  - scikit-learn>=1.3  # includes HDBSCAN
+  - mapclassify        # Jenks natural breaks
+  # visualisation
+  - matplotlib
+  - seaborn
+  - contextily
+  - matplotlib-scalebar
+  - folium
+  # dev
+  - jupyterlab
+  - ipykernel
+  - pytest
+  - black
+  - ruff
+  - nbstripout
+  - pre-commit
+  - pip
+  - pip:
+      - -e .

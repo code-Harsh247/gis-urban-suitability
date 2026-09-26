@@ -1,0 +1,63 @@
+# Project configuration: the single source of truth for all parameters (PRD FR-1).
+# Paths are relative to the repository root.
+
+project:
+  name: gis-urban-suitability
+  random_seed: 42
+
+aoi:
+  path: config/aoi.geojson   # one polygon, EPSG:4326 (to be created in P0.10)
+  name: TBD                  # study area name, e.g. city
+  buffer_m: 1000             # extra margin downloaded around the AOI (edge effects)
+  city_center: null          # optional [lon, lat] for dist_center feature
+
+crs:
+  epsg: auto                 # "auto" = UTM zone of the AOI centroid, or an EPSG code (metres)
+
+grid:
+  cell_size_m: 100
+
+years:
+  lulc_main: 2021            # ESA WorldCover year used for classification
+  baseline: 2017             # ESRI LULC baseline year (temporal validation)
+  latest: 2023               # ESRI LULC latest year (temporal validation)
+
+features:
+  context_radii_m: [250, 500]
+  road_density_radius_m: 500
+  distance_cap_m: 5000
+  max_nodata_fraction: 0.5
+
+exclusion:
+  slope_max_deg: 15
+  worldcover_codes: [70, 80, 90, 95]   # snow/ice, water, wetland, mangroves
+
+clustering:
+  k_min: 3
+  k_max: 10
+  pca_variance: 0.90
+
+labeling:
+  built_threshold: 0.3
+  forest_threshold: 0.5
+
+similarity:
+  buffer_radii_m: [100, 250, 500]
+  top_n: 20
+  knn_k: 10
+
+suitability:
+  class_quantiles: [0.9, 0.7, 0.4]     # S1 >= q90, S2 >= q70, S3 >= q40, else N
+  min_patch_area_m2: 10000
+
+validation:
+  spatial_block_m: 2000
+
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  data_features: data/features
+  outputs: outputs
+  figures: outputs/figures
+  metrics: outputs/metrics
+  logs: logs

@@ -22,7 +22,7 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 
 | Phase | Name | Harsh | Abhinav | Both | Gate test by | Gate passed |
 |---|---|---|---|---|---|---|
-| 0 | Setup and planning | 6 (4 done) | 4 | 2 | Harsh | ☐ |
+| 0 | Setup and planning | 6 (5 done) | 4 (3 done by Harsh) | 2 | Harsh | ☐ |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ☐ |
 | 2 | Data acquisition | 4 | 4 | 1 | Harsh | ☐ |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
@@ -48,27 +48,30 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 - [x] **P0.2** Add `.gitignore` (Python, data, rasters, vectors). — **Harsh**
 - [x] **P0.3** Add `docs/CLAUDE.md`, root `CLAUDE.md` pointer, `.claude/settings.json` (no AI attribution). — **Harsh**
 - [x] **P0.4** Write PRD and Tasks. — **Harsh**
-- [ ] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh**
-- [ ] **P0.6** Create `environment.yml` (conda-forge, Python 3.11, all libraries from PRD §12) and `scripts/check_env.py`. — **Harsh** · PRD NFR-1, NFR-3
-- [ ] **P0.7** Create the folder skeleton from PRD §11 (`src/` subpackages with `__init__.py`, `notebooks/`, `tests/unit/`, `tests/gates/`, `config/`, `outputs/`, `report/`) and `pyproject.toml` (black, ruff, pytest config). — **Abhinav** · NFR-4
-- [ ] **P0.8** Set up `pre-commit` with `black`, `ruff`, `nbstripout`. — **Abhinav** · NFR-6
+- [~] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh** · *Invite sent; waiting for Abhinav to accept and clone.*
+- [x] **P0.6** Create `environment.yml` (conda-forge, Python 3.11, all libraries from PRD §12) and `scripts/check_env.py`. — **Harsh** · PRD NFR-1, NFR-3
+- [x] **P0.7** Create the folder skeleton from PRD §11 (`src/` subpackages with `__init__.py`, `notebooks/`, `tests/unit/`, `tests/gates/`, `config/`, `outputs/`, `report/`) and `pyproject.toml` (black, ruff, pytest config). — **Abhinav** · NFR-4 · *Done by Harsh; `data/`, `outputs/`, `logs/` are git-ignored and created by `Config.ensure_dirs()`.*
+- [x] **P0.8** Set up `pre-commit` with `black`, `ruff`, `nbstripout`. — **Abhinav** · NFR-6 · *Done by Harsh; hooks run the env's own tools (plus a 1 MB file-size guard), so run `pre-commit install` inside `gis-suit`.*
 - [ ] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5
 - [ ] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1
-- [ ] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2
+- [x] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2 · *Done by Harsh, with 15 unit tests in `tests/unit/test_config.py`. `crs.epsg: auto` picks the UTM zone from the AOI, so P0.10 only needs the polygon + `aoi.name`.*
 - [ ] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3
 
 ### Phase 0 Gate
 
 **Automated — `tests/gates/test_phase0.py`** (written by **Harsh**):
-- [ ] Every library in `environment.yml` imports (`scripts/check_env.py` exits 0).
-- [ ] `config/config.yaml` loads through `src/config.py` without error.
+- [x] Every library in `environment.yml` imports (`scripts/check_env.py` exits 0).
+- [ ] `config/config.yaml` loads through `src/config.py` without error. *(blocked on `config/aoi.geojson`, P0.10)*
 - [ ] `config/aoi.geojson` has exactly one valid polygon; area between 50 and 1,500 km² when projected.
 - [ ] The configured CRS is projected with units in metres.
-- [ ] All folders from PRD §11 exist.
+- [ ] `aoi.name` in the config is set (not `TBD`).
+- [x] All tracked folders from PRD §11 and the key files exist; every `src/` subpackage has `__init__.py`.
+
+Status on Harsh's laptop (2026-09-27): **30 passed, 5 failing**. All 5 need the AOI.
 
 **Manual checklist:**
-- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**.
-- [ ] `pre-commit run --all-files` passes.
+- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Harsh: env done, gate waits on AOI; Abhinav: pending)*
+- [x] `pre-commit run --all-files` passes.
 - [ ] `docs/study_area.md` states the chosen AOI and the reason.
 - [ ] Deadline is recorded in PRD, and phase dates in this file are adjusted.
 
@@ -335,7 +338,7 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 
 - [ ] **P8.1** Write `src/viz/static_maps.py`: a consistent map style (title, legend, scale bar, north arrow, basemap) for all maps in FR-9.1; export to `outputs/figures/` at 300 dpi. — **Abhinav** · FR-9.1
 - [ ] **P8.2** Charts: class-area bar charts, elbow/silhouette, centroid profiles, feature importance, ROC curves. Same style throughout. — **Abhinav** · FR-9.3
-- [ ] **P8.3** Write `src/viz/interactive.py`: folium/leafmap HTML with toggleable layers (LULC, 3-class, suitability, candidates, reference buildings) and popups for candidates. — **Harsh** · FR-9.2
+- [ ] **P8.3** Write `src/viz/interactive.py`: folium HTML with toggleable layers (LULC, 3-class, suitability, candidates, reference buildings) and popups for candidates. — **Harsh** · FR-9.2
 - [ ] **P8.4** README: project summary, setup (conda), data download, how to run the pipeline and notebooks, and outputs description. — **Harsh** · D14
 - [ ] **P8.5** Report sections: Introduction, Study area, Data, Literature review. — **Abhinav** · D12
 - [ ] **P8.6** Report sections: Methodology (features, clustering, similarity, suitability), Validation design. — **Harsh** · D12

@@ -40,7 +40,11 @@ Team: Harsh and Abhinav.
 
 ## Stack
 
-rasterio, geopandas, shapely, pyproj, pystac-client + planetary-computer, osmnx, richdem, scipy, scikit-learn, matplotlib, folium / leafmap.
+rasterio, geopandas, shapely, pyproj, pystac-client + planetary-computer, osmnx, scipy, scikit-learn, mapclassify, matplotlib, folium. Full list in `environment.yml` (conda-forge, env name `gis-suit`).
+
+Running commands: use the `gis-suit` environment. On Harsh's laptop it is a micromamba env at `C:\micromamba\envs\gis-suit` (Python: `C:\micromamba\envs\gis-suit\python.exe`). Load config with `from src.config import load_config`.
+
+Before finishing a phase, run its gate: `pytest tests/gates/test_phaseN.py`.
 
 ## Planned layout
 

@@ -142,7 +142,7 @@ The AOI must:
 | D7 | Building similarity results (per-query + aggregate) | GeoTIFF, GeoPackage, PNG | `outputs/` |
 | D8 | Final suitability map (graded classes) | GeoTIFF + PNG | `outputs/` |
 | D9 | Top-N candidate sites | GeoPackage + CSV | `outputs/` |
-| D10 | Interactive map | HTML (folium/leafmap) | `outputs/` |
+| D10 | Interactive map | HTML (folium) | `outputs/` |
 | D11 | Validation report (metrics, figures) | Markdown / notebook | `docs/validation.md` |
 | D12 | Final project report | PDF | `report/` |
 | D13 | Presentation slides | PDF / PPTX | `report/` |
@@ -509,19 +509,20 @@ gis-urban-suitability/
 
 | Area | Libraries |
 |---|---|
-| Core | Python 3.11, numpy, pandas, pyyaml |
+| Core | Python 3.11, numpy, pandas, pyyaml, pyarrow |
 | Raster | rasterio, rioxarray, xarray |
 | Vector | geopandas, shapely ≥ 2, pyproj, pyogrio |
 | Data access | pystac-client, planetary-computer, osmnx, requests; (optional) earthengine-api, geemap |
-| Terrain | richdem or numpy-based slope (Horn method) |
-| Analysis | scipy, scikit-learn, hdbscan (or `sklearn.cluster.HDBSCAN`) |
-| Visualisation | matplotlib, contextily, matplotlib-scalebar, folium / leafmap, seaborn (optional) |
-| Dev | jupyterlab, pytest, black, ruff, nbstripout, pre-commit |
+| Terrain | numpy-based slope (Horn method), no extra dependency |
+| Analysis | scipy, scikit-learn ≥ 1.3 (includes `sklearn.cluster.HDBSCAN`), mapclassify (Jenks breaks) |
+| Visualisation | matplotlib, seaborn, contextily, matplotlib-scalebar, folium |
+| Dev | jupyterlab, ipykernel, pytest, black, ruff, nbstripout, pre-commit |
 
 Environment:
 
-- `environment.yml` using the **conda-forge** channel, with versions pinned after the first working install.
-- Everyone uses the same environment name: `gis-suit`.
+- `environment.yml` using the **conda-forge** channel. Any conda-compatible tool works: conda / Miniforge, mamba or micromamba. (On Harsh's laptop the Miniforge installer failed, so micromamba is used, with its root at `C:\micromamba`.)
+- Everyone uses the same environment name: `gis-suit`. The project itself is installed in editable mode (`pip install -e .`), so `import src...` works from notebooks.
+- Pin exact versions (`environment.lock.yml`) once both laptops have a working environment.
 - `scripts/check_env.py` imports every library and prints versions (used in the Phase 0 gate).
 
 ---

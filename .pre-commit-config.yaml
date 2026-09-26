@@ -1,0 +1,25 @@
+# Install once per clone:  pre-commit install
+# Run on everything:       pre-commit run --all-files
+# Hooks use the tools from the gis-suit environment, so versions match environment.yml.
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types_or: [python, jupyter]
+      - id: ruff
+        name: ruff
+        entry: ruff check --fix
+        language: system
+        types_or: [python, jupyter]
+      - id: nbstripout
+        name: nbstripout
+        entry: nbstripout
+        language: system
+        types: [jupyter]
+      - id: check-large-files
+        name: block files over 1 MB (keep data out of git)
+        entry: python scripts/check_large_files.py
+        language: system
