@@ -166,10 +166,10 @@ These are the only places the two tracks touch.
 - [x] A0.3 `tests/unit/test_contracts.py` checks every contract file against `schema.py` · after J3 · *also validates real files under `data/` and `outputs/` when they exist*
 
 **A1. Raster downloads** · W1–2 · P2.1–P2.3, P2.8
-- [ ] **A1.1** `src/io_utils.py`: manifest, SHA-256, skip-if-exists, logging · 🔓
-- [ ] A1.2 `src/download/lulc.py`: ESRI IO LULC 2018–2023 + WorldCover 2021, AOI + 1 km buffer · code 🔓, real run after J2
-- [ ] A1.3 `src/download/dem.py`: Copernicus DEM GLO-30 · code 🔓, real run after J2
-- [ ] A1.4 Rerun makes no downloads; manifest checksums match; quick-looks in notebook 01
+- [x] **A1.1** `src/io_utils.py`: manifest, SHA-256, skip-if-exists, logging · 🔓 · *also `retry()` with clear errors; Harsh: use `Manifest.for_config`, `needs_download`, `record_download`, `retry`*
+- [x] A1.2 `src/download/lulc.py`: ESRI IO LULC 2018–2023 + WorldCover 2021, AOI + 1 km buffer · code 🔓, real run after J2 · *shared STAC logic in `src/download/stac.py`*
+- [x] A1.3 `src/download/dem.py`: Copernicus DEM GLO-30 · code 🔓, real run after J2
+- [x] A1.4 Rerun makes no downloads; manifest checksums match; quick-looks in notebook 01 · *rerun skips all 8 files in 1.4 s*
 
 **A2. Raster preprocessing** · W2 · P3.1–P3.3
 - [ ] **A2.1** `src/preprocess/raster.py`: reference 10 m grid (ESRI tile grid, project UTM), reproject and align all rasters, nearest for classes, bilinear for DEM. **Saves the reference grid spec** to `data/processed/reference_grid.json`.
@@ -256,6 +256,7 @@ These are the only places the two tracks touch.
 - [ ] **H3.3** Real C3 for both snapshots · 🔒 **A2.1** (reference grid), 🔒 **A3.1** (real grid)
 
 **H4. Clustering (3 classes)** · W4–5 · P5.1–P5.4, P5.6–P5.8
+- ⚠️ *Note for H4 (from A1.4):* ESRI tree cover jumps between years (7.0 % → 2.3 % → 8.4 %), and ESRI shows much of Bannerghatta as rangeland. Take the forest class from one year (`years.latest`) and cross-check with WorldCover 2021 (20 % trees). See notebook 01.
 - [ ] H4.1 `src/classify/cluster.py`: standardise, optional PCA, K-Means k = 3…10, GMM · 🔓 *(stub or prototype Pune table)*
 - [ ] H4.2 Elbow + silhouette + Davies–Bouldin plots · 🔓 *(stub)*
 - [ ] H4.3 Real clustering on the AOI; choose k and justify · 🔒 **A3.5b** (real C4)
