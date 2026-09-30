@@ -1,0 +1,386 @@
+{
+  "pune_west": {
+    "bbox": [
+      73.62,
+      18.48,
+      73.86,
+      18.7
+    ],
+    "area_km2": 616.6,
+    "worldcover_2021": {
+      "Tree cover": 0.183,
+      "Shrubland": 0.079,
+      "Grassland": 0.225,
+      "Cropland": 0.21,
+      "Built-up": 0.285,
+      "Bare / sparse": 0.01,
+      "Water": 0.008
+    },
+    "usable_share": 0.524,
+    "esri_built_2018": 0.438,
+    "esri_built_2023": 0.522,
+    "persistent_growth_share": 0.0399,
+    "persistent_of_raw_growth": 0.41,
+    "growth_rate_of_nonbuilt": 0.071,
+    "osm_buildings_2018": 117552,
+    "osm_buildings_2026": 132636,
+    "osm_major_road_km": 828
+  },
+  "bhubaneswar": {
+    "bbox": [
+      85.7,
+      20.2,
+      85.92,
+      20.42
+    ],
+    "area_km2": 559.4,
+    "worldcover_2021": {
+      "Tree cover": 0.354,
+      "Shrubland": 0.003,
+      "Grassland": 0.093,
+      "Cropland": 0.367,
+      "Built-up": 0.156,
+      "Bare / sparse": 0.008,
+      "Water": 0.019,
+      "Wetland": 0.001
+    },
+    "usable_share": 0.471,
+    "esri_built_2018": 0.305,
+    "esri_built_2023": 0.377,
+    "persistent_growth_share": 0.0352,
+    "persistent_of_raw_growth": 0.46,
+    "growth_rate_of_nonbuilt": 0.051,
+    "osm_buildings_2018": 503,
+    "osm_buildings_2026": 21817,
+    "osm_major_road_km": 326
+  },
+  "dehradun": {
+    "bbox": [
+      77.92,
+      30.22,
+      78.14,
+      30.42
+    ],
+    "area_km2": 469.7,
+    "worldcover_2021": {
+      "Tree cover": 0.64,
+      "Shrubland": 0.01,
+      "Grassland": 0.026,
+      "Cropland": 0.126,
+      "Built-up": 0.189,
+      "Bare / sparse": 0.01,
+      "Water": 0.0
+    },
+    "usable_share": 0.172,
+    "esri_built_2018": 0.392,
+    "esri_built_2023": 0.424,
+    "persistent_growth_share": 0.0154,
+    "persistent_of_raw_growth": 0.35,
+    "growth_rate_of_nonbuilt": 0.025,
+    "osm_buildings_2018": 4387,
+    "osm_buildings_2026": 10982,
+    "osm_major_road_km": 186
+  },
+  "guwahati": {
+    "bbox": [
+      91.62,
+      26.05,
+      91.86,
+      26.23
+    ],
+    "area_km2": 478.4,
+    "worldcover_2021": {
+      "Tree cover": 0.562,
+      "Grassland": 0.026,
+      "Cropland": 0.08,
+      "Built-up": 0.209,
+      "Bare / sparse": 0.005,
+      "Water": 0.108,
+      "Wetland": 0.01
+    },
+    "usable_share": 0.111,
+    "esri_built_2018": 0.38,
+    "esri_built_2023": 0.415,
+    "persistent_growth_share": 0.018,
+    "persistent_of_raw_growth": 0.4,
+    "growth_rate_of_nonbuilt": 0.029,
+    "osm_buildings_2018": 237,
+    "osm_buildings_2026": 2661,
+    "osm_major_road_km": 290
+  },
+  "bengaluru_south": {
+    "bbox": [
+      77.52,
+      12.72,
+      77.74,
+      12.94
+    ],
+    "area_km2": 582.0,
+    "worldcover_2021": {
+      "Tree cover": 0.192,
+      "Shrubland": 0.113,
+      "Grassland": 0.114,
+      "Cropland": 0.215,
+      "Built-up": 0.344,
+      "Bare / sparse": 0.007,
+      "Water": 0.015,
+      "Wetland": 0.001
+    },
+    "usable_share": 0.449,
+    "esri_built_2018": 0.523,
+    "esri_built_2023": 0.6,
+    "persistent_growth_share": 0.0401,
+    "persistent_of_raw_growth": 0.42,
+    "growth_rate_of_nonbuilt": 0.084,
+    "osm_buildings_2018": 151374,
+    "osm_buildings_2026": 186526,
+    "osm_major_road_km": 606
+  },
+  "chennai_southwest": {
+    "bbox": [
+      80.02,
+      12.8,
+      80.24,
+      13.02
+    ],
+    "area_km2": 580.8,
+    "worldcover_2021": {
+      "Tree cover": 0.293,
+      "Shrubland": 0.015,
+      "Grassland": 0.118,
+      "Cropland": 0.176,
+      "Built-up": 0.331,
+      "Bare / sparse": 0.005,
+      "Water": 0.051,
+      "Wetland": 0.011
+    },
+    "usable_share": 0.314,
+    "esri_built_2018": 0.515,
+    "esri_built_2023": 0.569,
+    "persistent_growth_share": 0.028,
+    "persistent_of_raw_growth": 0.39,
+    "growth_rate_of_nonbuilt": 0.058,
+    "osm_buildings_2018": 137687,
+    "osm_buildings_2026": 147198,
+    "osm_major_road_km": 554
+  },
+  "gurugram": {
+    "bbox": [
+      76.94,
+      28.34,
+      77.16,
+      28.52
+    ],
+    "area_km2": 430.0,
+    "worldcover_2021": {
+      "Tree cover": 0.135,
+      "Shrubland": 0.119,
+      "Grassland": 0.085,
+      "Cropland": 0.236,
+      "Built-up": 0.404,
+      "Bare / sparse": 0.015,
+      "Water": 0.003,
+      "Wetland": 0.003
+    },
+    "usable_share": 0.455,
+    "esri_built_2018": 0.531,
+    "esri_built_2023": 0.592,
+    "persistent_growth_share": 0.0377,
+    "persistent_of_raw_growth": 0.49,
+    "growth_rate_of_nonbuilt": 0.08,
+    "osm_buildings_2018": 123037,
+    "osm_buildings_2026": 122537,
+    "osm_major_road_km": 542
+  },
+  "navi_mumbai": {
+    "bbox": [
+      73.0,
+      18.92,
+      73.22,
+      19.12
+    ],
+    "area_km2": 512.9,
+    "worldcover_2021": {
+      "Tree cover": 0.299,
+      "Grassland": 0.117,
+      "Cropland": 0.322,
+      "Built-up": 0.164,
+      "Bare / sparse": 0.027,
+      "Water": 0.043,
+      "Mangroves": 0.029
+    },
+    "usable_share": 0.466,
+    "esri_built_2018": 0.245,
+    "esri_built_2023": 0.294,
+    "persistent_growth_share": 0.0221,
+    "persistent_of_raw_growth": 0.36,
+    "growth_rate_of_nonbuilt": 0.029,
+    "osm_buildings_2018": 56243,
+    "osm_buildings_2026": 57046,
+    "osm_major_road_km": 556
+  },
+  "hyderabad_west": {
+    "bbox": [
+      78.22,
+      17.32,
+      78.44,
+      17.52
+    ],
+    "area_km2": 518.0,
+    "worldcover_2021": {
+      "Tree cover": 0.143,
+      "Shrubland": 0.045,
+      "Grassland": 0.162,
+      "Cropland": 0.241,
+      "Built-up": 0.348,
+      "Bare / sparse": 0.019,
+      "Water": 0.041
+    },
+    "usable_share": 0.467,
+    "esri_built_2018": 0.475,
+    "esri_built_2023": 0.57,
+    "persistent_growth_share": 0.0518,
+    "persistent_of_raw_growth": 0.47,
+    "growth_rate_of_nonbuilt": 0.099,
+    "osm_buildings_2018": 191309,
+    "osm_buildings_2026": 216856,
+    "osm_major_road_km": 714
+  },
+  "bhopal": {
+    "bbox": [
+      77.26,
+      23.14,
+      77.48,
+      23.34
+    ],
+    "area_km2": 499.0,
+    "worldcover_2021": {
+      "Tree cover": 0.131,
+      "Shrubland": 0.009,
+      "Grassland": 0.127,
+      "Cropland": 0.439,
+      "Built-up": 0.232,
+      "Bare / sparse": 0.004,
+      "Water": 0.059,
+      "Wetland": 0.0
+    },
+    "usable_share": 0.579,
+    "esri_built_2018": 0.325,
+    "esri_built_2023": 0.378,
+    "persistent_growth_share": 0.026,
+    "persistent_of_raw_growth": 0.41,
+    "growth_rate_of_nonbuilt": 0.039,
+    "osm_buildings_2018": 158481,
+    "osm_buildings_2026": 159732,
+    "osm_major_road_km": 421
+  },
+  "ranchi": {
+    "bbox": [
+      85.22,
+      23.26,
+      85.44,
+      23.46
+    ],
+    "area_km2": 498.2,
+    "worldcover_2021": {
+      "Tree cover": 0.155,
+      "Shrubland": 0.004,
+      "Grassland": 0.225,
+      "Cropland": 0.412,
+      "Built-up": 0.191,
+      "Bare / sparse": 0.003,
+      "Water": 0.01
+    },
+    "usable_share": 0.644,
+    "esri_built_2018": 0.448,
+    "esri_built_2023": 0.552,
+    "persistent_growth_share": 0.0557,
+    "persistent_of_raw_growth": 0.48,
+    "growth_rate_of_nonbuilt": 0.101,
+    "osm_buildings_2018": 558,
+    "osm_buildings_2026": 1838,
+    "osm_major_road_km": 380
+  },
+  "coimbatore": {
+    "bbox": [
+      76.84,
+      10.92,
+      77.06,
+      11.12
+    ],
+    "area_km2": 532.0,
+    "worldcover_2021": {
+      "Tree cover": 0.238,
+      "Shrubland": 0.001,
+      "Grassland": 0.266,
+      "Cropland": 0.119,
+      "Built-up": 0.364,
+      "Bare / sparse": 0.003,
+      "Water": 0.009,
+      "Wetland": 0.0
+    },
+    "usable_share": 0.389,
+    "esri_built_2018": 0.502,
+    "esri_built_2023": 0.561,
+    "persistent_growth_share": 0.0342,
+    "persistent_of_raw_growth": 0.43,
+    "growth_rate_of_nonbuilt": 0.069,
+    "osm_buildings_2018": 736,
+    "osm_buildings_2026": 162092,
+    "osm_major_road_km": 434
+  },
+  "visakhapatnam": {
+    "bbox": [
+      83.1,
+      17.68,
+      83.32,
+      17.88
+    ],
+    "area_km2": 516.7,
+    "worldcover_2021": {
+      "Tree cover": 0.541,
+      "Grassland": 0.113,
+      "Cropland": 0.125,
+      "Built-up": 0.174,
+      "Bare / sparse": 0.009,
+      "Water": 0.035,
+      "Wetland": 0.002
+    },
+    "usable_share": 0.247,
+    "esri_built_2018": 0.253,
+    "esri_built_2023": 0.29,
+    "persistent_growth_share": 0.0202,
+    "persistent_of_raw_growth": 0.39,
+    "growth_rate_of_nonbuilt": 0.027,
+    "osm_buildings_2018": 2471,
+    "osm_buildings_2026": 12333,
+    "osm_major_road_km": 448
+  },
+  "kharagpur": {
+    "bbox": [
+      87.2,
+      22.24,
+      87.42,
+      22.44
+    ],
+    "area_km2": 501.5,
+    "worldcover_2021": {
+      "Tree cover": 0.326,
+      "Shrubland": 0.005,
+      "Grassland": 0.077,
+      "Cropland": 0.51,
+      "Built-up": 0.059,
+      "Bare / sparse": 0.01,
+      "Water": 0.013
+    },
+    "usable_share": 0.602,
+    "esri_built_2018": 0.188,
+    "esri_built_2023": 0.246,
+    "persistent_growth_share": 0.0273,
+    "persistent_of_raw_growth": 0.38,
+    "growth_rate_of_nonbuilt": 0.034,
+    "osm_buildings_2018": 238,
+    "osm_buildings_2026": 454,
+    "osm_major_road_km": 211
+  }
+}

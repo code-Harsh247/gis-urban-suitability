@@ -6,8 +6,8 @@ project:
   random_seed: 42
 
 aoi:
-  path: config/aoi.geojson   # one polygon, EPSG:4326 (to be created in P0.10)
-  name: TBD                  # study area name, e.g. city
+  path: config/aoi.geojson   # one polygon, EPSG:4326 (bbox from docs/study_area.md; refine in P0.10)
+  name: Bengaluru South      # decision D1 (docs/execution_plan.md)
   buffer_m: 1000             # extra margin downloaded around the AOI (edge effects)
   city_center: null          # optional [lon, lat] for dist_center feature
 
@@ -17,10 +17,16 @@ crs:
 grid:
   cell_size_m: 100
 
-years:
-  lulc_main: 2021            # ESA WorldCover year used for classification
-  baseline: 2017             # ESRI LULC baseline year (temporal validation)
-  latest: 2023               # ESRI LULC latest year (temporal validation)
+lulc:
+  source: esri               # decision D2: ESRI IO LULC v02 for all features and labels
+  worldcover_check: 2021     # WorldCover year used only as a cross-check
+
+years:                       # decision D3 (ESRI 2017 is noisier; two years at each end)
+  baseline: 2018             # features, reference buildings and roads are taken from this year
+  baseline_confirm: 2019     # candidate cells must also be non-built in this year
+  change_train_end: [2020, 2021]   # change-RF positives: built in both (decision D6)
+  latest: 2023               # growth label: built in latest and latest_confirm
+  latest_confirm: 2022
 
 features:
   context_radii_m: [250, 500]
@@ -29,8 +35,10 @@ features:
   max_nodata_fraction: 0.5
 
 exclusion:
-  slope_max_deg: 15
-  worldcover_codes: [70, 80, 90, 95]   # snow/ice, water, wetland, mangroves
+  slope_max_deg: 15                    # decision D10
+  esri_codes: [1, 4, 9]                # water, flooded vegetation, snow/ice
+  worldcover_codes: [70, 80, 90, 95]   # cross-check only: snow/ice, water, wetland, mangroves
+  max_excluded_fraction: 0.5           # cell excluded if more than this share is excluded class
 
 clustering:
   k_min: 3
@@ -40,11 +48,26 @@ clustering:
 labeling:
   built_threshold: 0.3
   forest_threshold: 0.5
+  cropland_usable: true      # decision D10 (Q5): usable, but flagged
+
+growth:                      # temporal-validation labels (execution_plan A4)
+  nonbuilt_max: 0.1          # cell counts as non-built below this built fraction
+  built_min: 0.5             # cell counts as built at or above this built fraction
+  lei_min_patch_m2: 5000     # growth patches smaller than this are ignored for LEI
+  lei_buffer_m: 20
 
 similarity:
   buffer_radii_m: [100, 250, 500]
   top_n: 20
   knn_k: 10
+  metric: euclidean          # decision D5; cosine only as a comparison
+
+osm:
+  snapshot_baseline: "2018-01-01"   # decisions D8, D9 (Overpass [date:] query)
+  overpass_mirrors:
+    - https://overpass-api.de/api/interpreter
+    - https://overpass.kumi.systems/api/interpreter
+    - https://overpass.private.coffee/api/interpreter
 
 suitability:
   class_quantiles: [0.9, 0.7, 0.4]     # S1 >= q90, S2 >= q70, S3 >= q40, else N
