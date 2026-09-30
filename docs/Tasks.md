@@ -52,8 +52,8 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 - [x] **P0.6** Create `environment.yml` (conda-forge, Python 3.11, all libraries from PRD §12) and `scripts/check_env.py`. — **Harsh** · PRD NFR-1, NFR-3
 - [x] **P0.7** Create the folder skeleton from PRD §11 (`src/` subpackages with `__init__.py`, `notebooks/`, `tests/unit/`, `tests/gates/`, `config/`, `outputs/`, `report/`) and `pyproject.toml` (black, ruff, pytest config). — **Abhinav** · NFR-4 · *Done by Harsh; `data/`, `outputs/`, `logs/` are git-ignored and created by `Config.ensure_dirs()`.*
 - [x] **P0.8** Set up `pre-commit` with `black`, `ruff`, `nbstripout`. — **Abhinav** · NFR-6 · *Done by Harsh; hooks run the env's own tools (plus a 1 MB file-size guard), so run `pre-commit install` inside `gis-suit`.*
-- [ ] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5
-- [ ] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1
+- [x] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5 · *14 areas checked with `scripts/study_area_candidates.py` (persistent 2018→2023 growth, OSM buildings in 2018 and 2026). Recommends Bengaluru South, then Hyderabad West; Pune West as fallback.*
+- [~] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Waiting for Harsh to confirm; the polygon can still be refined.*
 - [x] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2 · *Done by Harsh, with 15 unit tests in `tests/unit/test_config.py`. `crs.epsg: auto` picks the UTM zone from the AOI, so P0.10 only needs the polygon + `aoi.name`.*
 - [ ] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3
 
@@ -61,16 +61,17 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 
 **Automated — `tests/gates/test_phase0.py`** (written by **Harsh**):
 - [x] Every library in `environment.yml` imports (`scripts/check_env.py` exits 0).
-- [ ] `config/config.yaml` loads through `src/config.py` without error. *(blocked on `config/aoi.geojson`, P0.10)*
-- [ ] `config/aoi.geojson` has exactly one valid polygon; area between 50 and 1,500 km² when projected.
-- [ ] The configured CRS is projected with units in metres.
-- [ ] `aoi.name` in the config is set (not `TBD`).
+- [x] `config/config.yaml` loads through `src/config.py` without error.
+- [x] `config/aoi.geojson` has exactly one valid polygon; area between 50 and 1,500 km² when projected.
+- [x] The configured CRS is projected with units in metres.
+- [x] `aoi.name` in the config is set (not `TBD`).
 - [x] All tracked folders from PRD §11 and the key files exist; every `src/` subpackage has `__init__.py`.
 
 Status on Harsh's laptop (2026-09-27): **30 passed, 5 failing**. All 5 need the AOI.
+Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 unit tests), with the Bengaluru South AOI.
 
 **Manual checklist:**
-- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Harsh: env done, gate waits on AOI; Abhinav: pending)*
+- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Harsh: env done, rerun now that the AOI exists; Abhinav: done 2026-10-01)*
 - [x] `pre-commit run --all-files` passes.
 - [ ] `docs/study_area.md` states the chosen AOI and the reason.
 - [ ] Deadline is recorded in PRD, and phase dates in this file are adjusted.

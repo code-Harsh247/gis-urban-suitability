@@ -1,0 +1,40 @@
+{
+  "type": "FeatureCollection",
+  "name": "aoi",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bengaluru South",
+        "source": "docs/study_area.md bbox, 2026-10-01"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.52,
+              12.72
+            ],
+            [
+              77.74,
+              12.72
+            ],
+            [
+              77.74,
+              12.94
+            ],
+            [
+              77.52,
+              12.94
+            ],
+            [
+              77.52,
+              12.72
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

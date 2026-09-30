@@ -26,3 +26,6 @@ logs/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local team discussion notes (not shared via git)
+discussion/
