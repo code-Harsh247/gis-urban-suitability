@@ -335,7 +335,8 @@ Do these first: each one unblocks the other person.
 
 ## 6. Working without blocking each other
 
-- **Branches:** `feat/a-<pkg>` and `feat/h-<pkg>`, e.g. `feat/h-osm-download`. Small PRs; the other person reviews within 24 h.
+- **Branches:** everything goes straight to `main`, with **one commit per finished work package** (message starts with its ID, e.g. `A2: ...`). The other person reviews the commit within 24 h.
+- **Done check:** after every package, and before ticking it or committing, run the done check in [CLAUDE.md](CLAUDE.md#done-check-after-every-work-package--phase): tests, lint, contracts, an **independent correctness check of the outputs** (a `scripts/verify_*.py` script), reproducibility, then record and commit. Example: `scripts/verify_raw_data.py` for A1 found a sub-pixel shift that all unit tests missed.
 - **Folder ownership avoids merge conflicts:**
   - **Abhinav:** `download/lulc.py`, `download/dem.py`, `preprocess/raster.py`, `preprocess/terrain.py`, `features/{grid,lulc_features,context,labels,build}.py`, `similarity/{profiles,query,aggregate}.py`, `suitability/{validate,score}.py`, `viz/interactive.py`, `pipeline.py`
   - **Harsh:** `download/osm.py`, `preprocess/vector.py`, `features/distance.py`, `classify/*`, `similarity/rf_model.py`, `suitability/mcda.py`, `viz/static_maps.py`
