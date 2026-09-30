@@ -200,7 +200,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 - [x] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
 - [ ] **P4.7** Optional: NDVI (Sentinel-2 median composite) and WorldPop density. — **Abhinav** · PRD §7.2
 - [~] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
-- [ ] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density)
+- [~] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density) · *Grid, fractions, rings and raster distances done (`tests/unit/test_features_raster.py`); road distance/density tests pending (H3).*
 
 ### Phase 4 Gate
 
