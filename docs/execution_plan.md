@@ -154,7 +154,7 @@ These are the only places the two tracks touch.
 - [ ] **J4** PRD updated to the §2 decisions (Abhinav writes, Harsh reviews) · W1 · after J1
 - [ ] **J5** Tasks.md updated to this plan (Harsh writes, Abhinav reviews) · W1 · after J1
 - [ ] **J6** `docs/literature_review.md`: Abhinav's MCDA/LULC half ☐ · Harsh's ML/validation half ☐ · synthesis together ☐ · W1–2
-- [ ] **J7** `docs/data_sources.md`: Abhinav's rasters ☐ · Harsh's OSM + snapshot method ☐ · W2
+- [~] **J7** `docs/data_sources.md`: Abhinav's rasters ☑ · Harsh's OSM + snapshot method ☐ · W2
 - [ ] **J8** Report: Discussion + Conclusion written together · W9
 - [ ] **J9** Slides done and rehearsed once · W10
 
@@ -172,10 +172,10 @@ These are the only places the two tracks touch.
 - [x] A1.4 Rerun makes no downloads; manifest checksums match; quick-looks in notebook 01 · *rerun skips all 8 files in 1.4 s*
 
 **A2. Raster preprocessing** · W2 · P3.1–P3.3
-- [ ] **A2.1** `src/preprocess/raster.py`: reference 10 m grid (ESRI tile grid, project UTM), reproject and align all rasters, nearest for classes, bilinear for DEM. **Saves the reference grid spec** to `data/processed/reference_grid.json`.
-- [ ] A2.2 `src/preprocess/terrain.py`: slope (Horn); unit test on a synthetic plane
-- [ ] A2.3 ESRI ↔ WorldCover class mapping table (code + `data_sources.md`)
-- [ ] A2.4 Unit tests: reprojection keeps class values; aligned rasters share transform and shape
+- [x] **A2.1** `src/preprocess/raster.py`: reference 10 m grid (ESRI tile grid, project UTM), reproject and align all rasters, nearest for classes, bilinear for DEM. **Saves the reference grid spec** to `data/processed/reference_grid.json`. · *Harsh: use `load_reference_grid(cfg)` (CRS, transform, shape) to rasterise roads in H3.3. Grid = 2,620 × 2,670 px, edges on whole 100 m cells.*
+- [x] A2.2 `src/preprocess/terrain.py`: slope (Horn); unit test on a synthetic plane · *slope computed on the 30 m UTM DEM, then bilinear to 10 m*
+- [x] A2.3 ESRI ↔ WorldCover class mapping table (code + `data_sources.md`)
+- [x] A2.4 Unit tests: reprojection keeps class values; aligned rasters share transform and shape · *done check: `scripts/verify_preprocessed.py`*
 
 **A3. Grid and raster features** · W3–4 · P4.1–P4.3, P4.6, P4.8
 - [ ] **A3.1** `src/features/grid.py`: real C1 for the AOI

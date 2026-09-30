@@ -156,9 +156,9 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 
 ### Todos
 
-- [ ] **P3.1** Write `src/preprocess/raster.py`: reproject to the project CRS, clip to AOI + buffer, align to a reference grid (WorldCover at 10 m is the reference). Nearest-neighbour for categorical, bilinear for continuous. Set nodata consistently. — **Harsh** · FR-3.1–3.3
-- [ ] **P3.2** Write `src/preprocess/terrain.py`: slope (degrees, Horn method) and aspect from the aligned DEM. — **Harsh** · FR-3.6
-- [ ] **P3.3** Harmonise ESRI LULC classes with WorldCover (mapping table in `src/preprocess/raster.py` + `docs/data_sources.md`), so temporal validation uses the same "built-up" definition. — **Harsh** · FR-8.1
+- [x] **P3.1** Write `src/preprocess/raster.py`: reproject to the project CRS, clip to AOI + buffer, align to a reference grid (WorldCover at 10 m is the reference). Nearest-neighbour for categorical, bilinear for continuous. Set nodata consistently. — **Harsh** · FR-3.1–3.3
+- [x] **P3.2** Write `src/preprocess/terrain.py`: slope (degrees, Horn method) and aspect from the aligned DEM. — **Harsh** · FR-3.6
+- [x] **P3.3** Harmonise ESRI LULC classes with WorldCover (mapping table in `src/preprocess/raster.py` + `docs/data_sources.md`), so temporal validation uses the same "built-up" definition. — **Harsh** · FR-8.1
 - [ ] **P3.4** Write `src/preprocess/vector.py`: reproject, clip, fix invalid geometries (`make_valid`), drop empties, explode multi-parts where needed. — **Abhinav** · FR-3.4
 - [ ] **P3.5** Classify roads into `major` / `minor` by `highway` tag (PRD FR-3.5); drop footpaths / tracks if configured. — **Abhinav** · FR-3.5
 - [ ] **P3.6** Clean buildings: remove tiny (< 10 m²) and huge outlier footprints; compute centroid, area and `building` type; dedupe fallback + OSM footprints if both are used. — **Abhinav**
