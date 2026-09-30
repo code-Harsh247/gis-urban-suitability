@@ -192,14 +192,14 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 
 ### Todos
 
-- [ ] **P4.1** Write `src/features/grid.py`: square grid of `cell_size` over the AOI, with `cell_id`, row, col and centroid; keep cells whose centre is inside the AOI. — **Harsh** · FR-4.1
-- [ ] **P4.2** Write `src/features/lulc_features.py`: per-cell class fractions from the 10 m LULC (block aggregation on the aligned raster, not slow polygon zonal stats). For both the baseline and latest years. — **Harsh** · FR-4.2
-- [ ] **P4.3** Terrain features per cell: `elev_mean`, `slope_mean`, `slope_max`. — **Harsh** · FR-4.2
+- [x] **P4.1** Write `src/features/grid.py`: square grid of `cell_size` over the AOI, with `cell_id`, row, col and centroid; keep cells whose centre is inside the AOI. — **Harsh** · FR-4.1
+- [x] **P4.2** Write `src/features/lulc_features.py`: per-cell class fractions from the 10 m LULC (block aggregation on the aligned raster, not slow polygon zonal stats). For both the baseline and latest years. — **Harsh** · FR-4.2
+- [x] **P4.3** Terrain features per cell: `elev_mean`, `slope_mean`, `slope_max`. — **Harsh** · FR-4.2
 - [ ] **P4.4** Write `src/features/distance.py`: distance transforms (`scipy.ndimage.distance_transform_edt` with correct pixel size) for major road, any road, water and built-up; sample at cell centroids; cap and log-transform. — **Abhinav** · FR-4.2
 - [ ] **P4.5** Road density within 500 m, and building count / area fraction per cell (for analysis only; flagged as leaky). — **Abhinav** · FR-4.2, FR-6.6
-- [ ] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
+- [x] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
 - [ ] **P4.7** Optional: NDVI (Sentinel-2 median composite) and WorldPop density. — **Abhinav** · PRD §7.2
-- [ ] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
+- [~] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
 - [ ] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density)
 
 ### Phase 4 Gate

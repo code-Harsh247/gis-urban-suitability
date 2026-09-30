@@ -128,7 +128,7 @@ def test_same_lattice_is_an_exact_copy(tmp_path, project):
 
 def test_reprojection_keeps_class_values(tmp_path, project):
     ref = pr.build_reference_grid(project)
-    w, s, e, n = project.aoi.buffer(0.02).total_bounds
+    w, s, e, n = project.aoi.buffer(0.06).total_bounds  # wider than AOI + buffer
     arr = np.random.default_rng(1).choice(
         np.array([10, 40, 50, 80], dtype=np.uint8), size=(300, 300)
     )

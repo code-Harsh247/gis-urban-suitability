@@ -178,11 +178,11 @@ These are the only places the two tracks touch.
 - [x] A2.4 Unit tests: reprojection keeps class values; aligned rasters share transform and shape · *done check: `scripts/verify_preprocessed.py`*
 
 **A3. Grid and raster features** · W3–4 · P4.1–P4.3, P4.6, P4.8
-- [ ] **A3.1** `src/features/grid.py`: real C1 for the AOI
-- [ ] A3.2 `src/features/lulc_features.py`: own-cell fractions (clustering only) per year
-- [ ] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
-- [ ] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year
-- [ ] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)*
+- [x] **A3.1** `src/features/grid.py`: real C1 for the AOI · *58,218 cells (centre inside AOI), `cell_id = row × n_cols + col` on the reference lattice. **Harsh:** use `xy_to_cell_id(cfg, x, y)` for building centroids (H2.3b); `data/features/grid.gpkg` has the cell polygons.*
+- [x] A3.2 `src/features/lulc_features.py`: own-cell fractions (clustering only) per year · *fractions of valid pixels (clouds count as nodata)*
+- [x] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
+- [x] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year · *built-up distance is to the nearest built pixel **outside** the cell (KD-tree, exact), so it never leaks the cell's own status. **Config change (done check):** `aoi.buffer_m` 1000 → 3000 and `features.distance_cap_m` 5000 → 3000, because distances are only exact up to the buffer (a cell at the AOI edge can't see beyond it). The code now refuses cap > buffer. **Harsh:** your OSM download area grows accordingly; cap road distances at 3 km too.*
+- [x] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)* · *`python -m src.features.build`; drops and logs cells with `nodata_frac` > 0.5*
 - [ ] **A3.5b** Real C4 on the AOI · 🔒 **H3.3**
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 

@@ -17,7 +17,8 @@ Every downloaded file is recorded in `data/manifest.json` (source items, date, C
 
 **Access:**
 - Anonymous STAC search at `https://planetarycomputer.microsoft.com/api/stac/v1`, with URLs signed by `planetary-computer`. No account needed.
-- Downloads cover the reference-grid rectangle plus 2 cells: the AOI plus `aoi.buffer_m` (1 km), grown to whole 100 m cells.
+- Downloads cover the reference-grid rectangle plus 2 cells: the AOI plus `aoi.buffer_m` (**3 km**), grown to whole 100 m cells.
+- The buffer equals `features.distance_cap_m`, so distances from AOI cells are exact (never cut off at the grid edge).
 - Only the needed window is read from each Cloud-Optimised GeoTIFF, clipped on the source's own pixel grid, so values are copied, not resampled.
 
 **Run:**
@@ -35,7 +36,7 @@ Reruns skip files whose checksum matches the manifest.
 ## Preprocessing (`src/preprocess/raster.py`)
 
 **Reference grid:**
-- EPSG:32643 at 10 m, 2,620 × 2,670 px, bounds (772400, 1406400, 798600, 1433100).
+- EPSG:32643 at 10 m, 3,020 × 3,070 px, bounds (770400, 1404400, 800600, 1435100).
 - The edges are multiples of 100 m, so every 10 × 10 block of pixels is one grid cell.
 - Saved in `data/processed/reference_grid.json`. Use `load_reference_grid(cfg)`, e.g. when rasterising OSM.
 
