@@ -51,7 +51,7 @@ Before finishing a phase, run its gate: `pytest tests/gates/test_phaseN.py`, the
 A package is **not done** when the code runs. After finishing it, and before ticking it or committing, check that everything is in order:
 
 1. **Tests:** `pytest tests` passes (unit tests + every gate up to the current phase).
-2. **Lint:** `pre-commit run --all-files` passes.
+2. **Lint:** `git add` the new files first, then `pre-commit run --all-files` passes (it skips files git doesn't track yet).
 3. **Contracts:** real output files pass `schema.validate_project(load_config())` (also run by `tests/unit/test_contracts.py`).
 4. **Correctness of the data, checked independently.** "It ran" is not enough. Compare outputs against something the code did not produce:
    - the source data (e.g. pixel values at random points);
