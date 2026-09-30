@@ -120,14 +120,14 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 
 ### Todos
 
-- [ ] **P2.1** Write `src/io_utils.py`: manifest read/write (`data/manifest.json`), SHA-256 checksum, "skip if exists and checksum matches" helper, logging setup. — **Harsh** · FR-2.5, FR-2.6, NFR-9
-- [ ] **P2.2** Write `src/download/lulc.py`: download ESA WorldCover (AOI + 1 km buffer) via STAC, mosaic tiles if needed. — **Harsh** · FR-2.1
-- [ ] **P2.3** Extend `lulc.py`: download ESRI Annual LULC for the baseline and latest years. — **Harsh** · FR-2.2
-- [ ] **P2.4** Write `src/download/dem.py`: download Copernicus DEM GLO-30 (AOI + buffer). — **Abhinav** · FR-2.3
+- [x] **P2.1** Write `src/io_utils.py`: manifest read/write (`data/manifest.json`), SHA-256 checksum, "skip if exists and checksum matches" helper, logging setup. — **Harsh** · FR-2.5, FR-2.6, NFR-9
+- [x] **P2.2** Write `src/download/lulc.py`: download ESA WorldCover (AOI + 1 km buffer) via STAC, mosaic tiles if needed. — **Harsh** · FR-2.1
+- [x] **P2.3** Extend `lulc.py`: download ESRI Annual LULC for the baseline and latest years. — **Harsh** · FR-2.2
+- [x] **P2.4** Write `src/download/dem.py`: download Copernicus DEM GLO-30 (AOI + buffer). — **Abhinav** · FR-2.3
 - [ ] **P2.5** Write `src/download/osm.py`: download roads (keep the `highway` tag), water (`natural=water`, `waterway=*`) and buildings (`building=*`) with osmnx. Save as GeoPackage. — **Abhinav** · FR-2.4
 - [ ] **P2.6** If needed (from P1.6): download fallback building footprints (Microsoft / Google Open Buildings) for the AOI. — **Abhinav** · Risk 1
 - [ ] **P2.7** Add retries and clear error messages to all downloaders. — **Abhinav** · FR-2.6
-- [ ] **P2.8** Create `notebooks/01_data_download.ipynb`: calls the download functions and shows quick-look plots of each layer over the AOI. — **Harsh** · FR-10.1
+- [x] **P2.8** Create `notebooks/01_data_download.ipynb`: calls the download functions and shows quick-look plots of each layer over the AOI. — **Harsh** · FR-10.1
 - [ ] **P2.9** Unit tests: manifest round-trip, checksum, skip-if-exists logic (with temporary files). — **Both** (Harsh: io_utils tests, Abhinav: downloader error-handling tests with mocked network)
 
 ### Phase 2 Gate
