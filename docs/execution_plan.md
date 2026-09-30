@@ -187,7 +187,7 @@ These are the only places the two tracks touch.
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 
 **A4. Labels and masks** · W4 · P5.5, FR-8.1
-- [ ] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 %
+- [ ] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 % · *also OSM water polygons from H1.3 if ready: vegetated lakes (e.g. Hulimavu) show as rangeland/wetland in ESRI 2023*
 - [ ] A4.1b Add protected areas (e.g. Bannerghatta NP) to the mask · 🔒 **H1.4** · *optional: skip if not ready by the end of W4 and note it*
 - [ ] **A4.2** Candidates, growth labels (2018/19 → 2022/23), change-training positives (2018/19 → 2020/21) → real C5
 - [ ] A4.3 LEI growth type (patches ≥ 0.5 ha, 20 m buffer) → `lei_type` in C5

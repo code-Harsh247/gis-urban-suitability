@@ -54,6 +54,24 @@ def search_items(collection: str, bbox, datetime: str | None = None, query: dict
     return items
 
 
+def snap_bounds(
+    src, bounds: tuple[float, float, float, float]
+) -> tuple[float, float, float, float]:
+    """Grow ``bounds`` (in the source CRS) outward to whole pixels of the source grid.
+
+    Without this, ``rasterio.merge`` starts the output grid at the raw bounds, which
+    shifts every pixel by a fraction of a cell and resamples the data.
+    """
+    rx, ry = abs(src.transform.a), abs(src.transform.e)
+    x0, y0 = src.transform.c, src.transform.f
+    eps = 1e-6
+    left = x0 + np.floor((bounds[0] - x0) / rx + eps) * rx
+    right = x0 + np.ceil((bounds[2] - x0) / rx - eps) * rx
+    top = y0 - np.floor((y0 - bounds[3]) / ry + eps) * ry
+    bottom = y0 - np.ceil((y0 - bounds[1]) / ry - eps) * ry
+    return (float(left), float(bottom), float(right), float(top))
+
+
 def mosaic_to_file(
     hrefs: list[str],
     bounds_4326: tuple[float, float, float, float],
@@ -65,7 +83,8 @@ def mosaic_to_file(
 ) -> None:
     """Mosaic the COGs over ``bounds_4326`` and write a tiled, compressed GeoTIFF.
 
-    If all sources share one CRS the data keep their native grid (no resampling).
+    If all sources share one CRS the data keep their native pixel grid: the bounds are
+    snapped to it, so values are copied, never resampled.
     Otherwise every source is warped to ``dst_crs`` at the finest source resolution.
     """
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -75,9 +94,12 @@ def mosaic_to_file(
         nd = nodata if nodata is not None else sources[0].nodata
         if len(crss) == 1:
             src_crs = sources[0].crs
-            b = transform_bounds(4326, src_crs, *bounds_4326, densify_pts=21)
+            b = snap_bounds(
+                sources[0], transform_bounds(4326, src_crs, *bounds_4326, densify_pts=21)
+            )
+            res = (abs(sources[0].transform.a), abs(sources[0].transform.e))
             arr, transform = retry(
-                lambda: merge(sources, bounds=b, nodata=nd, resampling=resampling),
+                lambda: merge(sources, bounds=b, res=res, nodata=nd, resampling=resampling),
                 what="read tiles",
             )
             crs = src_crs

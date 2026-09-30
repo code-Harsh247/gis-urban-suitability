@@ -129,6 +129,45 @@ def test_mosaic_two_tiles_same_crs(tmp_path):
     assert not out.with_suffix(".tmp.tif").exists()
 
 
+def test_mosaic_keeps_source_pixel_grid_and_values(tmp_path):
+    """Output pixels must sit exactly on the source grid: values copied, never shifted."""
+    n = 100
+    arr = np.arange(n * n, dtype="float32").reshape(1, n, n)  # every pixel unique
+    src = tmp_path / "dem.tif"
+    profile = dict(
+        driver="GTiff",
+        height=n,
+        width=n,
+        count=1,
+        dtype="float32",
+        crs="EPSG:4326",
+        transform=from_origin(77.0, 13.0, 0.001, 0.001),
+        nodata=-9999.0,
+    )
+    with rasterio.open(src, "w", **profile) as dst:
+        dst.write(arr)
+    out = tmp_path / "m.tif"
+    # bounds deliberately off-grid by fractions of a pixel
+    stac.mosaic_to_file(
+        [str(src)],
+        (77.01234, 12.95678, 77.05432, 12.98765),
+        out,
+        dst_crs="EPSG:32643",
+        resampling=Resampling.bilinear,
+    )
+    with rasterio.open(out) as ds, rasterio.open(src) as s0:
+        off_x = (ds.transform.c - s0.transform.c) / 0.001
+        off_y = (s0.transform.f - ds.transform.f) / 0.001
+        assert off_x == pytest.approx(round(off_x), abs=1e-6)
+        assert off_y == pytest.approx(round(off_y), abs=1e-6)
+        got = ds.read(1)
+        r0, c0 = round(off_y), round(off_x)
+        np.testing.assert_array_equal(got, arr[0, r0 : r0 + got.shape[0], c0 : c0 + got.shape[1]])
+        assert (
+            ds.bounds.left <= 77.01234 and ds.bounds.right >= 77.05432
+        )  # still covers the request
+
+
 def test_mosaic_mixed_crs_warps_to_project_crs(tmp_path):
     a = _tile(tmp_path / "a.tif", 77.00, 13.00, 10)
     b = _tile(tmp_path / "b.tif", 77.05, 13.00, 20)
