@@ -21,6 +21,7 @@ from rasterio.warp import calculate_default_transform, reproject, transform_boun
 from src.io_utils import (
     DownloadError,
     Manifest,
+    manifest_key,
     needs_download,
     raster_info,
     record_download,
@@ -187,10 +188,17 @@ def fetch_raster(
 ) -> Path:
     """Download one mosaicked raster for the AOI + buffer, unless it is already there."""
     manifest = manifest or Manifest.for_config(cfg)
-    if not force and not needs_download(out, manifest, cfg.root):
-        log.info("skip %s (exists, checksum matches)", out.name)
-        return out
     bbox = aoi_bounds_4326(cfg)
+    if not force and not needs_download(out, manifest, cfg.root):
+        entry = manifest.get(manifest_key(out, cfg.root)) or {}
+        old = entry.get("source", {}).get("bbox_4326")
+        if old is not None and np.allclose(old, bbox, atol=1e-9):
+            log.info("skip %s (exists, checksum matches)", out.name)
+            return out
+        log.info(
+            "%s covers a different area than requested (AOI or buffer changed); re-downloading",
+            out.name,
+        )
     items = search_items(collection, bbox, datetime, query)
     if item_filter is not None:
         items = [i for i in items if item_filter(i)]

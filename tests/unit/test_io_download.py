@@ -247,6 +247,24 @@ def test_esri_download_filters_year_records_manifest_and_skips_rerun(
     assert [p.stat().st_mtime_ns for p in paths] == mtimes
 
 
+def test_changed_area_triggers_redownload(project, tmp_path, monkeypatch):
+    from dataclasses import replace
+
+    calls = []
+
+    def fake_search(collection, bbox, datetime=None, query=None):
+        calls.append(bbox)
+        return _fake_items(tmp_path, [f"43P-{datetime}"], "data", 5)
+
+    monkeypatch.setattr(stac, "search_items", fake_search)
+    lulc.download_esri_lulc(project, years=[2018])
+    lulc.download_esri_lulc(project, years=[2018])
+    assert len(calls) == 1  # same area: skipped
+    bigger = replace(project, raw={**project.raw, "aoi": {**project["aoi"], "buffer_m": 5000}})
+    lulc.download_esri_lulc(bigger, years=[2018])
+    assert len(calls) == 2  # buffer changed: downloaded again
+
+
 def test_worldcover_and_dem_paths(project, tmp_path, monkeypatch):
     monkeypatch.setattr(
         stac,
