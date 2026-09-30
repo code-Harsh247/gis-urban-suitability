@@ -33,9 +33,25 @@ STAC_URL = "https://planetarycomputer.microsoft.com/api/stac/v1"
 
 
 def aoi_bounds_4326(cfg) -> tuple[float, float, float, float]:
-    """(west, south, east, north) of the AOI buffered by ``aoi.buffer_m``, in EPSG:4326."""
-    buffered = cfg.aoi_projected.buffer(float(cfg["aoi"].get("buffer_m", 0)))
-    return tuple(buffered.to_crs(4326).total_bounds)  # type: ignore[return-value]
+    """(west, south, east, north) in EPSG:4326 that fully cover the reference grid.
+
+    The reference grid (src/preprocess/raster.py) is the *rectangle* around the AOI
+    + ``aoi.buffer_m``, grown to whole cells. The rectangle's corners reach beyond the
+    rounded corners of the buffered AOI, so we transform the rectangle itself (densified,
+    so edges that curve in lat/lon are covered) and add two cells of margin.
+    """
+    cell = float(cfg.cell_size_m)
+    left, bottom, right, top = cfg.aoi_projected.buffer(
+        float(cfg["aoi"].get("buffer_m", 0))
+    ).total_bounds
+    left, bottom = (
+        np.floor(left / cell) * cell - 2 * cell,
+        np.floor(bottom / cell) * cell - 2 * cell,
+    )
+    right, top = np.ceil(right / cell) * cell + 2 * cell, np.ceil(top / cell) * cell + 2 * cell
+    return tuple(
+        float(v) for v in transform_bounds(cfg.crs, 4326, left, bottom, right, top, densify_pts=51)
+    )
 
 
 def search_items(collection: str, bbox, datetime: str | None = None, query: dict | None = None):

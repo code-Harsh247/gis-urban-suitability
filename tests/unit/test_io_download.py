@@ -283,4 +283,5 @@ def test_aoi_bounds_include_buffer(project):
     w, s, e, n = stac.aoi_bounds_4326(project)
     aw, as_, ae, an = project.aoi.total_bounds
     assert w < aw and s < as_ and e > ae and n > an  # 1 km buffer
-    assert (aw - w) * 111_000 == pytest.approx(1000, rel=0.1)
+    margin_m = project["aoi"]["buffer_m"] + 2 * project.cell_size_m  # buffer + 2 cells (+ rounding)
+    assert margin_m <= (aw - w) * 111_000 <= margin_m + project.cell_size_m + 50
