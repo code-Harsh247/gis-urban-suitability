@@ -26,7 +26,7 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 |---|---|---|---|---|---|---|
 | 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (sign-off pending) |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ☐ |
-| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ☐ |
+| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on Harsh's laptop (sign-off pending) |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
 | 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
 | 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
@@ -127,26 +127,26 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [x] **P2.2** Write `src/download/lulc.py`: download ESA WorldCover (AOI + 1 km buffer) via STAC, mosaic tiles if needed. — **Harsh** · FR-2.1
 - [x] **P2.3** Extend `lulc.py`: download ESRI Annual LULC for the baseline and latest years. — **Harsh** · FR-2.2
 - [x] **P2.4** Write `src/download/dem.py`: download Copernicus DEM GLO-30 (AOI + buffer). — **Abhinav** · FR-2.3
-- [ ] **P2.5** Write `src/download/osm.py`: download roads (keep the `highway` tag), water (`natural=water`, `waterway=*`) and buildings (`building=*`) with osmnx. Save as GeoPackage. — **Abhinav** · FR-2.4
-- [ ] **P2.6** If needed (from P1.6): download fallback building footprints (Microsoft / Google Open Buildings) for the AOI. — **Abhinav** · Risk 1
-- [ ] **P2.7** Add retries and clear error messages to all downloaders. — **Abhinav** · FR-2.6
+- [x] **P2.5** Write `src/download/osm.py`: download roads (keep the `highway` tag), water (`natural=water`, `waterway=*`) and buildings (`building=*`) with osmnx. Save as GeoPackage. — **Abhinav** · FR-2.4 · *Done by Harsh (OSM is his track, H1.1–H1.4): 2018 snapshot (`[date:]`) + current, plus protected areas; 9 unit tests. Details and Overpass workarounds in `docs/data_sources.md` §5.*
+- [x] **P2.6** If needed (from P1.6): download fallback building footprints (Microsoft / Google Open Buildings) for the AOI. — **Abhinav** · Risk 1 · *Not needed: OSM only (P1.6), 179,740 buildings in the 2018 snapshot.*
+- [x] **P2.7** Add retries and clear error messages to all downloaders. — **Abhinav** · FR-2.6 · *Rasters: `io_utils.retry` (Abhinav). OSM: retries per mirror, 3-mirror fallback, clear final error (Harsh).*
 - [x] **P2.8** Create `notebooks/01_data_download.ipynb`: calls the download functions and shows quick-look plots of each layer over the AOI. — **Harsh** · FR-10.1
-- [ ] **P2.9** Unit tests: manifest round-trip, checksum, skip-if-exists logic (with temporary files). — **Both** (Harsh: io_utils tests, Abhinav: downloader error-handling tests with mocked network)
+- [x] **P2.9** Unit tests: manifest round-trip, checksum, skip-if-exists logic (with temporary files). — **Both** (Harsh: io_utils tests, Abhinav: downloader error-handling tests with mocked network) · *`tests/unit/test_io_download.py` (Abhinav) + `tests/unit/test_osm_download.py` (Harsh).*
 
 ### Phase 2 Gate
 
 **Automated — `tests/gates/test_phase2.py`** (written by **Harsh**):
-- [ ] Every expected raw file exists: WorldCover, ESRI LULC × 2 years, DEM, roads, water, buildings.
-- [ ] Every raster opens with rasterio, has a CRS and nodata defined, and its bounds cover the AOI bbox.
-- [ ] Every vector opens with geopandas, has a CRS, and is non-empty.
-- [ ] LULC rasters contain only valid class codes (WorldCover: {10,20,…,100} + nodata; ESRI: documented codes).
-- [ ] `data/manifest.json` has one entry per file, and the stored checksums match the files on disk.
-- [ ] Rerunning the downloads doesn't re-download (checks file modified times).
+- [x] Every expected raw file exists: WorldCover, ESRI LULC × 2 years, DEM, roads, water, buildings. *(ESRI 2018–2023; OSM 2018 + current; protected areas)*
+- [x] Every raster opens with rasterio, has a CRS and nodata defined, and its bounds cover the AOI bbox.
+- [x] Every vector opens with geopandas, has a CRS, and is non-empty. *(plus: 2018 snapshot smaller than current; building / lake counts ≥ 95 % of ohsome; Bannerghatta NP present)*
+- [x] LULC rasters contain only valid class codes (WorldCover: {10,20,…,100} + nodata; ESRI: documented codes).
+- [x] `data/manifest.json` has one entry per file, and the stored checksums match the files on disk.
+- [x] Rerunning the downloads doesn't re-download (checks file modified times). *(checked via `needs_download`, which the downloaders use to skip)*
 
 **Manual checklist:**
-- [ ] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM).
-- [ ] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`).
-- [ ] Unit tests pass: `pytest tests/unit`.
+- [~] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters: notebook 01, Abhinav. OSM: 2018 vs current quick-look checked by Harsh, 2026-10-01; layers line up with the AOI.)*
+- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01. Abhinav: rasters; OSM pending.)*
+- [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 

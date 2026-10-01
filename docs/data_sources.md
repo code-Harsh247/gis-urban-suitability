@@ -75,9 +75,10 @@ Counted with the ohsome history API over the AOI bbox (77.52–77.74 E, 12.72–
   - Either way, "distance to any road" from current OSM partly encodes growth after 2018. Validation-run road features must use the **2018 snapshot**.
   - Major roads grew less (+41 %), which fits the prototype finding that they barely leak.
 - **Water:** OSM water polygons nearly tripled, which is mostly mapping effort, not new lakes. That's one reason `log_dist_water` comes from the ESRI water class (consistent across years), not from OSM.
-- **Protected areas:**
-  - The count dropped from 3 to 2 polygons, presumably through retagging or merging.
-  - **H1.4 must check that Bannerghatta National Park is present as a polygon in the current data** before A4.1b uses it for the mask.
+- **Protected areas (checked in H1.4):**
+  - The 2 `boundary=protected_area` polygons are only small heritage sites: Kalyani Vasanthapura Temple and Purandara Mantapa.
+  - **Bannerghatta National Park is tagged `boundary=national_park`** (relation 8124064, `protect_class=2`, `landuse=forest`), so the ohsome count above missed it. The downloader therefore also queries `boundary=national_park`.
+  - There are no `leisure=nature_reserve` features in the AOI.
   - Protected areas are a static layer, so the current version may be used in the validation run (time-travel rule exception, PRD FR-8.2).
 
 ---
@@ -99,12 +100,35 @@ There is visible growth between them: **8.4 % of the land non-built in 2018 beca
 
 ## 5. OSM snapshot method (Harsh's track, H1.1)
 
-- **Baseline snapshot:** an Overpass query with `[date:"2018-01-01T00:00:00Z"]` (`osm.snapshot_baseline`) returns the OSM data as it was on that date. That covers roads, water, buildings and their tags.
-- **Current snapshot:** the same query without `[date:]`.
-- **Mirrors:** tried in order from `osm.overpass_mirrors`: overpass-api.de → overpass.kumi.systems → overpass.private.coffee. Each request is retried (`io_utils.retry`).
-- **Caching:**
-  - Raw responses are cached under `data/raw/osm/` and recorded in `data/manifest.json` (query, date, mirror used, checksum).
-  - Reruns don't re-download.
+Implemented in [`src/download/osm.py`](../src/download/osm.py). Run it with `python -m src.download.osm`.
+
+- **Baseline snapshot `2018`:** osmnx `features_from_bbox` is run with `overpass_settings` ending in `[date:"2018-01-01T00:00:00Z"]` (from `osm.snapshot_baseline`). Overpass then returns the data as it was on that date. osmnx assembles multipolygons (e.g. buildings and lakes mapped as relations).
+- **Current snapshot `current`:** the same query without `[date:]`.
+- **Layers:**
+
+  | Layer | Tags | Snapshots |
+  |---|---|---|
+  | `roads` | `highway=*` | both |
+  | `water` | `natural=water` (queried as `natural=*`, filtered locally), `waterway=*` | both |
+  | `buildings` | `building=*` | both |
+  | `protected` | `boundary=protected_area` / `national_park`, `leisure=nature_reserve` | current only (static layer) |
+
+  Each layer keeps the tag columns listed in `LAYERS` plus `osm_type` and `osm_id`.
+- **Files:** `data/raw/osm/<snapshot>/<layer>.gpkg` (EPSG:4326). Each one is recorded in `data/manifest.json` with the mirror used, tags, date, bbox, feature count and checksum.
+- **Mirrors:** tried in order from `osm.overpass_mirrors`: overpass-api.de → overpass.kumi.systems → overpass.private.coffee. Each mirror gets 2 attempts (`io_utils.retry`).
+- **Caching:** osmnx caches raw Overpass responses in `data/raw/osm/cache/`. Reruns skip any file whose checksum matches the manifest.
+- **One query per tag key, key-only for history:**
+  - Overpass history (`[date:]`) queries with a key=value filter, like `natural=water`, run through the global tag index. They fail with "Query run out of memory using about 2048 MB" on both overpass-api.de and kumi, even for a 6 km tile.
+  - Key-only queries, like `natural=*` or `highway=*`, are bounded by the bbox and take seconds.
+  - So `osm.py` queries `natural=*` and keeps `natural=water` locally (`LOCAL_FILTERS`).
+  - Per-tag feature counts go into the manifest (`n_features_by_tag`).
+- **Empty tags:**
+  - A tag that every mirror reports as empty is recorded with count 0 and skipped.
+  - osmnx reports an Overpass error the same way, so the Phase 2 gate cross-checks building and lake counts against the ohsome numbers in §3.
+- **Network note:**
+  - osmnx normally pins the Overpass host to its IPv4 address.
+  - On Harsh's connection, IPv4 to overpass-api.de times out while IPv6 works, so `osm.py` turns that pinning off and uses normal DNS resolution.
+- **Not usable as a fallback:** the ohsome geometry endpoint (`/elements/geometry`) returns 403 for public requests. Only its count / length endpoints are open.
 - **Sharing:** the 2018 snapshot is slow to query, so `data/raw/osm/` also goes on the team's shared drive. *Link: to add (H1.5).*
 - **Last resort:** if historical queries fail on every mirror, use major roads only for the validation run (they barely leak; PRD §18).
 
@@ -130,4 +154,5 @@ There is visible growth between them: **8.4 % of the land non-built in 2018 beca
 | DEM acquisition (2011–2015) predates the baseline | Copernicus DEM | Terrain is treated as static |
 | OSM completeness varies by city and over time; buildings mapped after 2018 may have existed in 2018 | Herfort et al. 2023 (literature review D2); study_area.md | AOI chosen for good 2018 coverage; caveat in limitations |
 | OSM roads more than doubled 2018 → today | §3 | 2018 snapshot for validation-run features (D8) |
-| Protected-area polygons changed (3 → 2) | §3 | Check that Bannerghatta is present (H1.4) |
+| Bannerghatta NP is tagged `boundary=national_park`, not `protected_area` | §3 (H1.4) | `national_park` added to the protected query; the Phase 2 gate checks that Bannerghatta is present |
+| osmnx returns whole features that intersect the bbox (long roads / rivers extend far beyond it) | Quick-look, 2026-10-01 | Clip to AOI + buffer in preprocessing (H2.1) |
