@@ -14,6 +14,8 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
   3. **Sign-off:** both teammates tick their name.
 - **Do not start the next phase's dependent tasks until the gate passes.** Independent tasks (e.g. report writing) may start early.
 
+**Deadline: final submission Tue 2026-10-06.** Phase dates below follow the day plan in PRD §15.
+
 **Status legend:** `- [ ]` not started · `- [~]` in progress (write `[~]` by hand) · `- [x]` done
 
 ---
@@ -22,7 +24,7 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 
 | Phase | Name | Harsh | Abhinav | Both | Gate test by | Gate passed |
 |---|---|---|---|---|---|---|
-| 0 | Setup and planning | 6 (5 done) | 4 (3 done by Harsh) | 2 | Harsh | ☐ |
+| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (sign-off pending) |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ☐ |
 | 2 | Data acquisition | 4 | 4 | 1 | Harsh | ☐ |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
@@ -40,7 +42,7 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 ## Phase 0 — Setup and planning
 
 **Goal:** a working shared repo and environment on both laptops, agreed conventions, and a chosen study area.
-**Depends on:** nothing. **Est.:** Week 1.
+**Depends on:** nothing. **Target:** Thu 2026-10-01 (done).
 
 ### Todos
 
@@ -48,14 +50,14 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 - [x] **P0.2** Add `.gitignore` (Python, data, rasters, vectors). — **Harsh**
 - [x] **P0.3** Add `docs/CLAUDE.md`, root `CLAUDE.md` pointer, `.claude/settings.json` (no AI attribution). — **Harsh**
 - [x] **P0.4** Write PRD and Tasks. — **Harsh**
-- [~] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh** · *Invite sent; waiting for Abhinav to accept and clone.*
+- [x] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh** · *Done: Abhinav is a collaborator and has merged PRs #1 and #2.*
 - [x] **P0.6** Create `environment.yml` (conda-forge, Python 3.11, all libraries from PRD §12) and `scripts/check_env.py`. — **Harsh** · PRD NFR-1, NFR-3
 - [x] **P0.7** Create the folder skeleton from PRD §11 (`src/` subpackages with `__init__.py`, `notebooks/`, `tests/unit/`, `tests/gates/`, `config/`, `outputs/`, `report/`) and `pyproject.toml` (black, ruff, pytest config). — **Abhinav** · NFR-4 · *Done by Harsh; `data/`, `outputs/`, `logs/` are git-ignored and created by `Config.ensure_dirs()`.*
 - [x] **P0.8** Set up `pre-commit` with `black`, `ruff`, `nbstripout`. — **Abhinav** · NFR-6 · *Done by Harsh; hooks run the env's own tools (plus a 1 MB file-size guard), so run `pre-commit install` inside `gis-suit`.*
 - [x] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5 · *14 areas checked with `scripts/study_area_candidates.py` (persistent 2018→2023 growth, OSM buildings in 2018 and 2026). Recommends Bengaluru South, then Hyderabad West; Pune West as fallback.*
-- [~] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Waiting for Harsh to confirm; the polygon can still be refined.*
+- [x] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Confirmed by Harsh 2026-10-01; the polygon can still be refined (PRD Q9).*
 - [x] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2 · *Done by Harsh, with 15 unit tests in `tests/unit/test_config.py`. `crs.epsg: auto` picks the UTM zone from the AOI, so P0.10 only needs the polygon + `aoi.name`.*
-- [ ] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3
+- [~] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3 · *Deadline: **final submission Tue 2026-10-06** (Harsh, recorded in PRD §15). Report format still open (Abhinav).*
 
 ### Phase 0 Gate
 
@@ -69,12 +71,13 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 
 Status on Harsh's laptop (2026-09-27): **30 passed, 5 failing**. All 5 need the AOI.
 Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 unit tests), with the Bengaluru South AOI.
+Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full suite 82 passed, 1 skipped.
 
 **Manual checklist:**
-- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Harsh: env done, rerun now that the AOI exists; Abhinav: done 2026-10-01)*
+- [x] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Abhinav and Harsh: 35 passed, 2026-10-01)*
 - [x] `pre-commit run --all-files` passes.
-- [ ] `docs/study_area.md` states the chosen AOI and the reason.
-- [ ] Deadline is recorded in PRD, and phase dates in this file are adjusted.
+- [x] `docs/study_area.md` states the chosen AOI and the reason.
+- [x] Deadline is recorded in PRD, and phase dates in this file are adjusted.
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
@@ -83,7 +86,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 1 — Literature review and data discovery
 
 **Goal:** understand prior work and lock in the datasets.
-**Depends on:** P0.10 (study area) for the coverage checks. **Est.:** Weeks 1–2.
+**Depends on:** P0.10 (study area) for the coverage checks. **Target:** Fri 2026-10-02.
 
 ### Todos
 
@@ -116,7 +119,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 2 — Data acquisition
 
 **Goal:** all raw data downloaded reproducibly and recorded in a manifest.
-**Depends on:** Phase 1 gate. **Est.:** Week 3.
+**Depends on:** Phase 1 gate. **Target:** Fri 2026-10-02.
 
 ### Todos
 
@@ -152,7 +155,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 3 — Preprocessing
 
 **Goal:** every layer is clipped, in the project CRS, aligned to one reference grid, and clean.
-**Depends on:** Phase 2 gate. **Est.:** Weeks 3–4.
+**Depends on:** Phase 2 gate. **Target:** Sat 2026-10-03.
 
 ### Todos
 
@@ -188,7 +191,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 4 — Grid and feature engineering
 
 **Goal:** one feature table with a row per grid cell and all PRD §9.3 features.
-**Depends on:** Phase 3 gate. **Est.:** Weeks 4–5.
+**Depends on:** Phase 3 gate. **Target:** Sat 2026-10-03.
 
 ### Todos
 
@@ -224,7 +227,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 5 — Land classification (clustering)
 
 **Goal:** a three-class map (built-up / forest / usable) from clustering, evaluated and explained.
-**Depends on:** Phase 4 gate. **Est.:** Weeks 5–6.
+**Depends on:** Phase 4 gate. **Target:** Sun 2026-10-04.
 
 ### Todos
 
@@ -260,7 +263,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 6 — Building similarity
 
 **Goal:** given building A, find similar locations B, plus an aggregate similarity score and an RF alternative for every usable cell.
-**Depends on:** Phase 5 gate. **Est.:** Weeks 6–7.
+**Depends on:** Phase 5 gate. **Target:** Sun 2026-10-04.
 
 ### Todos
 
@@ -296,7 +299,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 7 — Suitability mapping and validation
 
 **Goal:** final suitability classes, candidate sites, MCDA baseline, and validation metrics.
-**Depends on:** Phase 6 gate. **Est.:** Weeks 8–9.
+**Depends on:** Phase 6 gate. **Target:** Mon 2026-10-05.
 
 ### Todos
 
@@ -333,7 +336,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 8 — Visualisation, report and presentation
 
 **Goal:** polished outputs, report and slides; the repo is clean and reproducible.
-**Depends on:** Phase 7 gate (report writing can start earlier). **Est.:** Weeks 9–10.
+**Depends on:** Phase 7 gate (report writing can start earlier). **Target:** Tue 2026-10-06 (submit).
 
 ### Todos
 

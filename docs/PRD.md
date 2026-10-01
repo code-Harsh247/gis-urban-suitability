@@ -8,6 +8,7 @@
 | Team | Harsh, Abhinav |
 | Repository | https://github.com/code-Harsh247/gis-urban-suitability |
 | Study area | **Bengaluru South**, India (582 km², EPSG:32643) |
+| Deadline | **Final submission Tue 2026-10-06** |
 | Document status | v1.1, aligned with the execution plan decisions D1–D10 |
 | Created / updated | 2026-09-27 / 2026-10-01 |
 | Related docs | [execution_plan.md](execution_plan.md) (who does what, when; file contracts) · [Tasks.md](Tasks.md) (phase checklist and gates) · [study_area.md](study_area.md) |
@@ -742,28 +743,30 @@ The project is **complete** when:
 
 ## 15. Development phases and timeline
 
-Work runs as **two parallel tracks** (§16) over **ten weeks starting Mon 2026-10-05**. Adjust once the deadline is known (Q2).
+**Deadline: final submission Tue 2026-10-06** (code, report and slides). The full scope is kept.
 
-- The **week-by-week plan, milestones (M1–M4) and blocking tasks** are in [execution_plan.md §3 and §5](execution_plan.md#3-timeline).
+- Work runs as **two parallel tracks** (§16).
+- The execution plan's W1–W10 sequence is compressed into **Thu 1 – Tue 6 October**. Its order, milestones and blocking tasks are unchanged, only the dates move.
+- The **sequence, milestones (M1–M4) and blocking tasks** are in [execution_plan.md §3 and §5](execution_plan.md#3-timeline).
 - The **phase checklist and gate tests** are in [Tasks.md](Tasks.md).
 
-| Phase | Name | Weeks | Gate test by |
-|---|---|---|---|
-| 0 | Setup and planning | W1 | Harsh (done) |
-| 1 | Literature review and data discovery | W1–2 | Abhinav |
-| 2 | Data acquisition | W1–2 | Harsh |
-| 3 | Preprocessing | W2 | Abhinav |
-| 4 | Grid, features and labels | W3–4 | Harsh |
-| 5 | Land classification (clustering) | W4–5 | Abhinav |
-| 6 | Building similarity and learned models | W6–7 | Harsh |
-| 7 | Suitability, validation and sensitivity | W7–8 | Abhinav |
-| 8 | Visualisation, report and presentation | W9–10 | Harsh |
+| Phase | Name | Plan weeks | Target date | Gate test by |
+|---|---|---|---|---|
+| 0 | Setup and planning | W1 | Thu 10-01 (done) | Harsh |
+| 1 | Literature review and data discovery | W1–2 | Fri 10-02 | Abhinav |
+| 2 | Data acquisition | W1–2 | Fri 10-02 | Harsh |
+| 3 | Preprocessing | W2 | Sat 10-03 | Abhinav |
+| 4 | Grid, features and labels | W3–4 | Sat 10-03 | Harsh |
+| 5 | Land classification (clustering) | W4–5 | Sun 10-04 | Abhinav |
+| 6 | Building similarity and learned models | W6–7 | Sun 10-04 | Harsh |
+| 7 | Suitability, validation and sensitivity | W7–8 | Mon 10-05 | Abhinav |
+| 8 | Visualisation, report and presentation | W9–10 | Tue 10-06 (submit) | Harsh |
 
 **Milestones:**
-- **M1** thin slice (end W3)
-- **M2** full feature table (end W4)
-- **M3** every model writes a score file (end W7)
-- **M4** validation complete (end W8)
+- **M1** thin slice: Sat 10-03 morning
+- **M2** full feature table: Sat 10-03 evening
+- **M3** every model writes a score file: Sun 10-04 evening
+- **M4** validation complete: Mon 10-05 evening
 
 A phase is **done** only when its gate passes and both teammates sign off in Tasks.md. Each person writes the gate tests that check the *other* person's work.
 
@@ -821,7 +824,7 @@ Both tracks meet only through the contract files (§13). Each develops against t
 | Spatial autocorrelation inflates CV scores | Over-optimistic tuning | High | Spatial-block CV (2 km); headline metric is temporal, not CV |
 | GDAL / environment problems | Blocks setup | Low (both laptops working) | conda-forge env; `check_env.py` |
 | One person falls behind | Delays on the critical path | Medium | Milestones M1–M4; stub-based work; rebalance at milestone reviews |
-| Deadline shorter than 10 weeks | Incomplete deliverables | Medium | Drop in order: sensitivity → LEI breakdown → state RF → cell-size runs. Always keep clustering, similarity, change RF, MCDA, temporal validation |
+| Tight schedule (deadline 2026-10-06) | Incomplete deliverables | Medium | Full scope kept. Only if a milestone slips, drop in this order: sensitivity → LEI breakdown → state RF → cell-size runs. Always keep clustering, similarity, change RF, MCDA, temporal validation |
 
 ---
 
@@ -839,8 +842,8 @@ Both tracks meet only through the contract files (§13). Each develops against t
 
 | # | Question | Status |
 |---|---|---|
-| Q1 | Study area | **Closed:** Bengaluru South [D1] (Harsh to confirm, J1) |
-| Q2 | Submission deadline and intermediate reviews | Open (Harsh, P0.12) |
+| Q1 | Study area | **Closed:** Bengaluru South [D1], confirmed by Harsh 2026-10-01 |
+| Q2 | Submission deadline and intermediate reviews | **Closed:** final submission Tue 2026-10-06 |
 | Q3 | Report format / length required by the instructor | Open (Abhinav, P0.12) |
 | Q4 | Grid cell size | **Closed:** 100 m; 50 / 200 m in the sensitivity runs |
 | Q5 | Cropland usable or excluded? | **Closed:** usable but flagged [D10] |
@@ -902,3 +905,4 @@ Starting points. The literature review (J6) extends these to ≥ 10 papers.
 |---|---|---|---|
 | 2026-09-27 | 1.0 | Initial PRD | Harsh |
 | 2026-10-01 | 1.1 | Aligned with execution_plan decisions D1–D10 and the swapped tracks. Main changes: study area; ESRI as the LULC source for everything; years 2018–2023 with persistent labels; OSM snapshots; leakage rule D4; Euclidean similarity; change RF; LEI; contracts C1–C8; baselines-first validation. Added rules D11 (out-of-fold RF scores) and D12 (time-travel rule), pending Abhinav's agreement | Harsh |
+| 2026-10-01 | 1.1 | Phase 0 close-out: study area confirmed; deadline 2026-10-06 recorded; plan compressed into 1–6 October with full scope | Harsh |

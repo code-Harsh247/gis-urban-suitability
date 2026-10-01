@@ -13,7 +13,7 @@ How we build the project from here: who does what, in which order, and how we av
 **Status on 2026-10-01:**
 - Phase 0: environment, skeleton, config loader and pre-commit are done.
 - P0.9: study-area comparison done, see [study_area.md](study_area.md).
-- Waiting on: choosing the AOI (P0.10) and the instructor's deadline (P0.12).
+- P0.10: Bengaluru South confirmed by Harsh. P0.12: deadline is Tue 2026-10-06 (report format still open).
 
 ---
 
@@ -74,7 +74,7 @@ That's one PR each.
 
 ## 3. Timeline
 
-Ten weeks, starting **Mon 2026-10-05**. Adjust once the deadline is known (P0.12).
+**Deadline: final submission Tue 2026-10-06.** The full scope is kept: the W1–W10 sequence below is compressed into Thu 1 – Tue 6 October, in the same order. Day targets per phase and milestone are in PRD §15.
 
 **M = milestone:** a point where both tracks must have something working together.
 
@@ -148,8 +148,8 @@ These are the only places the two tracks touch.
 
 ### Joint
 
-- [~] **J1** §2 defaults adopted (Abhinav ☑ 2026-10-01) · Harsh confirms or reopens ☐ · W1 · 🔓
-- [~] **J2** AOI polygon in `config/aoi.geojson` ☑, `aoi.name` set ☑, Phase 0 gate green on Abhinav's laptop ☑ · Harsh's laptop ☐ · W1 · after J1
+- [x] **J1** §2 defaults adopted (Abhinav ☑ 2026-10-01) · Harsh confirms ☑ 2026-10-01 (study area confirmed; D11/D12 proposed as additions in PRD §9.9) · W1 · 🔓
+- [x] **J2** AOI polygon in `config/aoi.geojson` ☑, `aoi.name` set ☑, Phase 0 gate green on Abhinav's laptop ☑ · Harsh's laptop ☑ (35 passed, 2026-10-01) · W1 · after J1
 - [~] **J3** `src/features/schema.py` merged (full draft by Abhinav on `main`, 2026-10-01; **Harsh to review the vector/model half**) (contract names, `FEATURE_GROUPS`, `CONTEXT_FEATURES`, `OWN_CELL_FEATURES`, `LEAKY_FEATURES`, `MODEL_INPUTS`) · W1 day 3 · one joint PR (A0.1 + H0.1)
 - [ ] **J4** PRD updated to the §2 decisions (Abhinav writes, Harsh reviews) · W1 · after J1
 - [ ] **J5** Tasks.md updated to this plan (Harsh writes, Abhinav reviews) · W1 · after J1

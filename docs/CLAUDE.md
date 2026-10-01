@@ -12,6 +12,8 @@ Study area: **Bengaluru South** (`config/aoi.geojson`, EPSG:32643). See [study_a
 
 Team: Harsh (vector and learning track) and Abhinav (raster and similarity track).
 
+Deadline: **final submission Tue 2026-10-06**, full scope (day targets in PRD §15).
+
 ## Key docs
 
 - [PRD.md](PRD.md) — full requirements, methodology, data, validation design. Source of truth for *what* to build.
