@@ -26,7 +26,7 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 |---|---|---|---|---|---|---|
 | 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (Abhinav signed; Harsh pending) |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ✅ 14/14 (Abhinav signed; Harsh pending) |
-| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on Harsh's laptop (sign-off pending) |
+| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on both laptops (Abhinav signed; Harsh pending) |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
 | 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
 | 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
@@ -147,10 +147,10 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 
 **Manual checklist:**
 - [x] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters, Abhinav 2026-10-01: notebook 01 maps, plus landmark checks against OSM Nominatim coordinates in `scripts/verify_raw_data.py`: Madiwala Lake = water, Electronic City and Koramangala = built; pixel values equal the source COGs. OSM: 2018 vs current quick-look checked by Harsh; layers line up with the AOI.)*
-- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav: all rasters for the 3 km buffer, on a USB drive linked as `data/`. **OSM missing:** every Overpass mirror times out from Abhinav's network (2026-10-01). Needs either a rerun on another network, or Harsh to rerun for the 3 km buffer and share `data/raw/osm/` (H1.5).)*
+- [x] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav ☑ 2026-10-01: all rasters and both OSM snapshots for the 3 km buffer, on a USB drive linked as `data/`. OSM was downloaded on another network, because Overpass is blocked on the campus network. Phase 2 gate 72/72. **Harsh:** your OSM files are for the old 1 km buffer; rerun `python -m src.download.osm`.)*
 - [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav *(Abhinav: waiting for OSM data. The gate passes 40/72 here; all 32 failures need the OSM files, which Overpass can't deliver on Abhinav's network.)*
+**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate 72/72 on Abhinav's laptop; full suite 226 passed)*
 
 ---
 

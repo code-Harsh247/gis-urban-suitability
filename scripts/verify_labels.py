@@ -26,10 +26,12 @@ import sys
 import matplotlib
 
 matplotlib.use("Agg")
+import geopandas as gpd  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 import rasterio  # noqa: E402
+import shapely  # noqa: E402
 from matplotlib.colors import ListedColormap  # noqa: E402
 from rasterio.warp import transform as warp_points  # noqa: E402
 from rasterio.windows import from_bounds  # noqa: E402
@@ -37,6 +39,7 @@ from scipy import ndimage as ndi  # noqa: E402
 
 from src.config import load_config  # noqa: E402
 from src.download.lulc import esri_path  # noqa: E402
+from src.download.osm import osm_path  # noqa: E402
 from src.features import labels, schema  # noqa: E402
 from src.features.grid import lattice, xy_to_cell_id  # noqa: E402
 from src.preprocess.raster import processed_dir  # noqa: E402
@@ -113,8 +116,24 @@ def main() -> int:
             "chg_train_pos",
             "excl_wet",
             "excl_slope",
+            "excl_protected",
         )
     }
+    # OSM layers, checked with point-in-polygon on pixel centres (not rasterio.rasterize)
+    osm_water = osm_protected = None
+    wpath = osm_path(cfg, str(cfg["osm"]["snapshot_baseline"])[:4], "water")
+    if wpath.exists():
+        w_gdf = gpd.read_file(wpath)
+        keep = w_gdf.geom_type.isin(["Polygon", "MultiPolygon"])
+        if "natural" in w_gdf.columns:
+            keep &= w_gdf["natural"] == "water"
+        osm_water = shapely.union_all(w_gdf[keep].to_crs(cfg.crs).geometry.values)
+    ppath = osm_path(cfg, "current", "protected")
+    if ppath.exists():
+        p_gdf = gpd.read_file(ppath)
+        p_gdf = p_gdf[p_gdf.geom_type.isin(["Polygon", "MultiPolygon"])]
+        osm_protected = shapely.union_all(p_gdf.to_crs(cfg.crs).geometry.values)
+    offs = (np.arange(10) + 0.5) * 10.0
     with rasterio.open(processed_dir(cfg) / "slope.tif") as sds:
         for cid in ids:
             g = grid.loc[cid]
@@ -128,17 +147,17 @@ def main() -> int:
                 w |= np.isin(
                     window(esri_path(cfg, yr), x0, y0, x0 + cell, y0 + cell), labels.WET_CODES
                 )
+            px, py = np.meshgrid(x0 + offs, y0 + cell - offs)  # row 0 = north
+            if osm_water is not None:
+                w |= shapely.contains_xy(osm_water, px, py)
+            prot = shapely.contains_xy(osm_protected, px, py).mean() if osm_protected else 0.0
+            ex_prot = bool(prot > cfg["exclusion"]["max_excluded_fraction"])
             slope = sds.read(
                 1, window=from_bounds(x0, y0, x0 + cell, y0 + cell, sds.transform)
             ).mean()
             ex_wet = w.mean() > cfg["exclusion"]["max_excluded_fraction"]
             ex_slope = slope > cfg["exclusion"]["slope_max_deg"]
-            excluded = (
-                ex_wet
-                or ex_slope
-                or bool(E.loc[cid, "excl_protected"])
-                or bool(E.loc[cid, "excl_nodata"])
-            )
+            excluded = ex_wet or ex_slope or ex_prot or bool(E.loc[cid, "excl_nodata"])
             cand = b[y["baseline"]] < lo and b[y["baseline_confirm"]] < lo and not excluded
             grew = cand and b[y["latest_confirm"]] >= hi and b[y["latest"]] >= hi
             stayed = cand and b[y["latest_confirm"]] < lo and b[y["latest"]] < lo
@@ -151,6 +170,7 @@ def main() -> int:
                 "chg_train_pos": cand and b[t0] >= hi and b[t1] >= hi,
                 "excl_wet": ex_wet,
                 "excl_slope": ex_slope,
+                "excl_protected": ex_prot,
             }
             for k, v in want.items():
                 got = bool(E.loc[cid, k]) if k.startswith("excl") else bool(L.loc[cid, k])
@@ -230,6 +250,23 @@ def main() -> int:
         f"     (final mask excludes {int(fin['excluded'].sum())} vs validation "
         f"{int(excl['excluded'].sum())}; sources {val_sources})"
     )
+
+    print("4b. protected areas")
+    n_prot = int(E["excl_protected"].sum())
+    if osm_protected is not None:
+        inside = osm_protected.intersection(cfg.aoi_projected.geometry.iloc[0]).area / 1e6
+        km2 = n_prot * cell * cell / 1e6
+        check(
+            abs(km2 - inside) / max(inside, 1e-9) < 0.05,
+            f"protected cells {km2:.1f} km² vs protected area inside the AOI {inside:.1f} km²",
+        )
+        pc = grid.loc[E.index[E["excl_protected"]]]
+        near = shapely.contains_xy(osm_protected.buffer(cell), pc["x"], pc["y"]).mean()
+        check(
+            near == 1.0, f"every protected cell lies within {cell:.0f} m of the protected polygons"
+        )
+    else:
+        check(n_prot == 0, "no protected layer, so no protected exclusions")
 
     print("5. landmarks")
     for name, (lon, lat_) in {**LAKES, **CITY}.items():
