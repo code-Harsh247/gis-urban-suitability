@@ -187,11 +187,11 @@ These are the only places the two tracks touch.
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 
 **A4. Labels and masks** · W4 · P5.5, FR-8.1
-- [ ] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 % · *also OSM water polygons from H1.3 if ready: vegetated lakes (e.g. Hulimavu) show as rangeland/wetland in ESRI 2023*
-- [ ] A4.1b Add protected areas (e.g. Bannerghatta NP) to the mask · 🔒 **H1.4** · *optional: skip if not ready by the end of W4 and note it*
-- [ ] **A4.2** Candidates, growth labels (2018/19 → 2022/23), change-training positives (2018/19 → 2020/21) → real C5
-- [ ] A4.3 LEI growth type (patches ≥ 0.5 ha, 20 m buffer) → `lei_type` in C5
-- [ ] A4.4 Unit tests on a synthetic 6-year stack; label counts logged
+- [x] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 % · *also OSM water polygons from H1.3 if ready: vegetated lakes (e.g. Hulimavu) show as rangeland/wetland in ESRI 2023* · *`src/features/labels.py → exclusion_table(cfg, run)` for **two runs**: `validation` (ESRI 2018+2019 and OSM 2018 water only, time-travel rule) and `final` (2022+2023 and current OSM). Written to `data/features/exclusion_{run}.parquet` with one column per rule. **Harsh (H4.4): use `exclusion_table(cfg, run)` for C7.** Real data: 1,921 excluded in validation (1,450 wet, 472 steep), 2,138 in final. Hulimavu is caught by the 2018/19 water rule.*
+- [~] A4.1b Add protected areas (e.g. Bannerghatta NP) to the mask · 🔒 **H1.4** · *optional: skip if not ready by the end of W4 and note it* · *Code done, together with OSM water: both are used when `data/raw/osm/...` exists, and skipped with a warning when it doesn't. **Not yet applied to the real labels:** Overpass is unreachable from Abhinav's network (2026-10-01), so the OSM files aren't here. Rerun `python -m src.features.labels` once they are.*
+- [x] **A4.2** Candidates, growth labels (2018/19 → 2022/23), change-training positives (2018/19 → 2020/21) → real C5 · *19,656 candidates → 1,129 grew, 15,599 stayed non-built, **2,928 ambiguous** (partly grown; left out of validation, PRD §9.6), 355 change positives. Prevalence 6.7 %. **Contract change:** C5 gained a boolean `ambiguous` column (schema + stubs updated).*
+- [x] A4.3 LEI growth type (patches ≥ 0.5 ha, 20 m buffer) → `lei_type` in C5 · *1,038 adjacent, **91 outlying** (few, as the prototype predicted: report descriptively). Agrees with an exact per-patch ring for 239/241 checked cells; the fast version shares rings where two patches touch.*
+- [x] A4.4 Unit tests on a synthetic 6-year stack; label counts logged · *done check: `scripts/verify_labels.py`*
 
 **A5. Building similarity** · W6–7 · P6.1, P6.3, P6.4, P6.7
 - [ ] A5.1 `src/similarity/profiles.py` from `MODEL_INPUTS` only; raises on own-cell or leaky features · 🔓 *(stub)*
