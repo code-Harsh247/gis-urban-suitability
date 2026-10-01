@@ -20,12 +20,12 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 
 | # | Paper | Year | Study area | Method | Validation | Relevance to us | By |
 |---|---|---|---|---|---|---|---|
-| A1 | Malczewski, *GIS-based land-use suitability analysis: a critical overview* | 2004 | — (review) | Review of GIS-MCDA suitability methods | — | Defines the MCDA approach our baseline follows | Abhinav *(suggested)* |
-| A2 | Collins et al., *Land-use suitability analysis in the United States: historical development …* | 2001 | USA (review) | History of overlay / GIS suitability analysis | — | Background for the introduction | Abhinav *(suggested)* |
-| A3 | Mosadeghi et al., *Comparison of Fuzzy-AHP and AHP … urban land-use planning* | 2015 | Gold Coast, Australia | GIS-MCDA with AHP vs Fuzzy-AHP weights | Comparison of the two outputs | Shows how sensitive results are to the weighting: the subjectivity argument | Abhinav *(suggested)* |
-| A4 | Parry et al., *GIS based land suitability analysis using AHP … Srinagar and Jammu* | 2018 | Srinagar, Jammu (India) | GIS-AHP urban suitability | *(to verify)* | Typical Indian urban MCDA study we compare against | Abhinav *(suggested)* |
-| A5 | Ramachandra et al., *Monitoring urbanization and its implications in a mega city from space* | 2015 | Bengaluru (India) | Multi-date remote-sensing LULC change + landscape metrics | *(to verify)* | Context for our study area: growth, loss of vegetation and lakes | Abhinav *(suggested)* |
-| A6 | Bharath et al., *Modelling urban dynamics in rapidly urbanising Indian cities* | 2018 | Indian cities *(which: to verify)* | Urban growth modelling | *(to verify)* | Indian growth-modelling context (optional) | Abhinav *(suggested)* |
+| A1 | Malczewski, *GIS-based land-use suitability analysis: a critical overview* | 2004 | — (review) | Review of GIS suitability methods: overlay, MCDA, AI-based | — | Defines the MCDA approach our baseline follows; names weight subjectivity as a core weakness | Abhinav |
+| A2 | Collins, Steiner & Rushman, *Land-use suitability analysis in the United States: historical development …* | 2001 | USA (review) | History of suitability analysis from McHarg-style hand overlays to GIS | — | Background for the introduction | Abhinav |
+| A3 | Mosadeghi et al., *Comparison of Fuzzy-AHP and AHP … urban land-use planning* | 2015 | North-east Gold Coast, Australia | Spatial MCDA weighted with AHP vs Fuzzy-AHP | The two outputs compared | Same option ranking, different zone extents: the weighting method changes *where*, which is the subjectivity argument | Abhinav |
+| A4 | Parry, Ganaie & Bhat, *GIS based land suitability analysis using AHP … Srinagar and Jammu* | 2018 | Srinagar, Jammu (India) | GIS-AHP on slope, altitude, LULC, existing amenities; municipal wards | None reported | Typical Indian MCDA study: few criteria, expert weights, no validation | Abhinav |
+| A5 | Ramachandra, Aithal & Sanna, *Insights to urban dynamics through landscape spatial pattern analysis* | 2012 | **Bangalore** (India) | Landsat 1973–2010 LULC change + landscape metrics | Classification accuracy *(values to verify)* | Context for our study area: built-up +584 %, vegetation −66 %, water bodies −74 % over four decades | Abhinav |
+| A6 | Bharath, Chandan, Vinay & Ramachandra, *Modelling urban dynamics in rapidly urbanising Indian cities* | 2018 | Delhi, Mumbai, Pune, Chennai, Coimbatore | CA-Markov with growth agents (soft computing) | *(to verify)* | Indian growth-modelling context: agents (industry, infrastructure) drive growth more than biophysical factors | Abhinav |
 | H1 | Li et al., *Spatial suitability evaluation … random forest: Yulin* | 2024 | Yulin, China | RF on built-up (presence) vs protected land, 30 m cells, 25 factors | Random 70/30 split, AUC 0.99 (urban) | Closest prior work; shows the own-cell leakage and random-split inflation we avoid | Harsh |
 | H2 | Wang et al., *Urban land expansion … diffusional and aggregated growth: Luoyang* | 2021 | Luoyang, China | MaxEnt (presence-only) + category-selected CA | 2009 → 2018 simulation, Kappa 0.78 | Presence-only framing like ours; aggregated vs diffusional = our LEI split | Harsh |
 | H3 | Ahmadlou et al., *Modeling urban dynamics using random forest: ROC and TOC* | 2016 | *(to verify)* | RF suitability for urban change, Landsat 1985 / 2000 / 2015 | Against observed change; ROC AUC 82.48 % + TOC | Same temporal-validation design; backs ROC + TOC (D7) | Harsh |
@@ -43,56 +43,102 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 
 ## Abhinav: GIS / MCDA and LULC-based urban growth (P1.2)
 
-> **Suggested by Harsh (2026-10-01), for Abhinav to review.** The citations are checked against Crossref or publisher pages. The method / validation details below are from the abstracts only, so read each paper and fill in or correct the fields before ticking P1.2. Swap any paper for a better one.
+> **Reviewed by Abhinav (2026-10-01)** from Harsh's suggestions. Every citation was checked against Crossref / Europe PMC / OpenAlex; details come from the source named in each entry (**Source:**).
+> - **Correction:** the suggested A5 (Ramachandra, Bharath & Sowmyashree 2015, *J. Env. Mgmt* 148, 67–81) studies **Delhi**, not Bengaluru: its abstract says *"This communication quantifies the urbanisation and associated growth pattern in Delhi"*. It was replaced by a Bangalore paper from the same IISc group (new A5).
+> - A6 also does **not** include Bengaluru.
+> - Items marked *(to verify)* need the full text (available through the institute library) before they're cited in the report.
 
 ### A1. Malczewski (2004): GIS-MCDA review
 
-- **Citation:** Malczewski, J. (2004). *GIS-based land-use suitability analysis: a critical overview.* Progress in Planning, 62(1), 3–65.
+- **Citation:** Malczewski, J. (2004). *GIS-based land-use suitability analysis: a critical overview.* Progress in Planning, 62(1), 3–65. https://doi.org/10.1016/j.progress.2003.09.002
 - **Study area:** none (review).
-- **Method:** reviews GIS-based land-use suitability approaches: overlay, MCDA and AI methods.
-- **Relevance:** the standard reference for the MCDA framework our baseline (`mcda`, FR-7.1) follows. It also discusses the subjectivity of criterion weights, which our data-driven models aim to reduce.
-- **To fill (Abhinav):** key findings, typical criteria and weighting methods.
+- **Data:** none (review of the literature).
+- **Method:** reviews GIS-based land-use suitability analysis in three groups:
+  1. computer-assisted overlay mapping (Boolean and weighted overlay);
+  2. multicriteria decision analysis (weighted linear combination, AHP-derived weights, ideal-point methods);
+  3. "soft computing" / AI approaches (fuzzy logic, neural networks, cellular automata, genetic algorithms).
+- **Criteria / weights:** criteria are problem-specific; weights usually come from expert judgement (rating, ranking, pairwise comparison).
+- **Validation:** the review notes that suitability maps are rarely validated against outcomes.
+- **Key findings:** GIS made suitability analysis routine, but results depend heavily on subjective choices (criteria, standardisation, weights) and on data uncertainty. Methods for handling that uncertainty and for involving stakeholders are the main open problems.
+- **Source:** the abstract isn't openly available; the summary follows how the paper is widely cited *(to verify against the full text)*.
+- **Relevance:**
+  - The standard reference for the MCDA framework our baseline (`mcda`, FR-7.1) follows.
+  - Its point that weights are subjective and results rarely validated is exactly what our design answers: learned scores plus temporal validation against real growth.
 
 ### A2. Collins, Steiner & Rushman (2001): history of suitability analysis
 
-- **Citation:** Collins, M. G., Steiner, F. R. & Rushman, M. J. (2001). *Land-use suitability analysis in the United States: historical development and promising technological achievements.* Environmental Management. https://doi.org/10.1007/s002670010247
+- **Citation:** Collins, M. G., Steiner, F. R. & Rushman, M. J. (2001). *Land-use suitability analysis in the United States: historical development and promising technological achievements.* Environmental Management, 28(5), 611–621. https://doi.org/10.1007/s002670010247
 - **Study area:** USA (review).
-- **Method:** traces suitability analysis from hand-drawn map overlays to GIS-based methods.
-- **Relevance:** background and history for the report introduction.
-- **To fill (Abhinav):** key findings.
+- **Data:** none (historical review).
+- **Method:** traces land-use suitability analysis (LUSA) through **six eras**, from hand-drawn overlays (popularised by McHarg's *Design with Nature*, 1969) to computer- and GIS-based methods.
+- **Key findings:** the core idea has stayed the same (map factors, rate them by suitability, overlay them into a composite), while the tools have moved from transparent hand overlays to GIS. The authors point to further technology (e.g. decision-support and artificial-intelligence tools) as promising.
+- **Validation:** — (review).
+- **Source:** bibliographic record + summaries of the paper in later literature (abstract withheld by the publisher) *(eras: to verify against the full text)*.
+- **Relevance:** history for the report introduction. Our project is a "next era" step: the factor map is learned from where development actually happened.
 
 ### A3. Mosadeghi et al. (2015): AHP vs Fuzzy-AHP for urban land-use planning
 
-- **Citation:** Mosadeghi, R., Warnken, J., Tomlinson, R. & Mirfenderesk, H. (2015). *Comparison of Fuzzy-AHP and AHP in a spatial multi-criteria decision making model for urban land-use planning.* Computers, Environment and Urban Systems, 49, 54–65.
-- **Study area:** north-east Gold Coast, Queensland, Australia.
-- **Method:** a spatial MCDA for urban land-use planning, weighted with AHP and with Fuzzy-AHP, and the outcomes compared.
-- **Relevance:** shows how the choice of weighting method changes an MCDA result. That supports our point that hand-set weights are subjective, and it's a reference for our AHP consistency-ratio check.
-- **To fill (Abhinav):** criteria used, size of the differences found.
+- **Citation:** Mosadeghi, R., Warnken, J., Tomlinson, R. & Mirfenderesk, H. (2015). *Comparison of Fuzzy-AHP and AHP in a spatial multi-criteria decision making model for urban land-use planning.* Computers, Environment and Urban Systems, 49, 54–65. https://doi.org/10.1016/j.compenvurbsys.2014.10.001
+- **Study area:** north-east Gold Coast, Queensland, Australia (large-scale urban planning scenario).
+- **Data:** spatial planning criteria layers *(full list: to verify)*.
+- **Method:** the same spatial MCDA model run with **AHP** and with **Fuzzy-AHP** weights; the land-use zones they produce are compared.
+- **Validation:** comparison of the two outputs (no test against real outcomes).
+- **Key findings:**
+  - The two methods agree on **which** development options rank best.
+  - The **spatial extents** of the selected zones differ.
+  - The authors' advice: plain AHP is enough to pick options early on; to draw boundaries, combine two or more MCDA techniques (e.g. their intersection).
+- **Source:** publisher page and summaries of the abstract.
+- **Relevance:** direct evidence that the weighting method alone changes *where* an MCDA puts development, which is the subjectivity our data-driven scores avoid. Also a reference for our AHP consistency-ratio check (FR-7.1).
 
 ### A4. Parry, Ganaie & Bhat (2018): GIS-AHP urban suitability, Srinagar and Jammu
 
 - **Citation:** Parry, J. A., Ganaie, S. A. & Bhat, M. S. (2018). *GIS based land suitability analysis using AHP model for urban services planning in Srinagar and Jammu urban centers of J&K, India.* Journal of Urban Management, 7(2), 46–56. https://doi.org/10.1016/j.jum.2018.05.002
 - **Study area:** Srinagar and Jammu, India.
-- **Method:** GIS overlay with AHP weights for urban services planning.
-- **Relevance:** a typical Indian urban MCDA study, close to what our MCDA baseline reproduces. Useful for listing the criteria and weights that Indian studies use.
-- **To fill (Abhinav):** criteria, weights, validation (if any).
-
-### A5. Ramachandra, Bharath & Sowmyashree (2015): Bengaluru urbanisation from space
-
-- **Citation:** Ramachandra, T. V., Bharath, A. H. & Sowmyashree, M. V. (2015). *Monitoring urbanization and its implications in a mega city from space: spatiotemporal patterns and its indicators.* Journal of Environmental Management, 148, 67–81.
-- **Study area:** Bengaluru, India.
-- **Method:** multi-date remote-sensing land-use change with spatial / landscape metrics.
+- **Data:** slope and altitude (DEM), land use / land cover, and the existing status of urban amenities, per **municipal ward**.
+- **Method:** AHP-weighted overlay of geo-physical and socio-economic criteria to find land suitable for new urban amenities (services).
+- **Criteria:** slope, altitude, land use / land cover, existing amenity status *(AHP weights and consistency ratio: to verify in the full text)*.
+- **Validation:** none reported in the abstract.
+- **Key findings:** both cities grew fast over the last 30 years, leading to leap-frog development and uneven amenities; the AHP maps show where amenities are lacking and where they could go.
+- **Source:** full abstract (via OpenAlex); the paper is open access.
 - **Relevance:**
-  - Context for our **study area**: how fast Bengaluru has grown and its loss of vegetation and water bodies (lakes / tanks).
-  - That loss is why our water mask and protected-area mask matter.
-- **To fill (Abhinav):** the periods covered, growth figures, main findings.
+  - A typical Indian urban MCDA study: a handful of criteria, expert weights, ward-level units, **no validation**. That's the "classic method" our MCDA baseline reproduces.
+  - Slope and LULC are shared with our feature set; altitude is in our terrain group.
+
+### A5. Ramachandra, Aithal & Sanna (2012): Bangalore urban dynamics from landscape patterns
+
+- **Citation:** Ramachandra, T. V., Aithal, B. H. & Sanna, D. D. (2012). *Insights to urban dynamics through landscape spatial pattern analysis.* International Journal of Applied Earth Observation and Geoinformation, 18, 329–343. https://doi.org/10.1016/j.jag.2012.03.005
+- **Study area:** **Bangalore (Bengaluru)**, India: the city and its surroundings.
+- **Data:**
+  - Landsat MSS (57.5 m) for 1973;
+  - Landsat TM / ETM+ (28.5 m) for 1992, 1999, 2002, 2006 and 2010;
+  - Survey of India topographic sheets, BBMP ward boundaries, 2001 census population, GPS ground control.
+- **Method:** multi-date land-use classification, then landscape (spatial pattern) metrics to describe how the urban form changed *(classifier and metric list: to verify)*.
+- **Validation:** classification accuracy assessment *(values to verify)*.
+- **Key findings:**
+  - Built-up area grew **584 %** over the four decades, while **vegetation fell 66 %** and **water bodies 74 %**.
+  - Growth of built-up area per period: 342.83 % (1973–1992), 129.56 % (1992–1999), 106.7 % (1999–2002), 114.51 % (2002–2006), 126.19 % (2006–2010).
+- **Source:** the authors' open online version of the paper (IISc Energy & Wetlands Research Group).
+- **Relevance:**
+  - Context for **our study area**: Bengaluru has grown fast for decades, mostly at the expense of vegetation and lakes / tanks.
+  - That's why our exclusion mask matters (water, vegetated lakes such as Hulimavu, the Bannerghatta forest), and why there's enough growth to validate against.
+
+**Replaced suggestion (not used):** Ramachandra, T. V., Bharath, A. H. & Sowmyashree, M. V. (2015). *Monitoring urbanization and its implications in a mega city from space.* J. Environmental Management, 148, 67–81. https://doi.org/10.1016/j.jenvman.2014.02.015. It studies **Delhi** (four decades, zones and 1 km concentric circles, Shannon's entropy), so it's not context for Bengaluru.
 
 ### A6. Bharath, Chandan, Vinay & Ramachandra (2018): urban dynamics in Indian cities (optional)
 
 - **Citation:** Bharath, H. A., Chandan, M. C., Vinay, S. & Ramachandra, T. V. (2018). *Modelling urban dynamics in rapidly urbanising Indian cities.* The Egyptian Journal of Remote Sensing and Space Science, 21(3), 201–210. https://doi.org/10.1016/j.ejrs.2017.08.002
-- **Study area:** rapidly urbanising Indian cities *(check whether Bengaluru is included)*.
-- **Method:** urban growth modelling *(model type to verify)*.
-- **Relevance:** Indian growth-modelling context; optional if A1–A5 are enough.
+- **Study area:** five Indian mega cities: **Delhi, Mumbai, Pune, Chennai and Coimbatore** (Bengaluru is not included).
+- **Data:** multi-date land-use maps covering about four decades, plus growth "agents" (industrial, infrastructural, socio-economic and biophysical factors).
+- **Method:** **CA-Markov** (cellular automata + Markov chain) with agent-based weighting of the growth drivers through soft-computing techniques; future growth visualised for each city.
+- **Validation:** *(to verify: the abstract reports no accuracy figures)*.
+- **Key findings:**
+  - Industrial, infrastructural and socio-economic factors influence urban growth **more than biophysical factors**.
+  - Growth concentrates in urban corridors, industrial areas and zones earmarked for development.
+- **Source:** full abstract (via Semantic Scholar); the paper is open access.
+- **Relevance:**
+  - Indian growth-modelling context, from the same IISc group as A5.
+  - Its finding that infrastructure-type drivers dominate matches our feature design (roads and nearby built-up as the main context features, terrain secondary). It also fits our prototype, where the near-built group carried most of the signal.
+  - Like the CA models in H2/H4, it simulates *when*; we only rank *where* (PRD §3.2).
 
 *Also cited in the PRD (§22), for reference: Saaty (1980), FAO (1976), Karra et al. (2021).*
 
