@@ -167,9 +167,9 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 - [x] **P3.4** Write `src/preprocess/vector.py`: reproject, clip, fix invalid geometries (`make_valid`), drop empties, explode multi-parts where needed. — **Abhinav** · FR-3.4 · *`python -m src.preprocess.vector`: reproject, clip to the reference grid, `make_valid`, drop empties, explode lines → `data/processed/osm/<snapshot>/<layer>.gpkg`. Checked by `scripts/verify_vectors.py`: drivable road length is conserved exactly after clipping; layers line up with ESRI within one pixel.*
 - [x] **P3.5** Classify roads into `major` / `minor` by `highway` tag (PRD FR-3.5); drop footpaths / tracks if configured. — **Abhinav** · FR-3.5 · *Major = motorway–secondary + links, minor = tertiary, residential, unclassified, service, living_street, road; tracks dropped unless `vector.keep_tracks`. 2018: 760 km major / 5,401 km minor. **2018 major roads in the AOI: 448 km, matching ohsome's 448 km.***
 - [x] **P3.6** Clean buildings: remove tiny (< 10 m²) and huge outlier footprints; compute centroid, area and `building` type; dedupe fallback + OSM footprints if both are used. — **Abhinav** · *Drop < 10 m² and > 100,000 m² (largest real footprint 70,584 m²); add area, centroid, type and `cell_id` → C6. **2018: 151,257 buildings in AOI cells vs ohsome 151,374 (−0.1 %)**; current 192,727. No fallback dataset, so no deduplication needed.*
-- [ ] **P3.7** Create `notebooks/02_preprocessing.ipynb`: before/after plots and a table of CRS, resolution, shape and nodata % per layer. — **Abhinav** · FR-10.1
+- [x] **P3.7** Create `notebooks/02_preprocessing.ipynb`: before/after plots and a table of CRS, resolution, shape and nodata % per layer. — **Abhinav** · FR-10.1 · *`notebooks/02_preprocessing.ipynb`: runs the preprocessing (skips existing outputs), a table of every processed layer (all 9 rasters on the reference grid with 0 % nodata; 7 vector layers in EPSG:32643), before/after plots and vector counts. Runs end to end.*
 - [~] **P3.8** Unit tests on synthetic data: reprojection keeps category values, slope of a known plane equals the expected angle, road classification mapping. — **Both** (Harsh: raster/terrain tests, Abhinav: vector tests) · *Vector tests done: `tests/unit/test_preprocess_vector.py` (19). Raster / terrain tests done in A2: `tests/unit/test_preprocess_raster.py`.*
-- [ ] **P3.9** Visual overlay check in the notebook: roads, water and buildings drawn over LULC line up correctly (no shifts). — **Both**
+- [x] **P3.9** Visual overlay check in the notebook: roads, water and buildings drawn over LULC line up correctly (no shifts). — **Both** · *Notebook 02 §4 + `outputs/figures/verify_vectors*.png`: roads, lakes, buildings and Bannerghatta line up with ESRI. At Madiwala Lake the OSM outline (and its island) matches the ESRI water / tree pixels. The ~5–10 m OSM vs Sentinel-2 offset is in the source data (under one pixel). Checked by Abhinav; Harsh to review.*
 
 ### Phase 3 Gate
 
@@ -182,9 +182,9 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 - [ ] Nodata share within the AOI is < 5 % for every raster.
 
 **Manual checklist:**
-- [ ] Overlay plot (P3.9) reviewed by both: no misalignment visible.
-- [ ] Slope map looks sensible (hills steep, plains flat).
-- [ ] ESRI → WorldCover class mapping documented.
+- [~] Overlay plot (P3.9) reviewed by both: no misalignment visible. *(Abhinav ☑; Harsh ☐)*
+- [x] Slope map looks sensible (hills steep, plains flat). *(Steep only in the Bannerghatta hills (south-west); lakes 0°, the dense city under 2°: `scripts/verify_preprocessed.py`)*
+- [x] ESRI → WorldCover class mapping documented. *(`docs/data_sources.md` §6, `harmonise_worldcover`)*
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
