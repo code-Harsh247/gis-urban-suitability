@@ -109,7 +109,7 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network). The gate was mutation-tested: 7 deliberate breakages of the docs (9 papers, 4 A-papers, synthesis unwritten, missing detail entry, missing licence / dataset / access method) were all caught.
 
 **Manual checklist:**
-- [ ] Each teammate has read the other's paper summaries.
+- [~] Each teammate has read the other's paper summaries. *(Abhinav ☑ 2026-10-01: read and verified H1–H10, D1–D2; H2, H3, H5 and H8 checked against full texts, their "to verify" fields filled. Harsh ☐: A1–A6.)*
 - [x] The synthesis section clearly states what our project adds. *(Combined conclusion, points 1–4; Harsh to confirm at sign-off.)*
 - [x] Building data source decided (OSM only, or OSM + fallback). *(OSM only)*
 - [x] Temporal validation years fixed in `config.yaml`.

@@ -28,12 +28,12 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 | A6 | Bharath, Chandan, Vinay & Ramachandra, *Modelling urban dynamics in rapidly urbanising Indian cities* | 2018 | Delhi, Mumbai, Pune, Chennai, Coimbatore | CA-Markov with growth agents (soft computing) | *(to verify)* | Indian growth-modelling context: agents (industry, infrastructure) drive growth more than biophysical factors | Abhinav |
 | H1 | Li et al., *Spatial suitability evaluation … random forest: Yulin* | 2024 | Yulin, China | RF on built-up (presence) vs protected land, 30 m cells, 25 factors | Random 70/30 split, AUC 0.99 (urban) | Closest prior work; shows the own-cell leakage and random-split inflation we avoid | Harsh |
 | H2 | Wang et al., *Urban land expansion … diffusional and aggregated growth: Luoyang* | 2021 | Luoyang, China | MaxEnt (presence-only) + category-selected CA | 2009 → 2018 simulation, Kappa 0.78 | Presence-only framing like ours; aggregated vs diffusional = our LEI split | Harsh |
-| H3 | Ahmadlou et al., *Modeling urban dynamics using random forest: ROC and TOC* | 2016 | *(to verify)* | RF suitability for urban change, Landsat 1985 / 2000 / 2015 | Against observed change; ROC AUC 82.48 % + TOC | Same temporal-validation design; backs ROC + TOC (D7) | Harsh |
+| H3 | Ahmadlou et al., *Modeling urban dynamics using random forest: ROC and TOC* | 2016 | Rasht, Gilan, Iran (~180 km²) | RF suitability for urban change, Landsat 1985 / 2000 / 2015 | Against observed change; ROC AUC 82.48 % + TOC | Same temporal-validation design; backs ROC + TOC (D7) | Harsh |
 | H4 | Liu et al., *A future land use simulation model (FLUS)* | 2017 | China | ANN probability-of-occurrence + CA | Simulated 2000 → 2010 vs actual; beats CLUE-S and CA | Standard reference for "learned suitability surface" | Harsh |
-| H5 | Pijanowski et al., *Land Transformation Model* | 2002 | *(to verify)* | ANN + GIS on distance and neighbourhood predictors | Against later observed change *(to verify)* | Ancestor of our context-profile features | Harsh |
+| H5 | Pijanowski et al., *Land Transformation Model* | 2002 | Grand Traverse Bay Watershed, Michigan, USA | ANN + GIS on distance and neighbourhood predictors, 100 m cells | 46 % of the 1980–90 changed cells predicted (same period, not independent) | Ancestor of our context-profile features | Harsh |
 | H6 | Roberts et al., *Cross-validation strategies for data with … spatial … structure* | 2017 | — (methods review) | Blocked cross-validation | Shows random CV underestimates error on structured data | Basis for spatial blocks (D11, FR-6.8) | Harsh |
 | H7 | Ploton et al., *Spatial validation reveals poor predictive performance of large-scale ecological mapping models* | 2020 | Central Africa | RF biomass mapping | Random vs spatial CV | Concrete case of spatial leakage inflating accuracy | Harsh |
-| H8 | Liu et al., *A new landscape index for quantifying urban expansion …* (LEI) | 2010 | Dongguan, China *(to verify)* | Landscape Expansion Index for growth patches | — | Source of our growth-type labels (`lei_type`) | Harsh |
+| H8 | Liu et al., *A new landscape index for quantifying urban expansion …* (LEI) | 2010 | Dongguan, Guangdong, China (1988–2006) | Landscape Expansion Index for growth patches | — | Source of our growth-type labels (`lei_type`) | Harsh |
 | H9 | Pontius & Si, *The total operating characteristic …* (TOC) | 2014 | — (methods) | TOC curve | — | Source of the TOC metric (D7) | Harsh |
 | H10 | Valavi et al., *blockCV: … spatially or environmentally separated folds …* | 2019 | — (methods / software) | Spatial / environmental blocking for k-fold CV | — | Practical reference for our 2 km spatial blocks | Harsh |
 | D1 | Venter et al., *Global 10 m LULC datasets: a comparison of Dynamic World, World Cover and Esri Land Cover* | 2022 | Global | Accuracy comparison against ground truth | Overall accuracy per product and class | Backs D2 (ESRI for everything); ESRI over-estimates scrub (the Bannerghatta issue) | Harsh (data) |
@@ -146,6 +146,8 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 
 ## Harsh: machine learning, presence-based suitability and validation (P1.3)
 
+> **Read and reviewed by Abhinav (2026-10-01)** (Phase 1: each teammate reads the other's summaries). H2, H3 and H5 were checked against their full texts, H8 against the authors' PDF. Their "to verify" fields are now filled. One correction in H5: the 3 × 3 to 9 × 9 windows are a goodness-of-fit metric, not predictors. H1, H4, H6, H7, H9, H10, D1 and D2 were read as summaries; no issues found.
+
 ### H1. Li et al. (2024): random forest suitability, Yulin
 
 - **Citation:** Li, A., Zhang, Z., Hong, Z., Liu, L., Liu, L., Ashraf, T. & Liu, Y. (2024). *Spatial suitability evaluation based on multisource data and random forest algorithm: a case study of Yulin, China.* Frontiers in Environmental Science, 12. https://doi.org/10.3389/fenvs.2024.1338931
@@ -168,9 +170,9 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 
 - **Citation:** Wang, R., He, W., Wu, D., Zhang, L. & Li, Y. (2021). *Urban land expansion simulation considering the diffusional and aggregated growth simultaneously: a case study of Luoyang City.* Sustainability, 13(17), 9781. https://doi.org/10.3390/su13179781
 - **Study area:** Luoyang, Henan, China.
-- **Data:** urban land 2009 and 2018, plus driving factors *(factor list to verify)*.
+- **Data:** built-up land 2009–2018 from China's second national land survey (vector). **8 driving factors:** distance to original built-up land, main roads, the political centre, the commercial centre, the airport and the high-speed rail station; GDP density; density of firms added 2009–2018.
 - **Method:** a **MaxEnt** model (maximum entropy, from species-distribution modelling) uses existing urban land as **presence-only** data to estimate a probability surface. A category-selected CA (MaxEnt-CSCA) then simulates two growth types at the same time: **aggregated** (next to existing urban land) and **diffusional** (scattered).
-- **Validation:** simulated 2009 → 2018 against actual 2018. Overall Kappa 0.78. Aggregated growth simulated with 47.40 % accuracy, diffusional with 37.13 %. Projection to 2035.
+- **Validation:** simulated 2009 → 2018 against actual 2018. Overall accuracy 87.65 %, Kappa 0.78 (Base-CA 0.71, MaxEnt-CA 0.74). Aggregated growth simulated with 47.40 % accuracy. The abstract gives 37.13 % for diffusional growth, the results section 34.13 % (an inconsistency in the paper). Projection to 2035.
 - **Key findings:** treating the two growth types separately helps. Diffusional growth is much harder to predict than aggregated growth.
 - **Relevance to us:**
   - **Same framing** as our similarity idea: "a building exists at A, so find places like A" is a presence-only problem.
@@ -180,15 +182,16 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 ### H3. Ahmadlou et al. (2016): random forest with ROC and TOC
 
 - **Citation:** Ahmadlou, M., Delavar, M. R., Shafizadeh-Moghadam, H. & Tayyebi, A. (2016). *Modeling urban dynamics using random forest: implementing ROC and TOC for model evaluation.* International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, XLI-B2, 285–290. https://isprs-archives.copernicus.org/articles/XLI-B2/285/2016/
-- **Study area:** *(to verify)*.
-- **Data:** multi-temporal Landsat imagery, 1985, 2000 and 2015. Predictor list *(to verify)*.
+- **Study area:** Rasht, capital of Gilan Province, Iran (~180 km², Caspian coast).
+- **Data:** Landsat TM / ETM+ for 1985, 2000 and 2015, classified into 5 classes (Kappa 0.86–0.88), 30 m. **11 predictors:** distance to agriculture, sea, built-up, rivers, forest and roads; DEM, slope, aspect; easting and northing.
 - **Method:** a random forest produces a suitability map for land-use change to urban, with variable importance reported.
-- **Validation:** the suitability map is overlaid with the map of **observed later change**. ROC AUC 82.48 %, complemented by the **TOC** (total operating characteristic).
+- **Validation:** calibrated on 1985 → 2000 change, tested on 2000 → 2015. The top 68,313 cells (= the observed amount of change) contained 44,476 real changes (65 %). ROC AUC 82.48 %, complemented by the **TOC** (total operating characteristic).
 - **Key findings:** RF gives a well-performing change-suitability surface. TOC adds information that ROC hides: how many cells are flagged at each threshold.
 - **Relevance to us:**
   - The **same validation design** as ours: build the score at an earlier date, test it against change that happened afterwards.
   - It supports reporting **TOC next to ROC** (D7, FR-8.3). Cite it with Pontius & Si (2014).
   - Its AUC of about 0.82 gives a realistic reference level for temporal validation, compared with the 0.99 of random-split studies such as H1.
+  - Caution: easting and northing are among its strongest predictors. Raw coordinates memorise *where* growth happened in the training period; we don't use them.
 
 ### H4. Liu et al. (2017): FLUS
 
@@ -208,10 +211,11 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 ### H5. Pijanowski et al. (2002): Land Transformation Model
 
 - **Citation:** Pijanowski, B. C., Brown, D. G., Shellito, B. A. & Manik, G. A. (2002). *Using neural networks and GIS to forecast land use changes: a Land Transformation Model.* Computers, Environment and Urban Systems, 26(6), 553–575. https://doi.org/10.1016/S0198-9715(01)00015-1
-- **Study area:** *(to verify; a Michigan, USA watershed)*.
-- **Data and features:** distance to roads, rivers and existing urban land, plus **neighbourhood window** predictors *(3 × 3 to 9 × 9 cells: to verify in the full text)*.
+- **Study area:** Grand Traverse Bay Watershed, Michigan, USA (six counties). 1980 land use rasterised at **100 × 100 m**, the same cell size as ours.
+- **Data and features:** **10 predictors:** agricultural density within 1 km (a neighbourhood feature); distance to highways, county roads, residential streets, inland lakes, the Lake Michigan shore, rivers, 1980 urban land and recreation sites; "quality of views" from the DEM. Exclusion zones (urban, water, wetlands, public land) are multiplied into one mask.
+  - **Correction:** the 3 × 3 to 9 × 9 windows in the paper are its *scalable-window goodness-of-fit metric*, not predictors.
 - **Method:** a GIS-coupled artificial neural network learns which cell conditions precede conversion to urban.
-- **Validation:** against observed later land-use change *(metric and values to verify)*.
+- **Validation:** the top 2,073 cells (= observed 1980–1990 change in Grand Traverse County) contained 941 real changes (**46 %**), rising to 65 % within a 1 km window. Training used every other cell of the **same** period and county, so this is not an independent forward test. Variable importance by dropping one predictor at a time.
 - **Key findings:** an early demonstration that a neural network on simple GIS predictors can forecast where land changes.
 - **Relevance to us:** the classic ancestor of our **context-profile** approach. Distances plus neighbourhood windows correspond to our distance features plus 250 / 500 m ring fractions.
 
@@ -238,10 +242,15 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 ### H8. Liu et al. (2010): Landscape Expansion Index (LEI)
 
 - **Citation:** Liu, X., Li, X., Chen, Y., Tan, Z., Li, S. & Ai, B. (2010). *A new landscape index for quantifying urban expansion using multi-temporal remotely sensed data.* Landscape Ecology, 25(5), 671–682. https://doi.org/10.1007/s10980-010-9454-5
-- **Study area:** *(to verify; a Chinese city)*.
-- **Method:** the **LEI** scores each new urban patch by how much of a buffer around it overlaps existing urban land. This sorts growth into **infilling**, **edge-expansion** and **outlying**.
+- **Study area:** Dongguan, Guangdong, China, 1988–2006 (Landsat TM, 30 m: 1988, 1993, 1997, 2001, 2006).
+- **Method:** the **LEI** scores each new urban patch from a buffer around it:
+  - LEI = 100 × A₀ / (A₀ + A_v), where A₀ is the buffer area on old urban land and A_v the buffer area on vacant land;
+  - **infilling** if LEI > 50, **edge-expansion** if 0 < LEI ≤ 50, **outlying** if LEI = 0;
+  - buffer of 1 m (vector patches); the paper notes LEI depends on the buffer distance.
+- **Key findings:** outlying growth dominated early (47 % of new patches in 1988–1993); later, edge-expansion took over (70 %) and outlying fell to 8–14 %.
 - **Relevance:**
-  - The source of our `lei_type` label (C5, A4.3). We merge infilling + edge-expansion into `adjacent`, and keep `outlying`.
+  - The source of our `lei_type` label (C5, A4.3). We merge infilling + edge-expansion into `adjacent` (LEI > 0), and keep `outlying` (LEI = 0).
+  - Our buffer is 20 m on 10 m pixels: on a raster the smallest buffer is one pixel, and two pixels tolerate the one-pixel gaps in ESRI built-up maps. Mention this in the methods.
   - It lets us report AUC per growth type, linking to the aggregated vs diffusional finding in H2.
 
 ### H9. Pontius & Si (2014): Total Operating Characteristic (TOC)
