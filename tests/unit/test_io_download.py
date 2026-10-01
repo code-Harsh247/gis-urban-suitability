@@ -58,6 +58,21 @@ def test_manifest_key_is_repo_relative_posix(tmp_path):
     assert manifest_key(tmp_path / "data" / "raw" / "a.tif", tmp_path) == "data/raw/a.tif"
 
 
+def test_manifest_works_when_data_is_a_symlink(tmp_path):
+    """data/ may live on another drive and be linked into the repo."""
+    repo, ext = tmp_path / "repo", tmp_path / "usb" / "data"
+    (ext / "raw").mkdir(parents=True)
+    repo.mkdir()
+    (repo / "data").symlink_to(ext, target_is_directory=True)
+    f = repo / "data" / "raw" / "x.bin"
+    f.write_bytes(b"abc")
+    assert manifest_key(f, repo) == "data/raw/x.bin"
+    m = Manifest(repo / "data" / "manifest.json")
+    record_download(m, f, repo, dataset="test")
+    assert not needs_download(f, Manifest(repo / "data" / "manifest.json"), repo)
+    assert (ext / "manifest.json").exists()  # written through the link
+
+
 def test_retry_succeeds_after_failures():
     calls = []
 
