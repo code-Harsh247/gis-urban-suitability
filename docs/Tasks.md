@@ -102,9 +102,11 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 ### Phase 1 Gate
 
 **Automated — `tests/gates/test_phase1.py`** (written by **Abhinav**):
-- [ ] `docs/literature_review.md` exists and contains ≥ 10 paper entries (count matrix rows).
-- [ ] `docs/data_sources.md` exists and lists WorldCover, ESRI LULC, DEM and OSM, each with licence and access method.
-- [ ] A STAC search for each raster collection over the AOI bbox returns ≥ 1 item (network test, marked `@pytest.mark.network`).
+- [x] `docs/literature_review.md` exists and contains ≥ 10 paper entries (count matrix rows). *(18; plus ≥ 5 per half, a detail entry per row, synthesis written)*
+- [x] `docs/data_sources.md` exists and lists WorldCover, ESRI LULC, DEM and OSM, each with licence and access method.
+- [x] A STAC search for each raster collection over the AOI bbox returns ≥ 1 item (network test, marked `@pytest.mark.network`).
+
+Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network). The gate was mutation-tested: 7 deliberate breakages of the docs (9 papers, 4 A-papers, synthesis unwritten, missing detail entry, missing licence / dataset / access method) were all caught.
 
 **Manual checklist:**
 - [ ] Each teammate has read the other's paper summaries.
