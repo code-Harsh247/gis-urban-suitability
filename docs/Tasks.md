@@ -27,7 +27,7 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 | 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (Abhinav signed; Harsh pending) |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ✅ 14/14 (Abhinav signed; Harsh pending) |
 | 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on both laptops (Abhinav signed; Harsh pending) |
-| 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
+| 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ✅ 40/40 (Abhinav signed; Harsh pending) |
 | 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
 | 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
 | 6 | Building similarity | 4 | 4 | 1 | Harsh | ☐ |
@@ -168,25 +168,28 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 - [x] **P3.5** Classify roads into `major` / `minor` by `highway` tag (PRD FR-3.5); drop footpaths / tracks if configured. — **Abhinav** · FR-3.5 · *Major = motorway–secondary + links, minor = tertiary, residential, unclassified, service, living_street, road; tracks dropped unless `vector.keep_tracks`. 2018: 760 km major / 5,401 km minor. **2018 major roads in the AOI: 448 km, matching ohsome's 448 km.***
 - [x] **P3.6** Clean buildings: remove tiny (< 10 m²) and huge outlier footprints; compute centroid, area and `building` type; dedupe fallback + OSM footprints if both are used. — **Abhinav** · *Drop < 10 m² and > 100,000 m² (largest real footprint 70,584 m²); add area, centroid, type and `cell_id` → C6. **2018: 151,257 buildings in AOI cells vs ohsome 151,374 (−0.1 %)**; current 192,727. No fallback dataset, so no deduplication needed.*
 - [x] **P3.7** Create `notebooks/02_preprocessing.ipynb`: before/after plots and a table of CRS, resolution, shape and nodata % per layer. — **Abhinav** · FR-10.1 · *`notebooks/02_preprocessing.ipynb`: runs the preprocessing (skips existing outputs), a table of every processed layer (all 9 rasters on the reference grid with 0 % nodata; 7 vector layers in EPSG:32643), before/after plots and vector counts. Runs end to end.*
-- [~] **P3.8** Unit tests on synthetic data: reprojection keeps category values, slope of a known plane equals the expected angle, road classification mapping. — **Both** (Harsh: raster/terrain tests, Abhinav: vector tests) · *Vector tests done: `tests/unit/test_preprocess_vector.py` (19). Raster / terrain tests done in A2: `tests/unit/test_preprocess_raster.py`.*
+- [x] **P3.8** Unit tests on synthetic data: reprojection keeps category values, slope of a known plane equals the expected angle, road classification mapping. — **Both** (Harsh: raster/terrain tests, Abhinav: vector tests) · *Vector tests done: `tests/unit/test_preprocess_vector.py` (19). Raster / terrain tests (category values kept, exact slope on planes) done in A2: `tests/unit/test_preprocess_raster.py`.*
 - [x] **P3.9** Visual overlay check in the notebook: roads, water and buildings drawn over LULC line up correctly (no shifts). — **Both** · *Notebook 02 §4 + `outputs/figures/verify_vectors*.png`: roads, lakes, buildings and Bannerghatta line up with ESRI. At Madiwala Lake the OSM outline (and its island) matches the ESRI water / tree pixels. The ~5–10 m OSM vs Sentinel-2 offset is in the source data (under one pixel). Checked by Abhinav; Harsh to review.*
 
 ### Phase 3 Gate
 
 **Automated — `tests/gates/test_phase3.py`** (written by **Abhinav**):
-- [ ] All processed rasters have **identical** CRS, transform, width and height.
-- [ ] All processed rasters and vectors use the project CRS from the config.
-- [ ] Processed LULC contains only valid codes (resampling didn't create new values).
-- [ ] Slope values are within [0, 90] and elevation is within a plausible range for the AOI (config min/max).
-- [ ] All vector geometries are valid and non-empty; roads have a `road_class` column with values in {major, minor}.
-- [ ] Nodata share within the AOI is < 5 % for every raster.
+- [x] All processed rasters have **identical** CRS, transform, width and height.
+- [x] All processed rasters and vectors use the project CRS from the config.
+- [x] Processed LULC contains only valid codes (resampling didn't create new values).
+- [x] Slope values are within [0, 90] and elevation is within a plausible range for the AOI (config min/max).
+- [x] All vector geometries are valid and non-empty; roads have a `road_class` column with values in {major, minor}.
+- [x] Nodata share within the AOI is < 5 % for every raster.
+- [x] *(added)* C6 buildings exist for both snapshots, pass the contract and lie in grid cells (FR-3.6).
+
+Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_range_m` = 600–1,200 m). The gate was mutation-tested: 9 deliberate breakages of a scratch copy (raster shifted 10 m, invented class code, slope 95°, elevation 1,500 m, 12.6 % nodata, vector in EPSG:4326, road_class 'path', invalid polygon, C6 building outside the grid) were all caught.
 
 **Manual checklist:**
 - [~] Overlay plot (P3.9) reviewed by both: no misalignment visible. *(Abhinav ☑; Harsh ☐)*
 - [x] Slope map looks sensible (hills steep, plains flat). *(Steep only in the Bannerghatta hills (south-west); lakes 0°, the dense city under 2°: `scripts/verify_preprocessed.py`)*
 - [x] ESRI → WorldCover class mapping documented. *(`docs/data_sources.md` §6, `harmonise_worldcover`)*
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate 40/40 on Abhinav's laptop)*
 
 ---
 
