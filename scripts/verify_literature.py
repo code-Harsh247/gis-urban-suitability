@@ -86,8 +86,27 @@ def main(argv: list[str] | None = None) -> int:
     total = len(matrix)
     check(total >= 10, f"{total} papers in total (Phase 1 gate needs >= 10)")
 
+    print("3. synthesis (P1.4)")
+    syn = text.split("## Synthesis", 1)[1] if "## Synthesis" in text else ""
+    check(bool(syn), "synthesis section exists")
+    check(
+        "To be written" not in syn and "*To be written" not in syn, "no part left 'to be written'"
+    )
+    for topic, pat in {
+        "common criteria": r"common criteria",
+        "typical weights": r"typical weights",
+        "validation methods": r"validation methods",
+        "the gap": r"the gap",
+        "what our project adds": r"(what our project adds|our project combines)",
+    }.items():
+        check(re.search(pat, syn, flags=re.I) is not None, f"synthesis covers {topic}")
+    # "decision D7" refers to an execution-plan decision, not a paper
+    cited = set(re.findall(r"(?<!decision )(?<!decisions )\b([AHD]\d+)\b", syn))
+    unknown = sorted(cited - set(matrix))
+    check(not unknown, f"synthesis cites {len(cited)} paper ids, all in the matrix {unknown or ''}")
+
     if not args.no_network:
-        print("3. DOIs resolve on Crossref with matching titles")
+        print("4. DOIs resolve on Crossref with matching titles")
         for pid, body in det.items():
             cit = re.search(r"\*\*Citation:\*\*(.+)", body)
             if not cit:

@@ -319,8 +319,43 @@ Studies that test against *later observed change* report more modest values, suc
 
 ### MCDA / LULC part (Abhinav)
 
-*To be written.*
+**1. Common criteria.** GIS suitability studies combine a small set of physical and access criteria:
+- terrain: slope and altitude / elevation;
+- current land use / land cover;
+- proximity: roads, existing built-up land or amenities, water.
+
+Parry et al. (2018, A4) is typical for Indian cities: slope, altitude, LULC and existing amenities, at municipal-ward level. Our feature table has the same core (slope, elevation, LULC context, distance to roads, built-up and water), at 100 m cells instead of wards.
+
+**2. Typical weights.**
+- Weights are set by **expert judgement**, usually AHP pairwise comparison with a consistency-ratio check (Malczewski 2004, A1). They differ from study to study and from expert to expert.
+- The weighting method itself changes the result: AHP and Fuzzy-AHP on the same criteria ranked the development options the same way but drew **different zone boundaries** (Mosadeghi et al. 2015, A3).
+- So an MCDA map says as much about the weights as about the land. That's the subjectivity our learned scores avoid (and why our MCDA baseline reports its consistency ratio and is compared on equal terms, decision D7).
+
+**3. Common validation methods.** Mostly **none**, or indirect:
+- MCDA maps are rarely checked against what actually happened (A1). A4 reports no validation.
+- A3 compares two MCDA outputs with each other, not with outcomes.
+- LULC-change studies validate the *classification* (accuracy of the land-cover maps, A5), not a suitability score.
+- Growth-simulation studies (A6, CA-Markov) compare simulated with observed maps, which tests *how much* and *when* rather than a ranking of *where*.
+
+**4. What the LULC literature tells us about the study area.**
+- Bengaluru's built-up area grew 584 % in four decades while vegetation fell 66 % and water bodies 74 % (Ramachandra et al. 2012, A5). Growth has eaten into exactly the land our exclusion mask protects (lakes, vegetated lakes, forest).
+- Across Indian mega cities, infrastructure and economic "agents" drive growth more than biophysical factors (Bharath et al. 2018, A6). That's consistent with our design: road access and nearby built-up are the main context features, and terrain is secondary.
+
+**5. The gap.** The MCDA literature (since the overlay methods traced by Collins et al. 2001, A2) answers "where *should* development go, given these expert weights?". It doesn't learn from where development actually happened, and it doesn't test its maps against later growth.
 
 ### Combined conclusion (both)
 
-*To be written once both halves are in.*
+> Drafted by Abhinav from both halves (2026-10-01); **Harsh to review**.
+
+Two families of methods rank land for urban development:
+- **Expert MCDA** (A1–A4): transparent and easy to explain, but its weights are subjective. A3 shows the weighting method alone moves zone boundaries, and the maps are almost never validated against real growth.
+- **Learned suitability** (H1–H5): learns from where development already is or recently happened, so the weights come from data. But validation is often optimistic: random splits of one date, the cell's own land use as an input, and no test against later change (H1 vs H3; H6, H7 explain why).
+
+Our project combines the strengths and closes the gaps:
+1. **One honest test for every method.** Every score, including the expert MCDA baseline, is validated the same way: against **persistent growth from 2018/19 to 2022/23** in Bengaluru, a city with documented fast growth (A5).
+   - It's reported as ROC, TOC and lift over random (H3, H9);
+   - with baselines (random, distance to built-up);
+   - split by growth type (H8, H2).
+2. **Leakage rules.** No own-cell LULC in model inputs, OSM snapshots from the baseline date, the time-travel rule and out-of-fold scores (H1, H6, H7, H10).
+3. **A per-building similarity query.** "Find land whose surroundings resemble building A", with a per-feature explanation. None of the reviewed papers offers this: MCDA scores land against expert weights, and learned models score it against a whole class (built / changed), not against a specific reference building.
+4. **Data choices backed by the literature.** ESRI LULC for everything (paper D1) and OSM coverage at the baseline date (paper D2).
