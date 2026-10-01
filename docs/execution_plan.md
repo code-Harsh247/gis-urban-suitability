@@ -153,7 +153,7 @@ These are the only places the two tracks touch.
 - [~] **J3** `src/features/schema.py` merged (full draft by Abhinav on `main`, 2026-10-01; **Harsh to review the vector/model half**) (contract names, `FEATURE_GROUPS`, `CONTEXT_FEATURES`, `OWN_CELL_FEATURES`, `LEAKY_FEATURES`, `MODEL_INPUTS`) · W1 day 3 · one joint PR (A0.1 + H0.1)
 - [ ] **J4** PRD updated to the §2 decisions (Abhinav writes, Harsh reviews) · W1 · after J1
 - [ ] **J5** Tasks.md updated to this plan (Harsh writes, Abhinav reviews) · W1 · after J1
-- [ ] **J6** `docs/literature_review.md`: Abhinav's MCDA/LULC half ☐ · Harsh's ML/validation half ☑ (7 papers + synthesis draft) · synthesis together ☐ · W1–2
+- [ ] **J6** `docs/literature_review.md`: Abhinav's MCDA/LULC half ☐ · Harsh's ML/validation half ☑ (H1–H10 + data papers D1–D2 + synthesis draft; A1–A6 pre-filled as suggestions for Abhinav) · synthesis together ☐ · W1–2
 - [ ] **J7** `docs/data_sources.md`: Abhinav's rasters ☐ · Harsh's OSM + snapshot method ☐ · W2
 - [ ] **J8** Report: Discussion + Conclusion written together · W9
 - [ ] **J9** Slides done and rehearsed once · W10

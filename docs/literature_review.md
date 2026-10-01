@@ -20,11 +20,12 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 
 | # | Paper | Year | Study area | Method | Validation | Relevance to us | By |
 |---|---|---|---|---|---|---|---|
-| A1 | *(Abhinav)* | | | | | | Abhinav |
-| A2 | *(Abhinav)* | | | | | | Abhinav |
-| A3 | *(Abhinav)* | | | | | | Abhinav |
-| A4 | *(Abhinav)* | | | | | | Abhinav |
-| A5 | *(Abhinav)* | | | | | | Abhinav |
+| A1 | Malczewski, *GIS-based land-use suitability analysis: a critical overview* | 2004 | — (review) | Review of GIS-MCDA suitability methods | — | Defines the MCDA approach our baseline follows | Abhinav *(suggested)* |
+| A2 | Collins et al., *Land-use suitability analysis in the United States: historical development …* | 2001 | USA (review) | History of overlay / GIS suitability analysis | — | Background for the introduction | Abhinav *(suggested)* |
+| A3 | Mosadeghi et al., *Comparison of Fuzzy-AHP and AHP … urban land-use planning* | 2015 | Gold Coast, Australia | GIS-MCDA with AHP vs Fuzzy-AHP weights | Comparison of the two outputs | Shows how sensitive results are to the weighting: the subjectivity argument | Abhinav *(suggested)* |
+| A4 | Parry et al., *GIS based land suitability analysis using AHP … Srinagar and Jammu* | 2018 | Srinagar, Jammu (India) | GIS-AHP urban suitability | *(to verify)* | Typical Indian urban MCDA study we compare against | Abhinav *(suggested)* |
+| A5 | Ramachandra et al., *Monitoring urbanization and its implications in a mega city from space* | 2015 | Bengaluru (India) | Multi-date remote-sensing LULC change + landscape metrics | *(to verify)* | Context for our study area: growth, loss of vegetation and lakes | Abhinav *(suggested)* |
+| A6 | Bharath et al., *Modelling urban dynamics in rapidly urbanising Indian cities* | 2018 | Indian cities *(which: to verify)* | Urban growth modelling | *(to verify)* | Indian growth-modelling context (optional) | Abhinav *(suggested)* |
 | H1 | Li et al., *Spatial suitability evaluation … random forest: Yulin* | 2024 | Yulin, China | RF on built-up (presence) vs protected land, 30 m cells, 25 factors | Random 70/30 split, AUC 0.99 (urban) | Closest prior work; shows the own-cell leakage and random-split inflation we avoid | Harsh |
 | H2 | Wang et al., *Urban land expansion … diffusional and aggregated growth: Luoyang* | 2021 | Luoyang, China | MaxEnt (presence-only) + category-selected CA | 2009 → 2018 simulation, Kappa 0.78 | Presence-only framing like ours; aggregated vs diffusional = our LEI split | Harsh |
 | H3 | Ahmadlou et al., *Modeling urban dynamics using random forest: ROC and TOC* | 2016 | *(to verify)* | RF suitability for urban change, Landsat 1985 / 2000 / 2015 | Against observed change; ROC AUC 82.48 % + TOC | Same temporal-validation design; backs ROC + TOC (D7) | Harsh |
@@ -32,18 +33,68 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
 | H5 | Pijanowski et al., *Land Transformation Model* | 2002 | *(to verify)* | ANN + GIS on distance and neighbourhood predictors | Against later observed change *(to verify)* | Ancestor of our context-profile features | Harsh |
 | H6 | Roberts et al., *Cross-validation strategies for data with … spatial … structure* | 2017 | — (methods review) | Blocked cross-validation | Shows random CV underestimates error on structured data | Basis for spatial blocks (D11, FR-6.8) | Harsh |
 | H7 | Ploton et al., *Spatial validation reveals poor predictive performance of large-scale ecological mapping models* | 2020 | Central Africa | RF biomass mapping | Random vs spatial CV | Concrete case of spatial leakage inflating accuracy | Harsh |
+| H8 | Liu et al., *A new landscape index for quantifying urban expansion …* (LEI) | 2010 | Dongguan, China *(to verify)* | Landscape Expansion Index for growth patches | — | Source of our growth-type labels (`lei_type`) | Harsh |
+| H9 | Pontius & Si, *The total operating characteristic …* (TOC) | 2014 | — (methods) | TOC curve | — | Source of the TOC metric (D7) | Harsh |
+| H10 | Valavi et al., *blockCV: … spatially or environmentally separated folds …* | 2019 | — (methods / software) | Spatial / environmental blocking for k-fold CV | — | Practical reference for our 2 km spatial blocks | Harsh |
+| D1 | Venter et al., *Global 10 m LULC datasets: a comparison of Dynamic World, World Cover and Esri Land Cover* | 2022 | Global | Accuracy comparison against ground truth | Overall accuracy per product and class | Backs D2 (ESRI for everything); ESRI over-estimates scrub (the Bannerghatta issue) | Harsh (data) |
+| D2 | Herfort et al., *… completeness and inequalities of global urban building data in OpenStreetMap* | 2023 | 13,189 urban centres worldwide | ML estimate of OSM building completeness over time | — | Backs choosing the AOI by 2018 OSM coverage (D1, D9) | Harsh (data) |
 
 ---
 
 ## Abhinav: GIS / MCDA and LULC-based urban growth (P1.2)
 
-*To be filled by Abhinav. Suggested starting points already cited in the PRD (§22):*
-- *Malczewski (2004)*
-- *Saaty (1980)*
-- *FAO (1976)*
-- *Karra et al. (2021)*
-- *Liu et al. (2010) on LEI*
-- *Pontius & Si (2014) on TOC*
+> **Suggested by Harsh (2026-10-01), for Abhinav to review.** The citations are checked against Crossref or publisher pages. The method / validation details below are from the abstracts only, so read each paper and fill in or correct the fields before ticking P1.2. Swap any paper for a better one.
+
+### A1. Malczewski (2004): GIS-MCDA review
+
+- **Citation:** Malczewski, J. (2004). *GIS-based land-use suitability analysis: a critical overview.* Progress in Planning, 62(1), 3–65.
+- **Study area:** none (review).
+- **Method:** reviews GIS-based land-use suitability approaches: overlay, MCDA and AI methods.
+- **Relevance:** the standard reference for the MCDA framework our baseline (`mcda`, FR-7.1) follows. It also discusses the subjectivity of criterion weights, which our data-driven models aim to reduce.
+- **To fill (Abhinav):** key findings, typical criteria and weighting methods.
+
+### A2. Collins, Steiner & Rushman (2001): history of suitability analysis
+
+- **Citation:** Collins, M. G., Steiner, F. R. & Rushman, M. J. (2001). *Land-use suitability analysis in the United States: historical development and promising technological achievements.* Environmental Management. https://doi.org/10.1007/s002670010247
+- **Study area:** USA (review).
+- **Method:** traces suitability analysis from hand-drawn map overlays to GIS-based methods.
+- **Relevance:** background and history for the report introduction.
+- **To fill (Abhinav):** key findings.
+
+### A3. Mosadeghi et al. (2015): AHP vs Fuzzy-AHP for urban land-use planning
+
+- **Citation:** Mosadeghi, R., Warnken, J., Tomlinson, R. & Mirfenderesk, H. (2015). *Comparison of Fuzzy-AHP and AHP in a spatial multi-criteria decision making model for urban land-use planning.* Computers, Environment and Urban Systems, 49, 54–65.
+- **Study area:** north-east Gold Coast, Queensland, Australia.
+- **Method:** a spatial MCDA for urban land-use planning, weighted with AHP and with Fuzzy-AHP, and the outcomes compared.
+- **Relevance:** shows how the choice of weighting method changes an MCDA result. That supports our point that hand-set weights are subjective, and it's a reference for our AHP consistency-ratio check.
+- **To fill (Abhinav):** criteria used, size of the differences found.
+
+### A4. Parry, Ganaie & Bhat (2018): GIS-AHP urban suitability, Srinagar and Jammu
+
+- **Citation:** Parry, J. A., Ganaie, S. A. & Bhat, M. S. (2018). *GIS based land suitability analysis using AHP model for urban services planning in Srinagar and Jammu urban centers of J&K, India.* Journal of Urban Management, 7(2), 46–56. https://doi.org/10.1016/j.jum.2018.05.002
+- **Study area:** Srinagar and Jammu, India.
+- **Method:** GIS overlay with AHP weights for urban services planning.
+- **Relevance:** a typical Indian urban MCDA study, close to what our MCDA baseline reproduces. Useful for listing the criteria and weights that Indian studies use.
+- **To fill (Abhinav):** criteria, weights, validation (if any).
+
+### A5. Ramachandra, Bharath & Sowmyashree (2015): Bengaluru urbanisation from space
+
+- **Citation:** Ramachandra, T. V., Bharath, A. H. & Sowmyashree, M. V. (2015). *Monitoring urbanization and its implications in a mega city from space: spatiotemporal patterns and its indicators.* Journal of Environmental Management, 148, 67–81.
+- **Study area:** Bengaluru, India.
+- **Method:** multi-date remote-sensing land-use change with spatial / landscape metrics.
+- **Relevance:**
+  - Context for our **study area**: how fast Bengaluru has grown and its loss of vegetation and water bodies (lakes / tanks).
+  - That loss is why our water mask and protected-area mask matter.
+- **To fill (Abhinav):** the periods covered, growth figures, main findings.
+
+### A6. Bharath, Chandan, Vinay & Ramachandra (2018): urban dynamics in Indian cities (optional)
+
+- **Citation:** Bharath, H. A., Chandan, M. C., Vinay, S. & Ramachandra, T. V. (2018). *Modelling urban dynamics in rapidly urbanising Indian cities.* The Egyptian Journal of Remote Sensing and Space Science, 21(3), 201–210. https://doi.org/10.1016/j.ejrs.2017.08.002
+- **Study area:** rapidly urbanising Indian cities *(check whether Bengaluru is included)*.
+- **Method:** urban growth modelling *(model type to verify)*.
+- **Relevance:** Indian growth-modelling context; optional if A1–A5 are enough.
+
+*Also cited in the PRD (§22), for reference: Saaty (1980), FAO (1976), Karra et al. (2021).*
 
 ---
 
@@ -138,6 +189,54 @@ Items marked *(to verify)* could not be checked against the full text yet. Check
   - Spatial CV showed almost no predictive power beyond the training locations, because nearby samples leaked information.
 - **Relevance to us:** a well-known, concrete example of the leakage our rules (D4, D11, D12) guard against. It's also a good citation for why "RF spatial-CV AUC on a trivial task" is **not** one of our success metrics (D7).
 
+### H8. Liu et al. (2010): Landscape Expansion Index (LEI)
+
+- **Citation:** Liu, X., Li, X., Chen, Y., Tan, Z., Li, S. & Ai, B. (2010). *A new landscape index for quantifying urban expansion using multi-temporal remotely sensed data.* Landscape Ecology, 25(5), 671–682. https://doi.org/10.1007/s10980-010-9454-5
+- **Study area:** *(to verify; a Chinese city)*.
+- **Method:** the **LEI** scores each new urban patch by how much of a buffer around it overlaps existing urban land. This sorts growth into **infilling**, **edge-expansion** and **outlying**.
+- **Relevance:**
+  - The source of our `lei_type` label (C5, A4.3). We merge infilling + edge-expansion into `adjacent`, and keep `outlying`.
+  - It lets us report AUC per growth type, linking to the aggregated vs diffusional finding in H2.
+
+### H9. Pontius & Si (2014): Total Operating Characteristic (TOC)
+
+- **Citation:** Pontius, R. G. Jr. & Si, K. (2014). *The total operating characteristic to measure diagnostic ability for multiple thresholds.* International Journal of Geographical Information Science, 28(3), 570–583. https://doi.org/10.1080/13658816.2013.862623
+- **Method:** the **TOC** curve. Like ROC, it plots hits against thresholds, but it also shows the actual number of cells flagged (hits + false alarms) at each threshold.
+- **Relevance:** the source of the TOC curve we report for every model (D7, FR-8.3). It's more informative than ROC for maps where growth is a small share of the land. Cited together with H3.
+
+### H10. Valavi et al. (2019): blockCV
+
+- **Citation:** Valavi, R., Elith, J., Lahoz-Monfort, J. J. & Guillera-Arroita, G. (2019). *blockCV: An R package for generating spatially or environmentally separated folds for k-fold cross-validation of species distribution models.* Methods in Ecology and Evolution, 10(2), 225–232. https://doi.org/10.1111/2041-210X.13107
+- **Method:** builds CV folds from spatial blocks, spatial / environmental clusters or buffers, so that training and test data are separated.
+- **Key findings:** random CV on structured data underestimates prediction error and can lead to the wrong model being chosen.
+- **Relevance:** the practical reference for **how** we build the 2 km spatial blocks (FR-6.8, H5.4). H6 (Roberts et al.) is the reference for **why**. We implement the blocks in Python, not with the R package.
+
+---
+
+## Data-source papers (for `docs/data_sources.md` and the report's data chapter)
+
+### D1. Venter et al. (2022): comparison of global 10 m LULC products
+
+- **Citation:** Venter, Z. S., Barton, D. N., Chakraborty, T., Simensen, T. & Singh, G. (2022). *Global 10 m Land Use Land Cover Datasets: A Comparison of Dynamic World, World Cover and Esri Land Cover.* Remote Sensing, 14(16), 4101. https://doi.org/10.3390/rs14164101
+- **Method:** compares the three products against global ground-truth data (minimum mapping unit 250 m²).
+- **Key findings:**
+  - Overall accuracy: **Esri 75 %**, Dynamic World 72 %, WorldCover 65 %.
+  - By class: water is best mapped (92 %), then built area (83 %), tree cover (81 %) and crops (78 %).
+  - Biases: WorldCover over-estimates grass, **Esri over-estimates shrub / scrub**, Dynamic World over-estimates snow / ice.
+- **Relevance:**
+  - Supports **D2** (ESRI as the LULC source for everything): the highest overall accuracy, and built area is one of its most reliable classes.
+  - Explains the **Bannerghatta issue**: ESRI's scrub bias is why the forest shows up as rangeland, and why we add a protected-area mask and cross-check forest with WorldCover.
+
+### D2. Herfort et al. (2023): OSM building completeness
+
+- **Citation:** Herfort, B., Lautenbach, S., Porto de Albuquerque, J., Anderson, J. & Zipf, A. (2023). *A spatio-temporal analysis investigating completeness and inequalities of global urban building data in OpenStreetMap.* Nature Communications, 14, 3985. https://doi.org/10.1038/s41467-023-39698-6
+- **Method:** a machine-learning model estimates the completeness of OSM building footprints over time for 13,189 urban centres.
+- **Key findings:**
+  - Only 1,848 urban centres (16 % of the urban population) have OSM building data over 80 % complete.
+  - 9,163 cities (48 % of the urban population) are below 20 %.
+  - Completeness differs hugely between cities and over time.
+- **Relevance:** supports choosing the study area by **OSM coverage at the baseline date** (D1, study_area.md) and using the 2018 snapshot for reference buildings (D9). The OSM completeness caveat belongs in the limitations section.
+
 ---
 
 ## Synthesis (P1.4, draft)
@@ -157,9 +256,13 @@ They share a core of predictors with our feature table: distance to roads, river
 
 Studies that test against *later observed change* report more modest values, such as AUC 0.82 (Ahmadlou et al. 2016). Roberts et al. (2017) and Ploton et al. (2020) show in general why random CV over-states performance on spatial data.
 
-**3. Growth type matters.** Wang et al. (2021) find scattered (diffusional) growth much harder to predict than growth next to existing urban land. We test this with the LEI split.
+**3. Growth type matters.** Wang et al. (2021) find scattered (diffusional) growth much harder to predict than growth next to existing urban land. We test this with the LEI split (Liu et al. 2010) and report TOC next to ROC (Pontius & Si 2014).
 
-**4. What our project adds:**
+**4. Data quality shapes the design.**
+- ESRI is the most accurate 10 m LULC product overall but over-estimates scrub (Venter et al. 2022). Hence ESRI for everything, plus a WorldCover cross-check and a protected-area mask.
+- OSM building completeness varies strongly between cities and over time (Herfort et al. 2023). Hence the study area was chosen by its OSM coverage in 2018.
+
+**5. What our project adds:**
 - **Strict temporal validation** on *persistent* growth (2018/19 → 2022/23), with leakage rules:
   - no own-cell LULC;
   - OSM snapshots from the baseline date;

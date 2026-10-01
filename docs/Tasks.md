@@ -91,7 +91,7 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 ### Todos
 
 - [x] **P1.1** Create `docs/literature_review.md` with a template matrix: title, authors, year, venue, study area, data used, method, criteria/features, validation, key findings, relevance to us. — **Abhinav** · *File and matrix created by Harsh with the P1.1 fields; rows A1–A6 pre-filled as suggestions for Abhinav to review.*
-- [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2
+- [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2 · *Suggested papers A1–A6 pre-filled by Harsh in `docs/literature_review.md` (citations checked, details from abstracts); Abhinav reviews, reads and completes them.*
 - [x] **P1.3** Review ≥ 5 papers on **ML / clustering / similarity for land classification and site selection** (K-Means/GMM on land features, RF urban growth models, spatial CV). — **Harsh** · G2 · *Papers H1–H10 in `docs/literature_review.md`; a few details marked "to verify" against full texts.*
 - [~] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part) · *Harsh's ML/validation draft done; MCDA part and combined conclusion pending.*
 - [ ] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7
