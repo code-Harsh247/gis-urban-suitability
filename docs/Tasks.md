@@ -146,8 +146,8 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 - [x] Rerunning the downloads doesn't re-download (checks file modified times). *(checked via `needs_download`, which the downloaders use to skip)*
 
 **Manual checklist:**
-- [~] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters: notebook 01, Abhinav. OSM: 2018 vs current quick-look checked by Harsh, 2026-10-01; layers line up with the AOI.)*
-- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01. Abhinav: rasters; OSM pending.)*
+- [x] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters, Abhinav 2026-10-01: notebook 01 maps, plus landmark checks against OSM Nominatim coordinates in `scripts/verify_raw_data.py`: Madiwala Lake = water, Electronic City and Koramangala = built; pixel values equal the source COGs. OSM: 2018 vs current quick-look checked by Harsh; layers line up with the AOI.)*
+- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav: all rasters for the 3 km buffer, on a USB drive linked as `data/`. **OSM missing:** every Overpass mirror times out from Abhinav's network (2026-10-01). Needs either a rerun on another network, or Harsh to rerun for the 3 km buffer and share `data/raw/osm/` (H1.5).)*
 - [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
