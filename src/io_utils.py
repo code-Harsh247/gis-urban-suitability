@@ -17,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import sys
 import time
 from collections.abc import Callable
@@ -72,8 +73,12 @@ class Manifest:
 
 
 def manifest_key(path: str | Path, root: str | Path) -> str:
-    """Repo-relative POSIX path used as the manifest key (same on Windows and Linux)."""
-    return Path(path).resolve().relative_to(Path(root).resolve()).as_posix()
+    """Repo-relative POSIX path used as the manifest key (same on Windows and Linux).
+
+    Symlinks are not followed, so ``data/`` may be a link to another drive and the
+    key stays ``data/raw/...``.
+    """
+    return Path(os.path.abspath(path)).relative_to(os.path.abspath(root)).as_posix()
 
 
 def needs_download(path: str | Path, manifest: Manifest, root: str | Path) -> bool:

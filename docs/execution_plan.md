@@ -154,7 +154,7 @@ These are the only places the two tracks touch.
 - [ ] **J4** PRD updated to the §2 decisions (Abhinav writes, Harsh reviews) · W1 · after J1
 - [ ] **J5** Tasks.md updated to this plan (Harsh writes, Abhinav reviews) · W1 · after J1
 - [ ] **J6** `docs/literature_review.md`: Abhinav's MCDA/LULC half ☐ · Harsh's ML/validation half ☑ (H1–H10 + data papers D1–D2 + synthesis draft; A1–A6 pre-filled as suggestions for Abhinav) · synthesis together ☐ · W1–2
-- [~] **J7** `docs/data_sources.md`: Abhinav's rasters ☐ (drafted by Harsh from the coverage check, Abhinav to review + add class mapping A2.3) · Harsh's OSM + snapshot method ☑ · W2
+- [x] **J7** `docs/data_sources.md`: Abhinav's rasters ☑ (reviewed Harsh's draft; added §2b download/preprocessing, §6 class mapping, known issues) · Harsh's OSM + snapshot method ☑ · W2
 - [ ] **J8** Report: Discussion + Conclusion written together · W9
 - [ ] **J9** Slides done and rehearsed once · W10
 
@@ -172,26 +172,26 @@ These are the only places the two tracks touch.
 - [x] A1.4 Rerun makes no downloads; manifest checksums match; quick-looks in notebook 01 · *rerun skips all 8 files in 1.4 s*
 
 **A2. Raster preprocessing** · W2 · P3.1–P3.3
-- [ ] **A2.1** `src/preprocess/raster.py`: reference 10 m grid (ESRI tile grid, project UTM), reproject and align all rasters, nearest for classes, bilinear for DEM. **Saves the reference grid spec** to `data/processed/reference_grid.json`.
-- [ ] A2.2 `src/preprocess/terrain.py`: slope (Horn); unit test on a synthetic plane
-- [ ] A2.3 ESRI ↔ WorldCover class mapping table (code + `data_sources.md`)
-- [ ] A2.4 Unit tests: reprojection keeps class values; aligned rasters share transform and shape
+- [x] **A2.1** `src/preprocess/raster.py`: reference 10 m grid (ESRI tile grid, project UTM), reproject and align all rasters, nearest for classes, bilinear for DEM. **Saves the reference grid spec** to `data/processed/reference_grid.json`. · *Harsh: use `load_reference_grid(cfg)` (CRS, transform, shape) to rasterise roads in H3.3. Grid = 2,620 × 2,670 px, edges on whole 100 m cells.*
+- [x] A2.2 `src/preprocess/terrain.py`: slope (Horn); unit test on a synthetic plane · *slope computed on the 30 m UTM DEM, then bilinear to 10 m*
+- [x] A2.3 ESRI ↔ WorldCover class mapping table (code + `data_sources.md`)
+- [x] A2.4 Unit tests: reprojection keeps class values; aligned rasters share transform and shape · *done check: `scripts/verify_preprocessed.py`*
 
 **A3. Grid and raster features** · W3–4 · P4.1–P4.3, P4.6, P4.8
-- [ ] **A3.1** `src/features/grid.py`: real C1 for the AOI
-- [ ] A3.2 `src/features/lulc_features.py`: own-cell fractions (clustering only) per year
-- [ ] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
-- [ ] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year
-- [ ] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)*
+- [x] **A3.1** `src/features/grid.py`: real C1 for the AOI · *58,218 cells (centre inside AOI), `cell_id = row × n_cols + col` on the reference lattice. **Harsh:** use `xy_to_cell_id(cfg, x, y)` for building centroids (H2.3b); `data/features/grid.gpkg` has the cell polygons.*
+- [x] A3.2 `src/features/lulc_features.py`: own-cell fractions (clustering only) per year · *fractions of valid pixels (clouds count as nodata)*
+- [x] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
+- [x] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year · *built-up distance is to the nearest built pixel **outside** the cell (KD-tree, exact), so it never leaks the cell's own status. **Config change (done check):** `aoi.buffer_m` 1000 → 3000 and `features.distance_cap_m` 5000 → 3000, because distances are only exact up to the buffer (a cell at the AOI edge can't see beyond it). The code now refuses cap > buffer. **Harsh:** your OSM download area grows accordingly; cap road distances at 3 km too.*
+- [x] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)* · *`python -m src.features.build`; drops and logs cells with `nodata_frac` > 0.5*
 - [ ] **A3.5b** Real C4 on the AOI · 🔒 **H3.3**
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 
 **A4. Labels and masks** · W4 · P5.5, FR-8.1
-- [ ] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 %
-- [ ] A4.1b Add protected areas (e.g. Bannerghatta NP) to the mask · 🔒 **H1.4** · *optional: skip if not ready by the end of W4 and note it*
-- [ ] **A4.2** Candidates, growth labels (2018/19 → 2022/23), change-training positives (2018/19 → 2020/21) → real C5
-- [ ] A4.3 LEI growth type (patches ≥ 0.5 ha, 20 m buffer) → `lei_type` in C5
-- [ ] A4.4 Unit tests on a synthetic 6-year stack; label counts logged
+- [x] **A4.1** Exclusion mask: water/flooded > 50 %, slope > 15°, nodata > 50 % · *also OSM water polygons from H1.3 if ready: vegetated lakes (e.g. Hulimavu) show as rangeland/wetland in ESRI 2023* · *`src/features/labels.py → exclusion_table(cfg, run)` for **two runs**: `validation` (ESRI 2018+2019 and OSM 2018 water only, time-travel rule) and `final` (2022+2023 and current OSM). Written to `data/features/exclusion_{run}.parquet` with one column per rule. **Harsh (H4.4): use `exclusion_table(cfg, run)` for C7.** Real data: 1,921 excluded in validation (1,450 wet, 472 steep), 2,138 in final. Hulimavu is caught by the 2018/19 water rule.*
+- [x] A4.1b Add protected areas (e.g. Bannerghatta NP) to the mask · 🔒 **H1.4** · *optional: skip if not ready by the end of W4 and note it* · *Code done, together with OSM water: both are used when `data/raw/osm/...` exists, and skipped with a warning when it doesn't. **Applied 2026-10-01** after downloading OSM on another network: Bannerghatta NP (relation 8124064) excludes 4,127 cells = 41.3 km², exactly the park's area inside the AOI. OSM 2018 water adds 488 wet cells. Validation exclusions 1,921 → **6,253**; candidates 19,656 → **15,658**; grew 1,129 → **1,125**; evaluated 12,777 (prevalence **8.8 %**). Checked independently in `scripts/verify_labels.py` (point-in-polygon on pixel centres).*
+- [x] **A4.2** Candidates, growth labels (2018/19 → 2022/23), change-training positives (2018/19 → 2020/21) → real C5 · *19,656 candidates → 1,129 grew, 15,599 stayed non-built, **2,928 ambiguous** (partly grown; left out of validation, PRD §9.6), 355 change positives. Prevalence 6.7 %. **Contract change:** C5 gained a boolean `ambiguous` column (schema + stubs updated).*
+- [x] A4.3 LEI growth type (patches ≥ 0.5 ha, 20 m buffer) → `lei_type` in C5 · *1,038 adjacent, **91 outlying** (few, as the prototype predicted: report descriptively). Agrees with an exact per-patch ring for 239/241 checked cells; the fast version shares rings where two patches touch.*
+- [x] A4.4 Unit tests on a synthetic 6-year stack; label counts logged · *done check: `scripts/verify_labels.py`*
 
 **A5. Building similarity** · W6–7 · P6.1, P6.3, P6.4, P6.7
 - [ ] A5.1 `src/similarity/profiles.py` from `MODEL_INPUTS` only; raises on own-cell or leaky features · 🔓 *(stub)*
@@ -335,7 +335,8 @@ Do these first: each one unblocks the other person.
 
 ## 6. Working without blocking each other
 
-- **Branches:** `feat/a-<pkg>` and `feat/h-<pkg>`, e.g. `feat/h-osm-download`. Small PRs; the other person reviews within 24 h.
+- **Branches:** everything goes straight to `main`, with **one commit per finished work package** (message starts with its ID, e.g. `A2: ...`). The other person reviews the commit within 24 h.
+- **Done check:** after every package, and before ticking it or committing, run the done check in [CLAUDE.md](CLAUDE.md#done-check-after-every-work-package--phase): tests, lint, contracts, an **independent correctness check of the outputs** (a `scripts/verify_*.py` script), reproducibility, then record and commit. Example: `scripts/verify_raw_data.py` for A1 found a sub-pixel shift that all unit tests missed.
 - **Folder ownership avoids merge conflicts:**
   - **Abhinav:** `download/lulc.py`, `download/dem.py`, `preprocess/raster.py`, `preprocess/terrain.py`, `features/{grid,lulc_features,context,labels,build}.py`, `similarity/{profiles,query,aggregate}.py`, `suitability/{validate,score}.py`, `viz/interactive.py`, `pipeline.py`
   - **Harsh:** `download/osm.py`, `preprocess/vector.py`, `features/distance.py`, `classify/*`, `similarity/rf_model.py`, `suitability/mcda.py`, `viz/static_maps.py`

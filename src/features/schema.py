@@ -196,6 +196,10 @@ CONTRACTS: dict[str, Contract] = {
             "built_baseline": Col("bool"),  # built in years.baseline
             "candidate": Col("bool"),  # non-built in baseline + baseline_confirm, not excluded
             "grew": Col("bool"),  # candidate and built in latest + latest_confirm
+            # candidate that neither grew nor stayed non-built (built fraction between
+            # the thresholds, or flickering, in latest_confirm/latest): left out of
+            # validation (PRD §9.6)
+            "ambiguous": Col("bool"),
             "chg_train_pos": Col("bool"),  # non-built baseline(+confirm), built change_train_end
             "lei_type": Col("str", values=LEI_TYPES),
         },

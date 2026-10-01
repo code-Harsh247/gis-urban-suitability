@@ -6,7 +6,7 @@ Final dataset list for **Bengaluru South** (Tasks P1.5–P1.7, joint task J7).
 - To rerun: `python scripts/check_data_coverage.py`. It reads STAC metadata and runs ohsome queries; it downloads no rasters.
 
 Ownership:
-- Raster sections: Abhinav's track. Drafted by Harsh from the coverage check; **Abhinav to review**.
+- Raster sections: Abhinav's track. Drafted by Harsh from the coverage check; reviewed and extended by Abhinav (§2b, §6, §7) on 2026-10-01.
 - OSM sections: Harsh's track.
 
 ---
@@ -32,7 +32,9 @@ Ownership:
 
 ## 2. Raster coverage over the AOI (P1.5)
 
-Search area: AOI + 1 km buffer, bbox 77.5108–77.7492 E, 12.7110–12.9490 N. Every dataset is covered by **one tile**, and the tile **fully covers** the buffered AOI.
+Search area at the time of the coverage check: AOI + 1 km buffer, bbox 77.5108–77.7492 E, 12.7110–12.9490 N. Every dataset is covered by **one tile**, and the tile **fully covers** the buffered AOI.
+
+> **Update (A3):** the buffer is now **3 km** (`aoi.buffer_m`), equal to `features.distance_cap_m`, so distances from AOI cells are exact (see §2b). The same single tiles still cover the larger area: `scripts/verify_raw_data.py` passes.
 
 | Dataset | Year | STAC item | Covers AOI + buffer | Full tile size |
 |---|---|---|---|---|
@@ -49,6 +51,33 @@ Search area: AOI + 1 km buffer, bbox 77.5108–77.7492 E, 12.7110–12.9490 N. E
 - The tiles are Cloud-Optimised GeoTIFFs. The downloaders read only the AOI window, so the local files are a few MB each, not the full-tile sizes above.
 - The ESRI tile `43P` is UTM zone 43N, the same zone as the project CRS (EPSG:32643), so there's no cross-zone warping.
 - 2017 is available but **not used** (D3: noticeably noisier than later years).
+
+---
+
+## 2b. Raster download and preprocessing (Abhinav, A1–A2)
+
+**Download** (`src/download/stac.py`, `lulc.py`, `dem.py`):
+- Each download covers the reference-grid rectangle plus 2 cells: the AOI plus `aoi.buffer_m` (3 km), grown to whole 100 m cells.
+- Only the needed window of each COG is read, clipped on the source's own pixel grid, so values are copied, not resampled.
+- A rerun skips files whose checksum matches the manifest **and** that cover the same area. If the AOI or buffer changes, the files are downloaded again.
+- Run: `python -m src.download.lulc`, `python -m src.download.dem`.
+
+**Preprocessing** (`src/preprocess/raster.py`, `terrain.py`): `python -m src.preprocess.raster`.
+- **Reference grid:** EPSG:32643 at 10 m, 3,020 × 3,070 px, bounds (770400, 1404400, 800600, 1435100).
+  - The edges are multiples of 100 m, so every 10 × 10 block of pixels is one grid cell.
+  - Saved in `data/processed/reference_grid.json`. Use `load_reference_grid(cfg)`, e.g. to rasterise OSM roads (H3.3).
+
+| Output | From | Method |
+|---|---|---|
+| `lulc_esri_{year}.tif` | ESRI | nearest. The source is on the same 10 m lattice, so values are copied exactly |
+| `worldcover_2021.tif` | WorldCover | nearest (~0.7 % of pixels on class boundaries tie-break to a neighbouring source pixel; no shift) |
+| `elevation.tif` | DEM | warped to UTM at 30 m, then bilinear to 10 m |
+| `slope.tif` | DEM | Horn slope (degrees) on the 30 m UTM DEM, then bilinear to 10 m |
+
+**Done checks:**
+- `scripts/verify_raw_data.py`: the downloads match the source COGs exactly at random points.
+- `scripts/verify_preprocessed.py`: the aligned rasters are on the grid; elevation and slope agree with independent computations.
+- `scripts/verify_features.py`: grid and raster features (A3).
 
 ---
 
@@ -136,7 +165,24 @@ Implemented in [`src/download/osm.py`](../src/download/osm.py). Run it with `pyt
 
 ## 6. ESRI ↔ WorldCover class mapping (A2.3, Abhinav)
 
-*To be added with A2.3. Used for the WorldCover cross-check of the 3-class map only.*
+ESRI IO LULC v02 classes are used everywhere (D2). WorldCover is mapped onto them only for cross-checks (`src.preprocess.raster.harmonise_worldcover`):
+
+| ESRI code | ESRI class | WorldCover classes mapped to it |
+|---|---|---|
+| 1 | Water | 80 Permanent water bodies |
+| 2 | Trees | 10 Tree cover |
+| 4 | Flooded vegetation | 90 Herbaceous wetland, 95 Mangroves |
+| 5 | Crops | 40 Cropland |
+| 7 | Built area | 50 Built-up |
+| 8 | Bare ground | 60 Bare / sparse vegetation |
+| 9 | Snow/ice | 70 Snow and ice |
+| 10 | Clouds | (none; treated as nodata) |
+| 11 | Rangeland | 20 Shrubland, 30 Grassland, 100 Moss and lichen |
+| 0 | nodata | 0 |
+
+**Growth labels:** "built-up" means ESRI class 7 in every year, so the baseline and latest years share the same definition (FR-8.1).
+
+**Agreement in 2021:** ESRI contains 99 % of WorldCover's built-up and 90 % of its water. ESRI "trees" covers only 25 % of WorldCover's tree cover, because ESRI labels scrub forest as rangeland.
 
 ---
 
@@ -156,3 +202,6 @@ Implemented in [`src/download/osm.py`](../src/download/osm.py). Run it with `pyt
 | OSM roads more than doubled 2018 → today | §3 | 2018 snapshot for validation-run features (D8) |
 | Bannerghatta NP is tagged `boundary=national_park`, not `protected_area` | §3 (H1.4) | `national_park` added to the protected query; the Phase 2 gate checks that Bannerghatta is present |
 | osmnx returns whole features that intersect the bbox (long roads / rivers extend far beyond it) | Quick-look, 2026-10-01 | Clip to AOI + buffer in preprocessing (H2.1) |
+| **Lakes covered in vegetation**: Hulimavu Lake is water in ESRI 2018, rangeland in 2023, wetland in WorldCover | `scripts/verify_raw_data.py` | Add OSM water polygons to the exclusion mask (A4.1) |
+| **Distances near the AOI edge** were wrong when the cap (5 km) exceeded the buffer (1 km): nearest water beyond the buffer was invisible | `scripts/verify_features.py` (A3) | Buffer = cap = 3 km; code refuses cap > buffer. **OSM layers must cover the 3 km buffer too** |
+| Slope is gentle overall: median 2.7°, 1.5 % of the area above 15° (mostly the Bannerghatta hills) | `scripts/verify_raw_data.py` | The 15° exclusion removes little land |

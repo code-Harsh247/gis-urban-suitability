@@ -21,6 +21,7 @@ from rasterio.warp import calculate_default_transform, reproject, transform_boun
 from src.io_utils import (
     DownloadError,
     Manifest,
+    manifest_key,
     needs_download,
     raster_info,
     record_download,
@@ -33,9 +34,25 @@ STAC_URL = "https://planetarycomputer.microsoft.com/api/stac/v1"
 
 
 def aoi_bounds_4326(cfg) -> tuple[float, float, float, float]:
-    """(west, south, east, north) of the AOI buffered by ``aoi.buffer_m``, in EPSG:4326."""
-    buffered = cfg.aoi_projected.buffer(float(cfg["aoi"].get("buffer_m", 0)))
-    return tuple(buffered.to_crs(4326).total_bounds)  # type: ignore[return-value]
+    """(west, south, east, north) in EPSG:4326 that fully cover the reference grid.
+
+    The reference grid (src/preprocess/raster.py) is the *rectangle* around the AOI
+    + ``aoi.buffer_m``, grown to whole cells. The rectangle's corners reach beyond the
+    rounded corners of the buffered AOI, so we transform the rectangle itself (densified,
+    so edges that curve in lat/lon are covered) and add two cells of margin.
+    """
+    cell = float(cfg.cell_size_m)
+    left, bottom, right, top = cfg.aoi_projected.buffer(
+        float(cfg["aoi"].get("buffer_m", 0))
+    ).total_bounds
+    left, bottom = (
+        np.floor(left / cell) * cell - 2 * cell,
+        np.floor(bottom / cell) * cell - 2 * cell,
+    )
+    right, top = np.ceil(right / cell) * cell + 2 * cell, np.ceil(top / cell) * cell + 2 * cell
+    return tuple(
+        float(v) for v in transform_bounds(cfg.crs, 4326, left, bottom, right, top, densify_pts=51)
+    )
 
 
 def search_items(collection: str, bbox, datetime: str | None = None, query: dict | None = None):
@@ -54,6 +71,24 @@ def search_items(collection: str, bbox, datetime: str | None = None, query: dict
     return items
 
 
+def snap_bounds(
+    src, bounds: tuple[float, float, float, float]
+) -> tuple[float, float, float, float]:
+    """Grow ``bounds`` (in the source CRS) outward to whole pixels of the source grid.
+
+    Without this, ``rasterio.merge`` starts the output grid at the raw bounds, which
+    shifts every pixel by a fraction of a cell and resamples the data.
+    """
+    rx, ry = abs(src.transform.a), abs(src.transform.e)
+    x0, y0 = src.transform.c, src.transform.f
+    eps = 1e-6
+    left = x0 + np.floor((bounds[0] - x0) / rx + eps) * rx
+    right = x0 + np.ceil((bounds[2] - x0) / rx - eps) * rx
+    top = y0 - np.floor((y0 - bounds[3]) / ry + eps) * ry
+    bottom = y0 - np.ceil((y0 - bounds[1]) / ry - eps) * ry
+    return (float(left), float(bottom), float(right), float(top))
+
+
 def mosaic_to_file(
     hrefs: list[str],
     bounds_4326: tuple[float, float, float, float],
@@ -65,7 +100,8 @@ def mosaic_to_file(
 ) -> None:
     """Mosaic the COGs over ``bounds_4326`` and write a tiled, compressed GeoTIFF.
 
-    If all sources share one CRS the data keep their native grid (no resampling).
+    If all sources share one CRS the data keep their native pixel grid: the bounds are
+    snapped to it, so values are copied, never resampled.
     Otherwise every source is warped to ``dst_crs`` at the finest source resolution.
     """
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -75,9 +111,12 @@ def mosaic_to_file(
         nd = nodata if nodata is not None else sources[0].nodata
         if len(crss) == 1:
             src_crs = sources[0].crs
-            b = transform_bounds(4326, src_crs, *bounds_4326, densify_pts=21)
+            b = snap_bounds(
+                sources[0], transform_bounds(4326, src_crs, *bounds_4326, densify_pts=21)
+            )
+            res = (abs(sources[0].transform.a), abs(sources[0].transform.e))
             arr, transform = retry(
-                lambda: merge(sources, bounds=b, nodata=nd, resampling=resampling),
+                lambda: merge(sources, bounds=b, res=res, nodata=nd, resampling=resampling),
                 what="read tiles",
             )
             crs = src_crs
@@ -149,10 +188,17 @@ def fetch_raster(
 ) -> Path:
     """Download one mosaicked raster for the AOI + buffer, unless it is already there."""
     manifest = manifest or Manifest.for_config(cfg)
-    if not force and not needs_download(out, manifest, cfg.root):
-        log.info("skip %s (exists, checksum matches)", out.name)
-        return out
     bbox = aoi_bounds_4326(cfg)
+    if not force and not needs_download(out, manifest, cfg.root):
+        entry = manifest.get(manifest_key(out, cfg.root)) or {}
+        old = entry.get("source", {}).get("bbox_4326")
+        if old is not None and np.allclose(old, bbox, atol=1e-9):
+            log.info("skip %s (exists, checksum matches)", out.name)
+            return out
+        log.info(
+            "%s covers a different area than requested (AOI or buffer changed); re-downloading",
+            out.name,
+        )
     items = search_items(collection, bbox, datetime, query)
     if item_filter is not None:
         items = [i for i in items if item_filter(i)]

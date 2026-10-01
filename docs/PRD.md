@@ -13,7 +13,7 @@
 | Created / updated | 2026-09-27 / 2026-10-01 |
 | Related docs | [execution_plan.md](execution_plan.md) (who does what, when; file contracts) · [Tasks.md](Tasks.md) (phase checklist and gates) · [study_area.md](study_area.md) |
 
-Decisions from the execution plan are cited as **[D1]…[D10]**. Rules added in this version are **[D11]** and **[D12]** (§9.9). They still need Abhinav's agreement.
+Decisions from the execution plan are cited as **[D1]…[D10]**. Rules added in this version are **[D11]** and **[D12]** (§9.9), agreed by both on 2026-10-01.
 
 ---
 
@@ -580,7 +580,9 @@ Cells between the thresholds (built fraction 0.1–0.5) are neither candidates n
 
 **[D12] Time-travel rule** (FR-8.2): with a 2023 3-class map in the validation run, every cell that grew by 2023 would already be labelled built-up and would never be scored. That breaks the validation.
 
-Both rules came out of the PRD review on 2026-10-01 and need Abhinav's agreement.
+Both rules came out of the PRD review on 2026-10-01 and are **agreed by both** (Abhinav, 2026-10-01):
+- D12 is implemented in `src/features/labels.py` and tested (the validation mask ignores every map after 2019).
+- D11 is needed on the real labels: 85 % of the 355 change-RF training positives are also `grew` cells (27 % of all growth), so in-sample scores would inflate the RF's AUC.
 
 ---
 
@@ -844,12 +846,12 @@ Both tracks meet only through the contract files (§13). Each develops against t
 |---|---|---|
 | Q1 | Study area | **Closed:** Bengaluru South [D1], confirmed by Harsh 2026-10-01 |
 | Q2 | Submission deadline and intermediate reviews | **Closed:** final submission Tue 2026-10-06 |
-| Q3 | Report format / length required by the instructor | Open (Abhinav, P0.12) |
+| Q3 | Report format / length required by the instructor | Open: not yet specified by the instructor (Abhinav, P0.12). **Working default until then:** a PDF report of about 15–20 pages (A4, 11 pt) with the sections in Tasks P8.5–P8.7, 300 dpi figures and a consistent author–year reference style, plus 10–15 slides. Replace if the instructor gives a format. |
 | Q4 | Grid cell size | **Closed:** 100 m; 50 / 200 m in the sensitivity runs |
 | Q5 | Cropland usable or excluded? | **Closed:** usable but flagged [D10] |
 | Q6 | Slope threshold | **Closed:** 15° [D10]; revisited in the sensitivity runs |
 | Q7 | Similarity per building type? | Open (stretch, depends on OSM tags) |
-| Q8 | Accept rules D11 (out-of-fold RF scores) and D12 (time-travel rule)? | Open (Abhinav to confirm) |
+| Q8 | Accept rules D11 (out-of-fold RF scores) and D12 (time-travel rule)? | **Closed:** agreed by both, 2026-10-01 (§9.9) |
 | Q9 | Refine the AOI from the bbox to a planning boundary? | Open (optional) |
 
 ---

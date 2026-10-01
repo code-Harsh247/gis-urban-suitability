@@ -67,6 +67,7 @@ def test_stub_labels_are_usable(synthetic_project):
     assert lab["grew"].sum() > 5 and lab["chg_train_pos"].sum() > 0
     assert not (lab["grew"] & ~lab["candidate"]).any()
     assert not (lab["candidate"] & lab["excluded"]).any()
+    assert not (lab["ambiguous"] & (lab["grew"] | ~lab["candidate"])).any()
     assert set(lab.loc[lab["grew"], "lei_type"]) <= {"adjacent", "outlying"}
     assert (lab.loc[~lab["grew"], "lei_type"] == "none").all()
 

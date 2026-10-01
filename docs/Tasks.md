@@ -24,9 +24,9 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 
 | Phase | Name | Harsh | Abhinav | Both | Gate test by | Gate passed |
 |---|---|---|---|---|---|---|
-| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (sign-off pending) |
-| 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ☐ |
-| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on Harsh's laptop (sign-off pending) |
+| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (Abhinav signed; Harsh pending) |
+| 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ✅ 14/14 (Abhinav signed; Harsh pending) |
+| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on both laptops (Abhinav signed; Harsh pending) |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
 | 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
 | 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
@@ -57,7 +57,7 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 - [x] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5 · *14 areas checked with `scripts/study_area_candidates.py` (persistent 2018→2023 growth, OSM buildings in 2018 and 2026). Recommends Bengaluru South, then Hyderabad West; Pune West as fallback.*
 - [x] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Confirmed by Harsh 2026-10-01; the polygon can still be refined (PRD Q9).*
 - [x] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2 · *Done by Harsh, with 15 unit tests in `tests/unit/test_config.py`. `crs.epsg: auto` picks the UTM zone from the AOI, so P0.10 only needs the polygon + `aoi.name`.*
-- [~] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3 · *Deadline: **final submission Tue 2026-10-06** (Harsh, recorded in PRD §15). Report format still open (Abhinav).*
+- [~] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3 · *Deadline: **final submission Tue 2026-10-06** (Harsh, recorded in PRD §15). Report format: not yet specified by the instructor; a working default is recorded in PRD §20 Q3 (Abhinav, 2026-10-01). Replace it once the instructor answers.*
 
 ### Phase 0 Gate
 
@@ -79,7 +79,7 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [x] `docs/study_area.md` states the chosen AOI and the reason.
 - [x] Deadline is recorded in PRD, and phase dates in this file are adjusted.
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
 
 ---
 
@@ -91,9 +91,9 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 ### Todos
 
 - [x] **P1.1** Create `docs/literature_review.md` with a template matrix: title, authors, year, venue, study area, data used, method, criteria/features, validation, key findings, relevance to us. — **Abhinav** · *File and matrix created by Harsh with the P1.1 fields; rows A1–A6 pre-filled as suggestions for Abhinav to review.*
-- [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2 · *Suggested papers A1–A6 pre-filled by Harsh in `docs/literature_review.md` (citations checked, details from abstracts); Abhinav reviews, reads and completes them.*
+- [x] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2 · *A1–A6 reviewed and completed from abstracts / open full texts; all DOIs verified on Crossref (`scripts/verify_literature.py`). **Correction:** the suggested A5 studies Delhi, not Bengaluru, so it was replaced by Ramachandra, Aithal & Sanna (2012), a Bangalore paper (built-up +584 %, vegetation −66 %, water bodies −74 % over four decades). A6 covers Delhi, Mumbai, Pune, Chennai and Coimbatore. A few details are marked *(to verify)* against full texts.*
 - [x] **P1.3** Review ≥ 5 papers on **ML / clustering / similarity for land classification and site selection** (K-Means/GMM on land features, RF urban growth models, spatial CV). — **Harsh** · G2 · *Papers H1–H10 in `docs/literature_review.md`; a few details marked "to verify" against full texts.*
-- [~] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part) · *Harsh's ML/validation draft done; MCDA part and combined conclusion pending.*
+- [x] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part) · *Both halves done. Abhinav's MCDA part covers common criteria, weights, validation and the gap. Combined conclusion drafted by Abhinav; **Harsh to review**. Paper ids and decision ids are now written apart ("paper D1" vs "decision D7"). Checked by `scripts/verify_literature.py`.*
 - [x] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7 · *Done with `scripts/check_data_coverage.py` for the D2/D3 years (ESRI 2018–2023, WorldCover 2021, DEM): one tile each, all cover AOI + buffer. See `docs/data_sources.md` §2.*
 - [x] **P1.6** Check OSM coverage in the AOI: count buildings, road length and water features with a quick `osmnx` query. Decide whether a fallback building dataset (Microsoft / Google Open Buildings) is needed. — **Abhinav** · PRD §7, Risk 1 · *Done by Harsh (OSM is his track) with the ohsome API, 2018 vs 2026: 151k → 187k buildings, roads 3,889 → 8,730 km. **Decision: OSM only, no fallback.** See `docs/data_sources.md` §3.*
 - [x] **P1.7** Write `docs/data_sources.md`: final dataset list, versions, years, licences, access method, and known issues. — **Harsh** · *Raster sections drafted for Abhinav to review; class mapping (§6) follows with A2.3; shared-drive link with H1.5.*
@@ -102,17 +102,19 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 ### Phase 1 Gate
 
 **Automated — `tests/gates/test_phase1.py`** (written by **Abhinav**):
-- [ ] `docs/literature_review.md` exists and contains ≥ 10 paper entries (count matrix rows).
-- [ ] `docs/data_sources.md` exists and lists WorldCover, ESRI LULC, DEM and OSM, each with licence and access method.
-- [ ] A STAC search for each raster collection over the AOI bbox returns ≥ 1 item (network test, marked `@pytest.mark.network`).
+- [x] `docs/literature_review.md` exists and contains ≥ 10 paper entries (count matrix rows). *(18; plus ≥ 5 per half, a detail entry per row, synthesis written)*
+- [x] `docs/data_sources.md` exists and lists WorldCover, ESRI LULC, DEM and OSM, each with licence and access method.
+- [x] A STAC search for each raster collection over the AOI bbox returns ≥ 1 item (network test, marked `@pytest.mark.network`).
+
+Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network). The gate was mutation-tested: 7 deliberate breakages of the docs (9 papers, 4 A-papers, synthesis unwritten, missing detail entry, missing licence / dataset / access method) were all caught.
 
 **Manual checklist:**
-- [ ] Each teammate has read the other's paper summaries.
-- [ ] The synthesis section clearly states what our project adds.
+- [~] Each teammate has read the other's paper summaries. *(Abhinav ☑ 2026-10-01: read and verified H1–H10, D1–D2; H2, H3, H5 and H8 checked against full texts, their "to verify" fields filled. Harsh ☐: A1–A6.)*
+- [x] The synthesis section clearly states what our project adds. *(Combined conclusion, points 1–4; Harsh to confirm at sign-off.)*
 - [x] Building data source decided (OSM only, or OSM + fallback). *(OSM only)*
 - [x] Temporal validation years fixed in `config.yaml`.
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
 
 ---
 
@@ -144,11 +146,11 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [x] Rerunning the downloads doesn't re-download (checks file modified times). *(checked via `needs_download`, which the downloaders use to skip)*
 
 **Manual checklist:**
-- [~] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters: notebook 01, Abhinav. OSM: 2018 vs current quick-look checked by Harsh, 2026-10-01; layers line up with the AOI.)*
-- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01. Abhinav: rasters; OSM pending.)*
+- [x] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters, Abhinav 2026-10-01: notebook 01 maps, plus landmark checks against OSM Nominatim coordinates in `scripts/verify_raw_data.py`: Madiwala Lake = water, Electronic City and Koramangala = built; pixel values equal the source COGs. OSM: 2018 vs current quick-look checked by Harsh; layers line up with the AOI.)*
+- [x] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav ☑ 2026-10-01: all rasters and both OSM snapshots for the 3 km buffer, on a USB drive linked as `data/`. OSM was downloaded on another network, because Overpass is blocked on the campus network. Phase 2 gate 72/72. **Harsh:** your OSM files are for the old 1 km buffer; rerun `python -m src.download.osm`.)*
 - [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate 72/72 on Abhinav's laptop; full suite 226 passed)*
 
 ---
 
@@ -159,9 +161,9 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 
 ### Todos
 
-- [ ] **P3.1** Write `src/preprocess/raster.py`: reproject to the project CRS, clip to AOI + buffer, align to a reference grid (WorldCover at 10 m is the reference). Nearest-neighbour for categorical, bilinear for continuous. Set nodata consistently. — **Harsh** · FR-3.1–3.3
-- [ ] **P3.2** Write `src/preprocess/terrain.py`: slope (degrees, Horn method) and aspect from the aligned DEM. — **Harsh** · FR-3.6
-- [ ] **P3.3** Harmonise ESRI LULC classes with WorldCover (mapping table in `src/preprocess/raster.py` + `docs/data_sources.md`), so temporal validation uses the same "built-up" definition. — **Harsh** · FR-8.1
+- [x] **P3.1** Write `src/preprocess/raster.py`: reproject to the project CRS, clip to AOI + buffer, align to a reference grid (WorldCover at 10 m is the reference). Nearest-neighbour for categorical, bilinear for continuous. Set nodata consistently. — **Harsh** · FR-3.1–3.3
+- [x] **P3.2** Write `src/preprocess/terrain.py`: slope (degrees, Horn method) and aspect from the aligned DEM. — **Harsh** · FR-3.6
+- [x] **P3.3** Harmonise ESRI LULC classes with WorldCover (mapping table in `src/preprocess/raster.py` + `docs/data_sources.md`), so temporal validation uses the same "built-up" definition. — **Harsh** · FR-8.1
 - [ ] **P3.4** Write `src/preprocess/vector.py`: reproject, clip, fix invalid geometries (`make_valid`), drop empties, explode multi-parts where needed. — **Abhinav** · FR-3.4
 - [ ] **P3.5** Classify roads into `major` / `minor` by `highway` tag (PRD FR-3.5); drop footpaths / tracks if configured. — **Abhinav** · FR-3.5
 - [ ] **P3.6** Clean buildings: remove tiny (< 10 m²) and huge outlier footprints; compute centroid, area and `building` type; dedupe fallback + OSM footprints if both are used. — **Abhinav**
@@ -195,15 +197,15 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 
 ### Todos
 
-- [ ] **P4.1** Write `src/features/grid.py`: square grid of `cell_size` over the AOI, with `cell_id`, row, col and centroid; keep cells whose centre is inside the AOI. — **Harsh** · FR-4.1
-- [ ] **P4.2** Write `src/features/lulc_features.py`: per-cell class fractions from the 10 m LULC (block aggregation on the aligned raster, not slow polygon zonal stats). For both the baseline and latest years. — **Harsh** · FR-4.2
-- [ ] **P4.3** Terrain features per cell: `elev_mean`, `slope_mean`, `slope_max`. — **Harsh** · FR-4.2
+- [x] **P4.1** Write `src/features/grid.py`: square grid of `cell_size` over the AOI, with `cell_id`, row, col and centroid; keep cells whose centre is inside the AOI. — **Harsh** · FR-4.1
+- [x] **P4.2** Write `src/features/lulc_features.py`: per-cell class fractions from the 10 m LULC (block aggregation on the aligned raster, not slow polygon zonal stats). For both the baseline and latest years. — **Harsh** · FR-4.2
+- [x] **P4.3** Terrain features per cell: `elev_mean`, `slope_mean`, `slope_max`. — **Harsh** · FR-4.2
 - [ ] **P4.4** Write `src/features/distance.py`: distance transforms (`scipy.ndimage.distance_transform_edt` with correct pixel size) for major road, any road, water and built-up; sample at cell centroids; cap and log-transform. — **Abhinav** · FR-4.2
 - [ ] **P4.5** Road density within 500 m, and building count / area fraction per cell (for analysis only; flagged as leaky). — **Abhinav** · FR-4.2, FR-6.6
-- [ ] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
+- [x] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
 - [ ] **P4.7** Optional: NDVI (Sentinel-2 median composite) and WorldPop density. — **Abhinav** · PRD §7.2
-- [ ] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
-- [ ] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density)
+- [~] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
+- [~] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density) · *Grid, fractions, rings and raster distances done (`tests/unit/test_features_raster.py`); road distance/density tests pending (H3).*
 
 ### Phase 4 Gate
 
@@ -235,7 +237,7 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [ ] **P5.2** K-Means for k = 3…10: elbow (inertia) and silhouette plots; pick k with justification. — **Abhinav** · FR-5.2, FR-5.3
 - [ ] **P5.3** Alternative: GMM (choose components by BIC) and/or HDBSCAN; compare with K-Means (silhouette, Davies–Bouldin, maps). — **Abhinav** · FR-5.2
 - [ ] **P5.4** Write `src/classify/label.py`: rule table mapping clusters → built-up / forest / usable / excluded from centroids (PRD §9.4); thresholds in config. — **Harsh** · FR-5.4
-- [ ] **P5.5** Exclusion mask: water, wetland, snow, mangroves and slope > threshold; applied after labelling. Save `outputs/exclusion_mask.tif`. — **Harsh** · FR-5.5
+- [~] **P5.5** Exclusion mask: water, wetland, snow, mangroves and slope > threshold; applied after labelling. Save `outputs/exclusion_mask.tif`. — **Harsh** · FR-5.5
 - [ ] **P5.6** Evaluation: confusion matrix vs WorldCover majority class (collapsed to 3), overall agreement, per-class precision/recall; centroid profile plots (radar or heatmap) to interpret clusters. — **Abhinav** · FR-5.6
 - [ ] **P5.7** Export `outputs/lulc_3class.tif` and `outputs/clusters.gpkg`; create `notebooks/04_clustering.ipynb` with all plots and a written interpretation of each cluster. — **Abhinav** · PRD §13
 - [ ] **P5.8** Unit tests: labelling rules on synthetic centroids; mask removes all water/steep cells; same seed gives identical labels. — **Harsh** · FR-5.7

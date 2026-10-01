@@ -9,9 +9,10 @@ venv/
 .ruff_cache/
 
 # Data (large rasters/vectors stay out of git)
-data/
-outputs/
-logs/
+# no trailing slash: also ignores a `data` symlink to an external drive
+data
+outputs
+logs
 *.tif
 *.tiff
 *.gpkg

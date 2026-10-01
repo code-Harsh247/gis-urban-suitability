@@ -58,6 +58,21 @@ def test_manifest_key_is_repo_relative_posix(tmp_path):
     assert manifest_key(tmp_path / "data" / "raw" / "a.tif", tmp_path) == "data/raw/a.tif"
 
 
+def test_manifest_works_when_data_is_a_symlink(tmp_path):
+    """data/ may live on another drive and be linked into the repo."""
+    repo, ext = tmp_path / "repo", tmp_path / "usb" / "data"
+    (ext / "raw").mkdir(parents=True)
+    repo.mkdir()
+    (repo / "data").symlink_to(ext, target_is_directory=True)
+    f = repo / "data" / "raw" / "x.bin"
+    f.write_bytes(b"abc")
+    assert manifest_key(f, repo) == "data/raw/x.bin"
+    m = Manifest(repo / "data" / "manifest.json")
+    record_download(m, f, repo, dataset="test")
+    assert not needs_download(f, Manifest(repo / "data" / "manifest.json"), repo)
+    assert (ext / "manifest.json").exists()  # written through the link
+
+
 def test_retry_succeeds_after_failures():
     calls = []
 
@@ -127,6 +142,45 @@ def test_mosaic_two_tiles_same_crs(tmp_path):
         assert ds.bounds.left == pytest.approx(77.02, abs=1e-3)
         assert ds.bounds.right == pytest.approx(77.08, abs=1e-3)
     assert not out.with_suffix(".tmp.tif").exists()
+
+
+def test_mosaic_keeps_source_pixel_grid_and_values(tmp_path):
+    """Output pixels must sit exactly on the source grid: values copied, never shifted."""
+    n = 100
+    arr = np.arange(n * n, dtype="float32").reshape(1, n, n)  # every pixel unique
+    src = tmp_path / "dem.tif"
+    profile = dict(
+        driver="GTiff",
+        height=n,
+        width=n,
+        count=1,
+        dtype="float32",
+        crs="EPSG:4326",
+        transform=from_origin(77.0, 13.0, 0.001, 0.001),
+        nodata=-9999.0,
+    )
+    with rasterio.open(src, "w", **profile) as dst:
+        dst.write(arr)
+    out = tmp_path / "m.tif"
+    # bounds deliberately off-grid by fractions of a pixel
+    stac.mosaic_to_file(
+        [str(src)],
+        (77.01234, 12.95678, 77.05432, 12.98765),
+        out,
+        dst_crs="EPSG:32643",
+        resampling=Resampling.bilinear,
+    )
+    with rasterio.open(out) as ds, rasterio.open(src) as s0:
+        off_x = (ds.transform.c - s0.transform.c) / 0.001
+        off_y = (s0.transform.f - ds.transform.f) / 0.001
+        assert off_x == pytest.approx(round(off_x), abs=1e-6)
+        assert off_y == pytest.approx(round(off_y), abs=1e-6)
+        got = ds.read(1)
+        r0, c0 = round(off_y), round(off_x)
+        np.testing.assert_array_equal(got, arr[0, r0 : r0 + got.shape[0], c0 : c0 + got.shape[1]])
+        assert (
+            ds.bounds.left <= 77.01234 and ds.bounds.right >= 77.05432
+        )  # still covers the request
 
 
 def test_mosaic_mixed_crs_warps_to_project_crs(tmp_path):
@@ -208,6 +262,24 @@ def test_esri_download_filters_year_records_manifest_and_skips_rerun(
     assert [p.stat().st_mtime_ns for p in paths] == mtimes
 
 
+def test_changed_area_triggers_redownload(project, tmp_path, monkeypatch):
+    from dataclasses import replace
+
+    calls = []
+
+    def fake_search(collection, bbox, datetime=None, query=None):
+        calls.append(bbox)
+        return _fake_items(tmp_path, [f"43P-{datetime}"], "data", 5)
+
+    monkeypatch.setattr(stac, "search_items", fake_search)
+    lulc.download_esri_lulc(project, years=[2018])
+    lulc.download_esri_lulc(project, years=[2018])
+    assert len(calls) == 1  # same area: skipped
+    bigger = replace(project, raw={**project.raw, "aoi": {**project["aoi"], "buffer_m": 5000}})
+    lulc.download_esri_lulc(bigger, years=[2018])
+    assert len(calls) == 2  # buffer changed: downloaded again
+
+
 def test_worldcover_and_dem_paths(project, tmp_path, monkeypatch):
     monkeypatch.setattr(
         stac,
@@ -244,4 +316,5 @@ def test_aoi_bounds_include_buffer(project):
     w, s, e, n = stac.aoi_bounds_4326(project)
     aw, as_, ae, an = project.aoi.total_bounds
     assert w < aw and s < as_ and e > ae and n > an  # 1 km buffer
-    assert (aw - w) * 111_000 == pytest.approx(1000, rel=0.1)
+    margin_m = project["aoi"]["buffer_m"] + 2 * project.cell_size_m  # buffer + 2 cells (+ rounding)
+    assert margin_m <= (aw - w) * 111_000 <= margin_m + project.cell_size_m + 50

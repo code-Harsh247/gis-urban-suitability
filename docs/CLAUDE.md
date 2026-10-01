@@ -54,7 +54,31 @@ rasterio, geopandas, shapely, pyproj, pystac-client + planetary-computer, osmnx,
 
 Running commands: use the `gis-suit` environment. On Harsh's laptop it is a micromamba env at `C:\micromamba\envs\gis-suit` (Python: `C:\micromamba\envs\gis-suit\python.exe`). Load config with `from src.config import load_config`.
 
-Before finishing a phase, run its gate: `pytest tests/gates/test_phaseN.py`.
+Before finishing a phase, run its gate: `pytest tests/gates/test_phaseN.py`, then the done check below.
+
+## Done check (after every work package / phase)
+
+A package is **not done** when the code runs. After finishing it, and before ticking it or committing, check that everything is in order:
+
+1. **Tests:** `pytest tests` passes (unit tests + every gate up to the current phase).
+2. **Lint:** `git add` the new files first, then `pre-commit run --all-files` passes (it skips files git doesn't track yet).
+3. **Contracts:** real output files pass `schema.validate_project(load_config())` (also run by `tests/unit/test_contracts.py`).
+4. **Correctness of the data, checked independently.** "It ran" is not enough. Compare outputs against something the code did not produce:
+   - the source data (e.g. pixel values at random points);
+   - grid/CRS alignment between layers;
+   - value ranges and nodata share;
+   - known landmarks (look up coordinates, don't guess);
+   - agreement with a second dataset;
+   - a visual quick-look.
+
+   Keep the check as a rerunnable script in `scripts/verify_*.py`.
+5. **Reproducible:** a rerun skips or reproduces the same outputs (same seed, same files).
+6. **Record:**
+   - tick the tasks in `docs/execution_plan.md` and `docs/Tasks.md`;
+   - write any surprises or caveats next to the affected task;
+   - commit the package on its own (message starts with its ID, e.g. `A2: ...`) and push to `main`.
+
+If a check fails, fix it (with a regression test) as a separate commit before moving on.
 
 ## Planned layout
 
@@ -80,3 +104,4 @@ outputs/     maps, rasters, metrics (git-ignored)
 ## Conventions
 
 - Keep large data files (`.tif`, `.shp`, `.gpkg`, `data/`) out of git.
+- `data/` may be a **symlink to an external drive**. On Abhinav's laptop: `data -> /media/abhinav/7E87-ECF8/gis-urban-suitability/data` (exFAT USB drive). Code must not follow symlinks when building repo-relative paths (use `io_utils.manifest_key`, not `Path.resolve()`). The drive must be mounted before running anything that reads or writes data.

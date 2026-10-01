@@ -8,7 +8,7 @@ project:
 aoi:
   path: config/aoi.geojson   # one polygon, EPSG:4326 (bbox from docs/study_area.md; refine in P0.10)
   name: Bengaluru South      # decision D1 (docs/execution_plan.md)
-  buffer_m: 1000             # extra margin downloaded around the AOI (edge effects)
+  buffer_m: 3000             # margin around the AOI for downloads, rings and distances; must be >= features.distance_cap_m (A3 done check)
   city_center: null          # optional [lon, lat] for dist_center feature
 
 crs:
@@ -31,7 +31,7 @@ years:                       # decision D3 (ESRI 2017 is noisier; two years at e
 features:
   context_radii_m: [250, 500]
   road_density_radius_m: 500
-  distance_cap_m: 5000
+  distance_cap_m: 3000       # distances are exact only up to aoi.buffer_m, so cap = buffer
   max_nodata_fraction: 0.5
 
 exclusion:

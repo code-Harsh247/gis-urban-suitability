@@ -180,6 +180,8 @@ def _labels(city: _City, cfg: Config) -> pd.DataFrame:
     nb &= b[y["baseline_confirm"]] < lo
     candidate = nb & ~excluded
     grew = candidate & (b[y["latest"]] >= hi) & (b[y["latest_confirm"]] >= hi)
+    stayed = candidate & (b[y["latest"]] < lo) & (b[y["latest_confirm"]] < lo)
+    ambiguous = candidate & ~grew & ~stayed
     t0, t1 = y["change_train_end"]
     chg = candidate & (b[t0] >= hi) & (b[t1] >= hi)
     near_old = ndi.maximum_filter(b[y["baseline"]] >= hi, 7)  # within ~300 m of old built-up
@@ -191,6 +193,7 @@ def _labels(city: _City, cfg: Config) -> pd.DataFrame:
             "built_baseline": (b[y["baseline"]] >= hi).ravel(),
             "candidate": candidate.ravel(),
             "grew": grew.ravel(),
+            "ambiguous": ambiguous.ravel(),
             "chg_train_pos": chg.ravel(),
             "lei_type": lei.ravel().astype(object),
         }
