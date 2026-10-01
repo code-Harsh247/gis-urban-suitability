@@ -94,10 +94,10 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2 · *Suggested papers A1–A6 pre-filled by Harsh in `docs/literature_review.md` (citations checked, details from abstracts); Abhinav reviews, reads and completes them.*
 - [x] **P1.3** Review ≥ 5 papers on **ML / clustering / similarity for land classification and site selection** (K-Means/GMM on land features, RF urban growth models, spatial CV). — **Harsh** · G2 · *Papers H1–H10 in `docs/literature_review.md`; a few details marked "to verify" against full texts.*
 - [~] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part) · *Harsh's ML/validation draft done; MCDA part and combined conclusion pending.*
-- [ ] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7
-- [ ] **P1.6** Check OSM coverage in the AOI: count buildings, road length and water features with a quick `osmnx` query. Decide whether a fallback building dataset (Microsoft / Google Open Buildings) is needed. — **Abhinav** · PRD §7, Risk 1
-- [ ] **P1.7** Write `docs/data_sources.md`: final dataset list, versions, years, licences, access method, and known issues. — **Harsh**
-- [ ] **P1.8** Decide the baseline and latest year for temporal validation (e.g. 2017 → 2023), and confirm there is visible growth between them. — **Both** · FR-8.1
+- [x] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7 · *Done with `scripts/check_data_coverage.py` for the D2/D3 years (ESRI 2018–2023, WorldCover 2021, DEM): one tile each, all cover AOI + buffer. See `docs/data_sources.md` §2.*
+- [x] **P1.6** Check OSM coverage in the AOI: count buildings, road length and water features with a quick `osmnx` query. Decide whether a fallback building dataset (Microsoft / Google Open Buildings) is needed. — **Abhinav** · PRD §7, Risk 1 · *Done by Harsh (OSM is his track) with the ohsome API, 2018 vs 2026: 151k → 187k buildings, roads 3,889 → 8,730 km. **Decision: OSM only, no fallback.** See `docs/data_sources.md` §3.*
+- [x] **P1.7** Write `docs/data_sources.md`: final dataset list, versions, years, licences, access method, and known issues. — **Harsh** · *Raster sections drafted for Abhinav to review; class mapping (§6) follows with A2.3; shared-drive link with H1.5.*
+- [x] **P1.8** Decide the baseline and latest year for temporal validation (e.g. 2017 → 2023), and confirm there is visible growth between them. — **Both** · FR-8.1 · *D3: 2018 + 2019 → 2022 + 2023 (change-RF positives 2020 + 2021), set in `config.yaml`; 8.4 % persistent growth of non-built land (`study_area.md`).*
 
 ### Phase 1 Gate
 
@@ -109,8 +109,8 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 **Manual checklist:**
 - [ ] Each teammate has read the other's paper summaries.
 - [ ] The synthesis section clearly states what our project adds.
-- [ ] Building data source decided (OSM only, or OSM + fallback).
-- [ ] Temporal validation years fixed in `config.yaml`.
+- [x] Building data source decided (OSM only, or OSM + fallback). *(OSM only)*
+- [x] Temporal validation years fixed in `config.yaml`.
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
