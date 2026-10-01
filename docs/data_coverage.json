@@ -1,0 +1,143 @@
+{
+  "aoi": "Bengaluru South",
+  "aoi_bbox_4326": [
+    77.52,
+    12.72,
+    77.74,
+    12.94
+  ],
+  "aoi_buffer_bbox_4326": [
+    77.51079,
+    12.71097,
+    77.74921,
+    12.94903
+  ],
+  "rasters": {
+    "esri_lulc": {
+      "collection": "io-lulc-annual-v02",
+      "license": "CC-BY-4.0",
+      "license_links": [
+        "https://creativecommons.org/licenses/by/4.0/"
+      ],
+      "title": "10m Annual Land Use Land Cover (9-class) V2",
+      "years": {
+        "2018": {
+          "items": [
+            "43P-2018"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            139.7
+          ]
+        },
+        "2019": {
+          "items": [
+            "43P-2019"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            142.0
+          ]
+        },
+        "2020": {
+          "items": [
+            "43P-2020"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            144.5
+          ]
+        },
+        "2021": {
+          "items": [
+            "43P-2021"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            144.6
+          ]
+        },
+        "2022": {
+          "items": [
+            "43P-2022"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            147.5
+          ]
+        },
+        "2023": {
+          "items": [
+            "43P-2023"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            123.5
+          ]
+        }
+      }
+    },
+    "worldcover": {
+      "collection": "esa-worldcover",
+      "license": "CC-BY-4.0",
+      "license_links": [
+        "https://spdx.org/licenses/CC-BY-4.0.html"
+      ],
+      "title": "ESA WorldCover",
+      "years": {
+        "2021": {
+          "items": [
+            "ESA_WorldCover_10m_2021_v200_N12E075"
+          ],
+          "n_items": 1,
+          "covers_aoi_buffer": true,
+          "tile_sizes_mb": [
+            127.7
+          ]
+        }
+      }
+    },
+    "dem": {
+      "collection": "cop-dem-glo-30",
+      "license": "proprietary",
+      "license_links": [
+        "https://spacedata.copernicus.eu/documents/20126/0/CSCDA_ESA_Mission-specific+Annex.pdf"
+      ],
+      "title": "Copernicus DEM GLO-30",
+      "static": {
+        "items": [
+          "Copernicus_DSM_COG_10_N12_00_E077_00_DEM"
+        ],
+        "n_items": 1,
+        "covers_aoi_buffer": true,
+        "tile_sizes_mb": [
+          42.0
+        ]
+      }
+    }
+  },
+  "osm": {
+    "2018-01-01": {
+      "buildings": 151374,
+      "roads_all_km": 3889,
+      "roads_major_km": 448,
+      "water_polygons": 159,
+      "waterways_km": 107,
+      "protected_areas": 3
+    },
+    "2026-01-01": {
+      "buildings": 186526,
+      "roads_all_km": 8730,
+      "roads_major_km": 630,
+      "water_polygons": 408,
+      "waterways_km": 255,
+      "protected_areas": 2
+    }
+  }
+}

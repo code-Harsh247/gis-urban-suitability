@@ -2,6 +2,14 @@
 
 Candidate study areas checked against the selection criteria in [PRD §5.1](PRD.md#51-selection-criteria), for the team decision in **P0.10**.
 
+> **Decision (P0.10, 2026-10-01): Bengaluru South**. Proposed by Abhinav, confirmed by Harsh. The reasons:
+> - strong persistent growth (8.4 % of non-built land)
+> - a clear forest block (Bannerghatta)
+> - mostly gentle terrain
+> - good OSM building coverage *in 2018*, which temporal validation needs
+>
+> Backups: Hyderabad West, then Pune West. The AOI is in `config/aoi.geojson` (582 km², EPSG:32643).
+
 All numbers come from [`scripts/study_area_candidates.py`](../scripts/study_area_candidates.py) (raw output: [`img/study_area_candidates.json`](img/study_area_candidates.json)). Run on 2026-09-28. To rerun: `python scripts/study_area_candidates.py [name ...]`.
 
 ## How candidates were compared

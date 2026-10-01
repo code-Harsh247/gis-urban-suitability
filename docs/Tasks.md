@@ -14,6 +14,8 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
   3. **Sign-off:** both teammates tick their name.
 - **Do not start the next phase's dependent tasks until the gate passes.** Independent tasks (e.g. report writing) may start early.
 
+**Deadline: final submission Tue 2026-10-06.** Phase dates below follow the day plan in PRD §15.
+
 **Status legend:** `- [ ]` not started · `- [~]` in progress (write `[~]` by hand) · `- [x]` done
 
 ---
@@ -22,9 +24,9 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 
 | Phase | Name | Harsh | Abhinav | Both | Gate test by | Gate passed |
 |---|---|---|---|---|---|---|
-| 0 | Setup and planning | 6 (5 done) | 4 (3 done by Harsh) | 2 | Harsh | ☐ |
+| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (sign-off pending) |
 | 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ☐ |
-| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ☐ |
+| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on Harsh's laptop (sign-off pending) |
 | 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ☐ |
 | 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
 | 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
@@ -40,7 +42,7 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 ## Phase 0 — Setup and planning
 
 **Goal:** a working shared repo and environment on both laptops, agreed conventions, and a chosen study area.
-**Depends on:** nothing. **Est.:** Week 1.
+**Depends on:** nothing. **Target:** Thu 2026-10-01 (done).
 
 ### Todos
 
@@ -48,14 +50,14 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 - [x] **P0.2** Add `.gitignore` (Python, data, rasters, vectors). — **Harsh**
 - [x] **P0.3** Add `docs/CLAUDE.md`, root `CLAUDE.md` pointer, `.claude/settings.json` (no AI attribution). — **Harsh**
 - [x] **P0.4** Write PRD and Tasks. — **Harsh**
-- [~] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh** · *Invite sent; waiting for Abhinav to accept and clone.*
+- [x] **P0.5** Add Abhinav as a collaborator on GitHub; Abhinav clones the repo. — **Harsh** · *Done: Abhinav is a collaborator and has merged PRs #1 and #2.*
 - [x] **P0.6** Create `environment.yml` (conda-forge, Python 3.11, all libraries from PRD §12) and `scripts/check_env.py`. — **Harsh** · PRD NFR-1, NFR-3
 - [x] **P0.7** Create the folder skeleton from PRD §11 (`src/` subpackages with `__init__.py`, `notebooks/`, `tests/unit/`, `tests/gates/`, `config/`, `outputs/`, `report/`) and `pyproject.toml` (black, ruff, pytest config). — **Abhinav** · NFR-4 · *Done by Harsh; `data/`, `outputs/`, `logs/` are git-ignored and created by `Config.ensure_dirs()`.*
 - [x] **P0.8** Set up `pre-commit` with `black`, `ruff`, `nbstripout`. — **Abhinav** · NFR-6 · *Done by Harsh; hooks run the env's own tools (plus a 1 MB file-size guard), so run `pre-commit install` inside `gis-suit`.*
 - [x] **P0.9** Propose 3 candidate study areas that meet PRD §5.1. For each, give: approx. area (km²), a screenshot of WorldCover, an OSM building coverage check, and visible growth 2017→2023. Write it up in `docs/study_area.md`. — **Abhinav** · PRD §5 · *14 areas checked with `scripts/study_area_candidates.py` (persistent 2018→2023 growth, OSM buildings in 2018 and 2026). Recommends Bengaluru South, then Hyderabad West; Pune West as fallback.*
-- [~] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Waiting for Harsh to confirm; the polygon can still be refined.*
+- [x] **P0.10** Choose the study area together; draw `config/aoi.geojson`; set the UTM EPSG code. — **Both** · Q1 · *Bengaluru South adopted as the default (see `docs/execution_plan.md` §2). AOI = the study-area bbox (582 km², EPSG:32643 via `crs.epsg: auto`). Confirmed by Harsh 2026-10-01; the polygon can still be refined (PRD Q9).*
 - [x] **P0.11** Write `config/config.yaml` and `src/config.py` (load + validate: AOI valid polygon, CRS projected, cell size > 0). — **Abhinav** · FR-1.1, FR-1.2 · *Done by Harsh, with 15 unit tests in `tests/unit/test_config.py`. `crs.epsg: auto` picks the UTM zone from the AOI, so P0.10 only needs the polygon + `aoi.name`.*
-- [ ] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3
+- [~] **P0.12** Find out the deadline, intermediate reviews and report format from the instructor; update PRD §15 and §20. — **Both** (Harsh: deadline/reviews, Abhinav: report format) · Q2, Q3 · *Deadline: **final submission Tue 2026-10-06** (Harsh, recorded in PRD §15). Report format still open (Abhinav).*
 
 ### Phase 0 Gate
 
@@ -69,12 +71,13 @@ Ownership in short: **Harsh** leads the raster/LULC pipeline, building similarit
 
 Status on Harsh's laptop (2026-09-27): **30 passed, 5 failing**. All 5 need the AOI.
 Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 unit tests), with the Bengaluru South AOI.
+Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full suite 82 passed, 1 skipped.
 
 **Manual checklist:**
-- [ ] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Harsh: env done, rerun now that the AOI exists; Abhinav: done 2026-10-01)*
+- [x] Both teammates created the conda env and ran `pytest tests/gates/test_phase0.py` successfully on **their own laptop**. *(Abhinav and Harsh: 35 passed, 2026-10-01)*
 - [x] `pre-commit run --all-files` passes.
-- [ ] `docs/study_area.md` states the chosen AOI and the reason.
-- [ ] Deadline is recorded in PRD, and phase dates in this file are adjusted.
+- [x] `docs/study_area.md` states the chosen AOI and the reason.
+- [x] Deadline is recorded in PRD, and phase dates in this file are adjusted.
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
@@ -83,18 +86,18 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 1 — Literature review and data discovery
 
 **Goal:** understand prior work and lock in the datasets.
-**Depends on:** P0.10 (study area) for the coverage checks. **Est.:** Weeks 1–2.
+**Depends on:** P0.10 (study area) for the coverage checks. **Target:** Fri 2026-10-02.
 
 ### Todos
 
-- [ ] **P1.1** Create `docs/literature_review.md` with a template matrix: title, authors, year, venue, study area, data used, method, criteria/features, validation, key findings, relevance to us. — **Abhinav**
-- [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2
-- [ ] **P1.3** Review ≥ 5 papers on **ML / clustering / similarity for land classification and site selection** (K-Means/GMM on land features, RF urban growth models, spatial CV). — **Harsh** · G2
-- [ ] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part)
-- [ ] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7
-- [ ] **P1.6** Check OSM coverage in the AOI: count buildings, road length and water features with a quick `osmnx` query. Decide whether a fallback building dataset (Microsoft / Google Open Buildings) is needed. — **Abhinav** · PRD §7, Risk 1
-- [ ] **P1.7** Write `docs/data_sources.md`: final dataset list, versions, years, licences, access method, and known issues. — **Harsh**
-- [ ] **P1.8** Decide the baseline and latest year for temporal validation (e.g. 2017 → 2023), and confirm there is visible growth between them. — **Both** · FR-8.1
+- [x] **P1.1** Create `docs/literature_review.md` with a template matrix: title, authors, year, venue, study area, data used, method, criteria/features, validation, key findings, relevance to us. — **Abhinav** · *File and matrix created by Harsh with the P1.1 fields; rows A1–A6 pre-filled as suggestions for Abhinav to review.*
+- [ ] **P1.2** Review ≥ 5 papers on **GIS/MCDA land suitability and urban growth using LULC** (AHP, weighted overlay, FAO framework, LULC change). — **Abhinav** · G2 · *Suggested papers A1–A6 pre-filled by Harsh in `docs/literature_review.md` (citations checked, details from abstracts); Abhinav reviews, reads and completes them.*
+- [x] **P1.3** Review ≥ 5 papers on **ML / clustering / similarity for land classification and site selection** (K-Means/GMM on land features, RF urban growth models, spatial CV). — **Harsh** · G2 · *Papers H1–H10 in `docs/literature_review.md`; a few details marked "to verify" against full texts.*
+- [~] **P1.4** Write a 1-page synthesis in the review: common criteria, typical weights, common validation methods, and the gap our similarity approach fills. — **Both** (Abhinav: MCDA part, Harsh: ML part) · *Harsh's ML/validation draft done; MCDA part and combined conclusion pending.*
+- [x] **P1.5** Check coverage and access for WorldCover (2020, 2021), ESRI Annual LULC (2017–2023) and Copernicus DEM over the AOI via Planetary Computer STAC. Record item IDs, tiles and sizes. — **Harsh** · PRD §7 · *Done with `scripts/check_data_coverage.py` for the D2/D3 years (ESRI 2018–2023, WorldCover 2021, DEM): one tile each, all cover AOI + buffer. See `docs/data_sources.md` §2.*
+- [x] **P1.6** Check OSM coverage in the AOI: count buildings, road length and water features with a quick `osmnx` query. Decide whether a fallback building dataset (Microsoft / Google Open Buildings) is needed. — **Abhinav** · PRD §7, Risk 1 · *Done by Harsh (OSM is his track) with the ohsome API, 2018 vs 2026: 151k → 187k buildings, roads 3,889 → 8,730 km. **Decision: OSM only, no fallback.** See `docs/data_sources.md` §3.*
+- [x] **P1.7** Write `docs/data_sources.md`: final dataset list, versions, years, licences, access method, and known issues. — **Harsh** · *Raster sections drafted for Abhinav to review; class mapping (§6) follows with A2.3; shared-drive link with H1.5.*
+- [x] **P1.8** Decide the baseline and latest year for temporal validation (e.g. 2017 → 2023), and confirm there is visible growth between them. — **Both** · FR-8.1 · *D3: 2018 + 2019 → 2022 + 2023 (change-RF positives 2020 + 2021), set in `config.yaml`; 8.4 % persistent growth of non-built land (`study_area.md`).*
 
 ### Phase 1 Gate
 
@@ -106,8 +109,8 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 **Manual checklist:**
 - [ ] Each teammate has read the other's paper summaries.
 - [ ] The synthesis section clearly states what our project adds.
-- [ ] Building data source decided (OSM only, or OSM + fallback).
-- [ ] Temporal validation years fixed in `config.yaml`.
+- [x] Building data source decided (OSM only, or OSM + fallback). *(OSM only)*
+- [x] Temporal validation years fixed in `config.yaml`.
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
@@ -116,7 +119,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 2 — Data acquisition
 
 **Goal:** all raw data downloaded reproducibly and recorded in a manifest.
-**Depends on:** Phase 1 gate. **Est.:** Week 3.
+**Depends on:** Phase 1 gate. **Target:** Fri 2026-10-02.
 
 ### Todos
 
@@ -124,26 +127,26 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 - [x] **P2.2** Write `src/download/lulc.py`: download ESA WorldCover (AOI + 1 km buffer) via STAC, mosaic tiles if needed. — **Harsh** · FR-2.1
 - [x] **P2.3** Extend `lulc.py`: download ESRI Annual LULC for the baseline and latest years. — **Harsh** · FR-2.2
 - [x] **P2.4** Write `src/download/dem.py`: download Copernicus DEM GLO-30 (AOI + buffer). — **Abhinav** · FR-2.3
-- [ ] **P2.5** Write `src/download/osm.py`: download roads (keep the `highway` tag), water (`natural=water`, `waterway=*`) and buildings (`building=*`) with osmnx. Save as GeoPackage. — **Abhinav** · FR-2.4
-- [ ] **P2.6** If needed (from P1.6): download fallback building footprints (Microsoft / Google Open Buildings) for the AOI. — **Abhinav** · Risk 1
-- [ ] **P2.7** Add retries and clear error messages to all downloaders. — **Abhinav** · FR-2.6
+- [x] **P2.5** Write `src/download/osm.py`: download roads (keep the `highway` tag), water (`natural=water`, `waterway=*`) and buildings (`building=*`) with osmnx. Save as GeoPackage. — **Abhinav** · FR-2.4 · *Done by Harsh (OSM is his track, H1.1–H1.4): 2018 snapshot (`[date:]`) + current, plus protected areas; 9 unit tests. Details and Overpass workarounds in `docs/data_sources.md` §5.*
+- [x] **P2.6** If needed (from P1.6): download fallback building footprints (Microsoft / Google Open Buildings) for the AOI. — **Abhinav** · Risk 1 · *Not needed: OSM only (P1.6), 179,740 buildings in the 2018 snapshot.*
+- [x] **P2.7** Add retries and clear error messages to all downloaders. — **Abhinav** · FR-2.6 · *Rasters: `io_utils.retry` (Abhinav). OSM: retries per mirror, 3-mirror fallback, clear final error (Harsh).*
 - [x] **P2.8** Create `notebooks/01_data_download.ipynb`: calls the download functions and shows quick-look plots of each layer over the AOI. — **Harsh** · FR-10.1
-- [ ] **P2.9** Unit tests: manifest round-trip, checksum, skip-if-exists logic (with temporary files). — **Both** (Harsh: io_utils tests, Abhinav: downloader error-handling tests with mocked network)
+- [x] **P2.9** Unit tests: manifest round-trip, checksum, skip-if-exists logic (with temporary files). — **Both** (Harsh: io_utils tests, Abhinav: downloader error-handling tests with mocked network) · *`tests/unit/test_io_download.py` (Abhinav) + `tests/unit/test_osm_download.py` (Harsh).*
 
 ### Phase 2 Gate
 
 **Automated — `tests/gates/test_phase2.py`** (written by **Harsh**):
-- [ ] Every expected raw file exists: WorldCover, ESRI LULC × 2 years, DEM, roads, water, buildings.
-- [ ] Every raster opens with rasterio, has a CRS and nodata defined, and its bounds cover the AOI bbox.
-- [ ] Every vector opens with geopandas, has a CRS, and is non-empty.
-- [ ] LULC rasters contain only valid class codes (WorldCover: {10,20,…,100} + nodata; ESRI: documented codes).
-- [ ] `data/manifest.json` has one entry per file, and the stored checksums match the files on disk.
-- [ ] Rerunning the downloads doesn't re-download (checks file modified times).
+- [x] Every expected raw file exists: WorldCover, ESRI LULC × 2 years, DEM, roads, water, buildings. *(ESRI 2018–2023; OSM 2018 + current; protected areas)*
+- [x] Every raster opens with rasterio, has a CRS and nodata defined, and its bounds cover the AOI bbox.
+- [x] Every vector opens with geopandas, has a CRS, and is non-empty. *(plus: 2018 snapshot smaller than current; building / lake counts ≥ 95 % of ohsome; Bannerghatta NP present)*
+- [x] LULC rasters contain only valid class codes (WorldCover: {10,20,…,100} + nodata; ESRI: documented codes).
+- [x] `data/manifest.json` has one entry per file, and the stored checksums match the files on disk.
+- [x] Rerunning the downloads doesn't re-download (checks file modified times). *(checked via `needs_download`, which the downloaders use to skip)*
 
 **Manual checklist:**
-- [ ] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM).
-- [ ] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`).
-- [ ] Unit tests pass: `pytest tests/unit`.
+- [~] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters: notebook 01, Abhinav. OSM: 2018 vs current quick-look checked by Harsh, 2026-10-01; layers line up with the AOI.)*
+- [~] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01. Abhinav: rasters; OSM pending.)*
+- [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
@@ -152,7 +155,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 3 — Preprocessing
 
 **Goal:** every layer is clipped, in the project CRS, aligned to one reference grid, and clean.
-**Depends on:** Phase 2 gate. **Est.:** Weeks 3–4.
+**Depends on:** Phase 2 gate. **Target:** Sat 2026-10-03.
 
 ### Todos
 
@@ -188,7 +191,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 4 — Grid and feature engineering
 
 **Goal:** one feature table with a row per grid cell and all PRD §9.3 features.
-**Depends on:** Phase 3 gate. **Est.:** Weeks 4–5.
+**Depends on:** Phase 3 gate. **Target:** Sat 2026-10-03.
 
 ### Todos
 
@@ -224,7 +227,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 5 — Land classification (clustering)
 
 **Goal:** a three-class map (built-up / forest / usable) from clustering, evaluated and explained.
-**Depends on:** Phase 4 gate. **Est.:** Weeks 5–6.
+**Depends on:** Phase 4 gate. **Target:** Sun 2026-10-04.
 
 ### Todos
 
@@ -260,7 +263,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 6 — Building similarity
 
 **Goal:** given building A, find similar locations B, plus an aggregate similarity score and an RF alternative for every usable cell.
-**Depends on:** Phase 5 gate. **Est.:** Weeks 6–7.
+**Depends on:** Phase 5 gate. **Target:** Sun 2026-10-04.
 
 ### Todos
 
@@ -296,7 +299,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 7 — Suitability mapping and validation
 
 **Goal:** final suitability classes, candidate sites, MCDA baseline, and validation metrics.
-**Depends on:** Phase 6 gate. **Est.:** Weeks 8–9.
+**Depends on:** Phase 6 gate. **Target:** Mon 2026-10-05.
 
 ### Todos
 
@@ -333,7 +336,7 @@ Status on Abhinav's laptop (2026-10-01, Linux, micromamba): **35 passed** (+ 15 
 ## Phase 8 — Visualisation, report and presentation
 
 **Goal:** polished outputs, report and slides; the repo is clean and reproducible.
-**Depends on:** Phase 7 gate (report writing can start earlier). **Est.:** Weeks 9–10.
+**Depends on:** Phase 7 gate (report writing can start earlier). **Target:** Tue 2026-10-06 (submit).
 
 ### Todos
 

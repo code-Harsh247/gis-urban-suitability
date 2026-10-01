@@ -8,13 +8,16 @@ Guidance for Claude Code when working in this repository.
 
 Goal: produce a map of land suitable for new urban development, using LULC data plus supporting layers (terrain, roads, water), with the whole analysis done in Python (not QGIS).
 
-Study area: **TBD** — the choice decides which LULC datasets have coverage.
+Study area: **Bengaluru South** (`config/aoi.geojson`, EPSG:32643). See [study_area.md](study_area.md).
 
-Team: Harsh and Abhinav.
+Team: Harsh (vector and learning track) and Abhinav (raster and similarity track).
+
+Deadline: **final submission Tue 2026-10-06**, full scope (day targets in PRD §15).
 
 ## Key docs
 
 - [PRD.md](PRD.md) — full requirements, methodology, data, validation design. Source of truth for *what* to build.
+- [execution_plan.md](execution_plan.md) — the two tracks, file contracts C1–C8, decisions D1–D10, week plan, blocking tasks (🔒). Don't start a 🔒 task before its blocker is ticked.
 - [Tasks.md](Tasks.md) — phased task list with owners and phase gate checks. Tick tasks off in the same change that completes them, and don't start a phase before the previous phase's gate passes.
 
 ## Tasks (from project meeting)
@@ -26,17 +29,24 @@ Team: Harsh and Abhinav.
 
 ## Data sources
 
-- LULC: ESA WorldCover (10 m), Dynamic World (10 m), ESRI 10 m Annual LULC; Bhuvan/NRSC for India
-- Built-up: GHSL; building footprints and roads from OpenStreetMap
-- Terrain: SRTM or Copernicus DEM (elevation, slope)
-- Optional: Sentinel-2 (NDVI), WorldPop (population)
+- LULC: **ESRI IO LULC v02, 2018–2023, for everything**; ESA WorldCover 2021 as a cross-check only
+- OSM roads / water / buildings: **2018-01-01 snapshot** (Overpass `[date:]`) for the validation run, current for the final map; OSM protected areas for the mask
+- Terrain: Copernicus DEM GLO-30 (elevation, slope)
 
 ## Method outline
 
-- Split the study area into a regular grid; per cell compute: LULC class fractions, elevation, slope, distance to roads / water / built-up, built-up density, NDVI.
-- Clustering: K-Means (baseline), GMM or HDBSCAN; choose k with elbow + silhouette; map clusters to the three classes.
-- Similarity: context profiles in 100 / 250 / 500 m buffers around existing buildings; score candidate cells by cosine / Euclidean similarity, or use a random-forest built vs non-built probability. Exclude forest, water and steep cells.
-- Validation: hold out some existing buildings and check they rank highly.
+- 100 m grid aligned to the 10 m ESRI reference grid; features per cell (`src/features/schema.py`).
+- Clustering on own-cell LULC fractions + terrain → built-up / forest / usable (+ exclusion mask).
+- Similarity: **Euclidean** distance on `schema.MODEL_INPUTS` (ring fractions, distances, terrain); single-building query + aggregate kNN score.
+- Change-based RF (2018 features → growth by 2020/21), state RF for comparison, MCDA/AHP baseline.
+- Validation: 2018 → persistent growth in 2022/23; ROC-AUC, lift, TOC, LEI split; baselines random + distance-to-built + MCDA always shown.
+
+## Leakage rules (enforce in code and tests)
+
+- Models (similarity, RF) take only `schema.MODEL_INPUTS`: **never own-cell LULC fractions or building counts**. Call `schema.check_model_inputs`.
+- **Time-travel rule:** nothing dated after `years.baseline_confirm` feeds a validation-run score (LULC, OSM snapshot, 3-class map, mask, reference buildings).
+- Models trained on growth labels are scored **out of fold** (2 km spatial blocks) in the validation run.
+- Every model writes `outputs/scores/{model}.parquet` (contract C8) and is evaluated by the same harness.
 
 ## Stack
 
