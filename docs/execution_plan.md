@@ -261,7 +261,7 @@ These are the only places the two tracks touch.
 - [ ] H4.2 Elbow + silhouette + Davies–Bouldin plots · 🔓 *(stub)*
 - [x] H4.3 Real clustering on the AOI; choose k and justify · 🔒 **A3.5b** (real C4) · *H4.1/H4.3 done by Abhinav (Tasks.md assigns P5.1–P5.3 to Abhinav): K-Means k = 7 for both runs, `outputs/clusters_{validation,final}.parquet`. H4.2 metrics computed; plots go in notebook 04.*
 - [ ] **H4.4** `src/classify/label.py`: cluster → class rules + exclusion mask → real C7 · 🔒 **A4.1**
-- [ ] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04
+- [~] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04 · *Abhinav: `src/classify/evaluate.py` + `export.py` + gate `tests/gates/test_phase5.py` written; waiting for C7 (H4.4).*
 - [ ] H4.6 Unit tests: labelling rules, mask removes water/steep, same seed = same labels · 🔓
 
 **H5. Learning models and ablation** · W6–7 · P6.5, P6.6
