@@ -3,7 +3,8 @@
 For each feature year, C2 of that year is joined on ``cell_id`` with the OSM snapshot
 that belongs to it (``schema.vector_snapshot_for``: baseline year -> 2018 snapshot,
 otherwise current). Cells with ``nodata_frac`` above ``features.max_nodata_fraction``
-are dropped and logged.
+are dropped and logged. Each table is also written as a GeoPackage of cell squares
+(``grid_features_{year}.gpkg``) for viewing in a GIS.
 
 Run: python -m src.features.build
 """
@@ -16,6 +17,7 @@ import pandas as pd
 
 from src.config import load_config
 from src.features import schema
+from src.features.grid import grid_geodataframe
 from src.features.raster_features import features_years
 from src.io_utils import setup_logging
 
@@ -50,12 +52,20 @@ def build_feature_table(cfg, year: int) -> pd.DataFrame:
     return df
 
 
+def write_feature_gpkg(cfg, df: pd.DataFrame, path) -> None:
+    """C4 with the cell squares as geometry (x, y from the grid C1)."""
+    grid = schema.read_contract(schema.contract_path(cfg, "C1"), "C1")
+    g = df.merge(grid[["cell_id", "x", "y"]], on="cell_id", how="left", validate="1:1")
+    grid_geodataframe(g, cfg).to_file(path, driver="GPKG")
+
+
 def write_feature_tables(cfg) -> dict[int, pd.DataFrame]:
     out = {}
     for year in features_years(cfg):
         df = build_feature_table(cfg, year)
         path = schema.contract_path(cfg, "C4", year=year)
         df.to_parquet(path, index=False)
+        write_feature_gpkg(cfg, df, path.with_suffix(".gpkg"))
         log.info("wrote %s (%d cells, %d columns)", path.name, len(df), df.shape[1])
         out[year] = df
     return out

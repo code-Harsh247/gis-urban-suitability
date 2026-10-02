@@ -206,8 +206,8 @@ Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_ran
 - [x] **P4.4** Write `src/features/distance.py`: distance transforms (`scipy.ndimage.distance_transform_edt` with correct pixel size) for major road, any road, water and built-up; sample at cell centroids; cap and log-transform. — **Abhinav** · FR-4.2 · *Done (C3). Road distances are exact point-to-line distances (shapely STRtree nearest) instead of an EDT on rasterised roads: no rasterisation error, and as fast. Water and built-up distances come from the rasters (`src/features/proximity.py`, C2). Verified by `scripts/verify_vector_features.py` (matches `shapely.distance` to 1e-12 m). Caveat: in 4.1 % of cells the 2018 network has a road > 50 m closer than today; 82 % of those are ways retagged `highway=track` since 2018 (tracks are dropped), 13 % deleted/merged in OSM. Consistent within each snapshot, so it doesn't break the time-travel rule.*
 - [x] **P4.5** Road density within 500 m, and building count / area fraction per cell (for analysis only; flagged as leaky). — **Abhinav** · FR-4.2, FR-6.6 · *Done (C3). Density = road length in the disk of cells within 500 m (81 cells, 0.81 km²), normalised by the cells on the lattice at the edge; r = 1.000 and 2–3 % median error against an exact 500 m circle. Medians: 3.0 km/km² (2018) vs 12.4 (current).*
 - [x] **P4.6** Write `src/features/context.py`: focal means at 250 m and 500 m for base features; the "surrounding ring" built-up fraction (excluding the centre cell). — **Harsh** · FR-4.3
-- [ ] **P4.7** Optional: NDVI (Sentinel-2 median composite) and WorldPop density. — **Abhinav** · PRD §7.2
-- [~] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5
+- [ ] **P4.7** Optional: NDVI (Sentinel-2 median composite) and WorldPop density. — **Abhinav** · PRD §7.2 · *Skipped for now (optional; time goes to Phases 5–7). Revisit only if time is left.*
+- [x] **P4.8** Write `src/features/build.py` to assemble everything into `data/features/grid_features.parquet` (+ `.gpkg` with geometry); log dropped cells (> 50 % nodata). Create `notebooks/03_feature_engineering.ipynb` with a map of each feature, histograms and a correlation matrix. — **Abhinav** · FR-4.4, FR-4.5 · *Done. `python -m src.features.build` writes `grid_features_{2018,2023}.parquet` + `.gpkg` (2018 features use the 2018 OSM snapshot). 58,218 cells, none dropped (> 50 % nodata). Full rebuild (C2 + C3 + C4) 0.4 min. Verified by `scripts/verify_feature_table.py`. Five pairs with |r| > 0.9 (250 m vs 500 m rings of the same class, slope mean vs max): all kept in C4, decision in notebook 03. Road density rises even in the old urban core between snapshots: OSM mapping completeness, not construction.*
 - [x] **P4.9** Unit tests: grid cell count and area on a synthetic AOI; fractions on a synthetic raster; distance transform of a single-pixel target gives the correct metres. — **Both** (Harsh: grid/fractions/context, Abhinav: distance/density) · *Grid, fractions, rings and raster distances done (`tests/unit/test_features_raster.py`); road distance/density done (`tests/unit/test_features_vector.py`).*
 
 ### Phase 4 Gate
@@ -221,9 +221,9 @@ Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_ran
 - [ ] Spot check: a cell containing a known major road has `dist_road_major` ≤ `cell_size`.
 
 **Manual checklist:**
-- [ ] Feature maps in notebook 03 look spatially sensible (distance grows away from roads, etc.).
-- [ ] Highly correlated features (|r| > 0.9) noted, with a decision on whether to drop them.
-- [ ] Feature build runs in < 10 min.
+- [x] Feature maps in notebook 03 look spatially sensible (distance grows away from roads, etc.).
+- [x] Highly correlated features (|r| > 0.9) noted, with a decision on whether to drop them.
+- [x] Feature build runs in < 10 min. *(0.4 min)*
 
 **Sign-off:** - [ ] Harsh  - [ ] Abhinav
 
@@ -239,7 +239,7 @@ Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_ran
 - [ ] **P5.1** Write `src/classify/cluster.py`: feature selection, standardisation, optional PCA (≥ 90 % variance). — **Abhinav** · FR-5.1
 - [ ] **P5.2** K-Means for k = 3…10: elbow (inertia) and silhouette plots; pick k with justification. — **Abhinav** · FR-5.2, FR-5.3
 - [ ] **P5.3** Alternative: GMM (choose components by BIC) and/or HDBSCAN; compare with K-Means (silhouette, Davies–Bouldin, maps). — **Abhinav** · FR-5.2
-- [ ] **P5.4** Write `src/classify/label.py`: rule table mapping clusters → built-up / forest / usable / excluded from centroids (PRD §9.4); thresholds in config. — **Harsh** · FR-5.4
+- [ ] **P5.4** Write `src/classify/label.py`: rule table mapping clusters → built-up / forest / usable / excluded from centroids (PRD §9.4); thresholds in config. — **Harsh** · FR-5.4 · *Caveat (found in P4.8): inside Bannerghatta NP, ESRI has 47 % trees and 50 % rangeland (dry deciduous forest and scrub). A rule that maps rangeland → usable would mark half the park usable; the protected mask removes it from scoring, but the 3-class map should treat protected / steep rangeland as forest-like or excluded.*
 - [~] **P5.5** Exclusion mask: water, wetland, snow, mangroves and slope > threshold; applied after labelling. Save `outputs/exclusion_mask.tif`. — **Harsh** · FR-5.5
 - [ ] **P5.6** Evaluation: confusion matrix vs WorldCover majority class (collapsed to 3), overall agreement, per-class precision/recall; centroid profile plots (radar or heatmap) to interpret clusters. — **Abhinav** · FR-5.6
 - [ ] **P5.7** Export `outputs/lulc_3class.tif` and `outputs/clusters.gpkg`; create `notebooks/04_clustering.ipynb` with all plots and a written interpretation of each cluster. — **Abhinav** · PRD §13

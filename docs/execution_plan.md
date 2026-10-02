@@ -183,7 +183,7 @@ These are the only places the two tracks touch.
 - [x] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
 - [x] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year · *built-up distance is to the nearest built pixel **outside** the cell (KD-tree, exact), so it never leaks the cell's own status. **Config change (done check):** `aoi.buffer_m` 1000 → 3000 and `features.distance_cap_m` 5000 → 3000, because distances are only exact up to the buffer (a cell at the AOI edge can't see beyond it). The code now refuses cap > buffer. **Harsh:** your OSM download area grows accordingly; cap road distances at 3 km too.*
 - [x] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)* · *`python -m src.features.build`; drops and logs cells with `nodata_frac` > 0.5*
-- [ ] **A3.5b** Real C4 on the AOI · 🔒 **H3.3**
+- [x] **A3.5b** Real C4 on the AOI · 🔒 **H3.3** · *`grid_features_{2018,2023}.parquet` + `.gpkg`; checked by `scripts/verify_feature_table.py`.*
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 
 **A4. Labels and masks** · W4 · P5.5, FR-8.1

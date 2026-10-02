@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+import geopandas as gpd
 import numpy as np
 import pandas as pd
 import pytest
@@ -280,6 +281,21 @@ def test_build_drops_high_nodata_cells(tmp_path):
     c2.to_parquet(p, index=False)
     df = build.build_feature_table(cfg, year)
     assert len(df) == len(c2) - 5
+
+
+def test_feature_gpkg_has_cell_squares(tmp_path):
+    cfg = make_synthetic_project(tmp_path / "p", n=10)
+    year = cfg["years"]["baseline"]
+    p = schema.contract_path(cfg, "C2", year=year)
+    c2 = pd.read_parquet(p)
+    c2.loc[:4, "nodata_frac"] = 0.9  # dropped rows: the gpkg must still line up by cell_id
+    c2.to_parquet(p, index=False)
+    out = build.write_feature_tables(cfg)
+    g = gpd.read_file(schema.contract_path(cfg, "C4", year=year).with_suffix(".gpkg"))
+    grid = pd.read_parquet(schema.contract_path(cfg, "C1")).set_index("cell_id")
+    assert len(g) == len(out[year]) and g["cell_id"].tolist() == out[year]["cell_id"].tolist()
+    assert np.allclose(g.centroid.x, grid.loc[g["cell_id"], "x"])
+    assert np.allclose(g.area, cfg.cell_size_m**2)
 
 
 def test_write_grid_matches_contract(raster_project):
