@@ -74,6 +74,15 @@ def test_grid_polygons_are_whole_cells_on_the_reference_grid(raster_project):
     assert np.allclose(((ref.transform.f - b["maxy"]) / cfg.cell_size_m) % 1, 0)
 
 
+def test_grid_polygons_ignore_the_frame_index(raster_project):
+    """Regression: boxes built from Series aligned on a non-default index gave None geometry."""
+    cfg, _, _ = raster_project
+    grid = build_grid(cfg).iloc[::3].set_index("cell_id", drop=False)
+    gdf = grid_geodataframe(grid, cfg)
+    assert gdf.geometry.notna().all()
+    assert np.allclose(gdf.centroid.x, grid["x"]) and np.allclose(gdf.centroid.y, grid["y"])
+
+
 def test_xy_to_cell_id_round_trip(raster_project):
     cfg, _, _ = raster_project
     grid = build_grid(cfg)

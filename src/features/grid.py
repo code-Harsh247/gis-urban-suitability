@@ -101,7 +101,8 @@ def build_grid(cfg) -> pd.DataFrame:
 def grid_geodataframe(grid: pd.DataFrame, cfg) -> gpd.GeoDataFrame:
     """Cell squares as polygons, in the project CRS."""
     h = float(cfg.cell_size_m) / 2
-    geom = shapely.box(grid["x"] - h, grid["y"] - h, grid["x"] + h, grid["y"] + h)
+    x, y = grid["x"].to_numpy(), grid["y"].to_numpy()  # arrays: no index alignment
+    geom = shapely.box(x - h, y - h, x + h, y + h)
     return gpd.GeoDataFrame(grid.copy(), geometry=geom, crs=cfg.crs)
 
 

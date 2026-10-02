@@ -115,6 +115,18 @@ def test_non_matching_parts_are_dropped(cfg):
     assert len(out) == 0 and stats["empty_after_clip"] == 1
 
 
+def test_nothing_inside_the_extent_gives_an_empty_layer(cfg):
+    """Regression: an empty selection crashed (float dtype of an empty mask)."""
+    ext = pv.reference_extent(cfg)
+    far = ext.bounds[2] + 5000
+    raw = gpd.GeoDataFrame(
+        {"osm_id": [1]}, geometry=[_to_ll(cfg, box(far, 0, far + 10, 10))], crs=4326
+    )
+    for gdf in (raw, raw.iloc[:0]):
+        out, stats = pv.clean_geometries(gdf, cfg.crs, ext, pv.POLY_TYPES)
+        assert len(out) == 0 and stats["kept"] == 0
+
+
 # ---------------------------------------------------------------- water
 
 
@@ -138,6 +150,26 @@ def test_water_kinds(cfg):
     lake = out.loc[out["kind"] == "water_body"]
     assert lake.area.iloc[0] == pytest.approx(2500, rel=1e-3)
     assert "km2_water_bodies" in stats
+
+
+def test_waterways_are_exploded_to_linestrings(cfg):
+    """A stream that leaves and re-enters the extent is a MultiLineString after clipping."""
+    ext = pv.reference_extent(cfg)
+    x0, y0, x1, _ = ext.bounds
+    y = y0 + 500
+    out_x = x1 + 2000
+    meander = LineString([(x1 - 500, y), (out_x, y + 300), (x1 - 500, y + 600)])
+    multi = shapely.MultiLineString(
+        [[(x0 + 100, y0 + 100), (x0 + 400, y0 + 100)], [(x0 + 100, y0 + 200), (x0 + 400, y0 + 200)]]
+    )
+    raw = gpd.GeoDataFrame(
+        {"osm_id": [1, 2], "natural": [None, None], "waterway": ["stream", "drain"]},
+        geometry=[_to_ll(cfg, meander), _to_ll(cfg, multi)],
+        crs=4326,
+    )
+    out, _ = pv.clean_water(cfg, raw, ext)
+    assert (out.geom_type == "LineString").all(), out.geom_type.value_counts().to_dict()
+    assert sorted(out["osm_id"]) == [1, 1, 2, 2]  # two parts each, tags kept
 
 
 # ---------------------------------------------------------------- buildings + C6
@@ -167,7 +199,7 @@ def test_clean_buildings(cfg):
     assert out.loc[out["osm_id"] == 12, "geometry"].iloc[0].geom_type == "MultiPolygon"
     assert out.loc[out["osm_id"] == 12, "building_type"].iloc[0] == "yes"  # missing tag -> yes
     lat = lattice(cfg)
-    r, c = lat.xy_to_rowcol(house["cx"], house["cy"])
+    r, c = lat.xy_to_rowcol(house["centroid_x"], house["centroid_y"])
     assert house["cell_id"] == r * lat.shape[1] + c
     assert list(out["bldg_id"]) == list(range(len(out)))
 
