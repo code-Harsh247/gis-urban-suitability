@@ -245,10 +245,10 @@ These are the only places the two tracks touch.
 - [ ] H1.5 `data/raw/osm/` copied to the shared drive; link in `data_sources.md`
 
 **H2. Vector preprocessing and reference buildings** · W2 · P3.4–P3.6, P6.2
-- [ ] H2.1 `src/preprocess/vector.py`: reproject, `make_valid`, drop empties · 🔓 *(stub)*
-- [ ] H2.2 Road classes major/minor; unit test on the mapping · 🔓
-- [ ] H2.3a Building cleaning (< 10 m², outliers), both snapshots · 🔓
-- [ ] **H2.3b** `cell_id` joined → real C6 for 2018 and current · 🔒 **A3.1** (real grid)
+- [x] H2.1 `src/preprocess/vector.py`: reproject, `make_valid`, drop empties · 🔓 *(stub)*
+- [x] H2.2 Road classes major/minor; unit test on the mapping · 🔓
+- [x] H2.3a Building cleaning (< 10 m², outliers), both snapshots · 🔓
+- [x] **H2.3b** `cell_id` joined → real C6 for 2018 and current · 🔒 **A3.1** (real grid) · *H2.1–H2.3 done by Abhinav (Tasks.md assigns P3.4–P3.6 to Abhinav), 2026-10-01: `src/preprocess/vector.py`, C6 for both snapshots. This unblocks A5.4/A5.5 (needs C6).*
 
 **H3. Vector features** · W3–4 · P4.4, P4.5
 - [ ] H3.1 `src/features/distance.py`: rasterise roads, EDT at 10 m, sample at cell centres · 🔓 *(stub)*; unit test: single road → correct metres

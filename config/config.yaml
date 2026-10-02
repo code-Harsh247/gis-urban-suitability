@@ -62,6 +62,14 @@ similarity:
   knn_k: 10
   metric: euclidean          # decision D5; cosine only as a comparison
 
+qa:                          # plausibility ranges checked by the phase gates
+  elevation_range_m: [600, 1200]   # Bengaluru plateau; observed 717-1033 m in the AOI + buffer
+
+vector:                      # OSM cleaning (P3.4-P3.6, PRD FR-3.5)
+  building_min_area_m2: 10   # smaller footprints are mapping errors / sheds
+  building_max_area_m2: 100000  # outlier cap; largest real footprint in the AOI is 70,584 m² (industrial)
+  keep_tracks: false         # highway=track (farm tracks) counted as minor roads if true
+
 osm:
   snapshot_baseline: "2018-01-01"   # decisions D8, D9 (Overpass [date:] query)
   overpass_mirrors:
