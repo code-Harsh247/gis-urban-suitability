@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+import geopandas as gpd
 import numpy as np
 import pandas as pd
 import pytest
@@ -72,6 +73,15 @@ def test_grid_polygons_are_whole_cells_on_the_reference_grid(raster_project):
     b = gdf.bounds
     assert np.allclose(((b["minx"] - ref.transform.c) / cfg.cell_size_m) % 1, 0)
     assert np.allclose(((ref.transform.f - b["maxy"]) / cfg.cell_size_m) % 1, 0)
+
+
+def test_grid_polygons_ignore_the_frame_index(raster_project):
+    """Regression: boxes built from Series aligned on a non-default index gave None geometry."""
+    cfg, _, _ = raster_project
+    grid = build_grid(cfg).iloc[::3].set_index("cell_id", drop=False)
+    gdf = grid_geodataframe(grid, cfg)
+    assert gdf.geometry.notna().all()
+    assert np.allclose(gdf.centroid.x, grid["x"]) and np.allclose(gdf.centroid.y, grid["y"])
 
 
 def test_xy_to_cell_id_round_trip(raster_project):
@@ -271,6 +281,21 @@ def test_build_drops_high_nodata_cells(tmp_path):
     c2.to_parquet(p, index=False)
     df = build.build_feature_table(cfg, year)
     assert len(df) == len(c2) - 5
+
+
+def test_feature_gpkg_has_cell_squares(tmp_path):
+    cfg = make_synthetic_project(tmp_path / "p", n=10)
+    year = cfg["years"]["baseline"]
+    p = schema.contract_path(cfg, "C2", year=year)
+    c2 = pd.read_parquet(p)
+    c2.loc[:4, "nodata_frac"] = 0.9  # dropped rows: the gpkg must still line up by cell_id
+    c2.to_parquet(p, index=False)
+    out = build.write_feature_tables(cfg)
+    g = gpd.read_file(schema.contract_path(cfg, "C4", year=year).with_suffix(".gpkg"))
+    grid = pd.read_parquet(schema.contract_path(cfg, "C1")).set_index("cell_id")
+    assert len(g) == len(out[year]) and g["cell_id"].tolist() == out[year]["cell_id"].tolist()
+    assert np.allclose(g.centroid.x, grid.loc[g["cell_id"], "x"])
+    assert np.allclose(g.area, cfg.cell_size_m**2)
 
 
 def test_write_grid_matches_contract(raster_project):

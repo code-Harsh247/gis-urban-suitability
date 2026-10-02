@@ -10,7 +10,7 @@ For each snapshot (``2018`` and ``current``):
 - **water:** ``kind`` = ``water_body`` (``natural=water`` polygons) or ``waterway``
   (lines);
 - **buildings:** drop footprints < ``vector.building_min_area_m2`` or >
-  ``vector.building_max_area_m2``; add ``area_m2``, centroid ``cx``/``cy``,
+  ``vector.building_max_area_m2``; add ``area_m2``, centroid ``centroid_x``/``centroid_y``,
   ``building_type`` and ``cell_id`` (``-1`` outside the grid lattice). The
   buildings whose centroid lies in an analysis grid cell form contract **C6**.
 
@@ -100,7 +100,7 @@ def clean_geometries(
     crosses = ~shapely.within(geoms, extent)
     geoms = np.where(crosses, shapely.intersection(geoms, extent), geoms)
     geoms = _keep_types(geoms, types)
-    empty = np.array([x is None or x.is_empty for x in geoms])
+    empty = np.array([x is None or x.is_empty for x in geoms], dtype=bool)
     stats["empty_after_clip"] = int(empty.sum())
     g = g.loc[~empty].copy()
     g = g.set_geometry(gpd.GeoSeries(geoms[~empty], index=g.index, crs=crs))
@@ -146,6 +146,9 @@ def clean_water(cfg, raw: gpd.GeoDataFrame, extent) -> tuple[gpd.GeoDataFrame, d
     waterway = raw["waterway"] if "waterway" in raw.columns else pd.Series(None, index=raw.index)
     bodies, s1 = clean_geometries(raw.loc[poly & (natural == "water")], cfg.crs, extent, POLY_TYPES)
     ways, s2 = clean_geometries(raw.loc[~poly & waterway.notna()], cfg.crs, extent, LINE_TYPES)
+    # multi-part lines (from OSM or from clipping a line that leaves and re-enters the
+    # extent) -> one LineString per part, as for roads
+    ways = ways.explode(index_parts=False).reset_index(drop=True)
     bodies["kind"] = "water_body"
     ways["kind"] = "waterway"
     g = pd.concat([bodies, ways], ignore_index=True)
@@ -180,11 +183,11 @@ def clean_buildings(cfg, raw: gpd.GeoDataFrame, extent) -> tuple[gpd.GeoDataFram
     c = g.geometry.centroid
     g["bldg_id"] = np.arange(len(g), dtype="int64")
     g["area_m2"] = g.area.astype("float64")
-    g["cx"], g["cy"] = c.x.to_numpy(), c.y.to_numpy()
+    g["centroid_x"], g["centroid_y"] = c.x.to_numpy(), c.y.to_numpy()
     g["building_type"] = (
         g["building"].fillna("yes").astype(str) if "building" in g.columns else "yes"
     )
-    g["cell_id"] = xy_to_cell_id(cfg, g["cx"], g["cy"], lattice(cfg))
+    g["cell_id"] = xy_to_cell_id(cfg, g["centroid_x"], g["centroid_y"], lattice(cfg))
     stats["kept"] = len(g)
     cols = [
         "bldg_id",
@@ -192,8 +195,8 @@ def clean_buildings(cfg, raw: gpd.GeoDataFrame, extent) -> tuple[gpd.GeoDataFram
         "osm_id",
         "building_type",
         "area_m2",
-        "cx",
-        "cy",
+        "centroid_x",
+        "centroid_y",
         "cell_id",
         "name",
         "amenity",

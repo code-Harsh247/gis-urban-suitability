@@ -183,7 +183,7 @@ These are the only places the two tracks touch.
 - [x] A3.3 `src/features/context.py`: 250 / 500 m ring fractions excluding the centre cell
 - [x] A3.4 `log_dist_built`, `log_dist_water` (EDT at 10 m, sampled at cell centres) → real C2 per year · *built-up distance is to the nearest built pixel **outside** the cell (KD-tree, exact), so it never leaks the cell's own status. **Config change (done check):** `aoi.buffer_m` 1000 → 3000 and `features.distance_cap_m` 5000 → 3000, because distances are only exact up to the buffer (a cell at the AOI edge can't see beyond it). The code now refuses cap > buffer. **Harsh:** your OSM download area grows accordingly; cap road distances at 3 km too.*
 - [x] A3.5a `src/features/build.py` merges C2 + C3 → C4 · 🔓 *(stub)* · *`python -m src.features.build`; drops and logs cells with `nodata_frac` > 0.5*
-- [ ] **A3.5b** Real C4 on the AOI · 🔒 **H3.3**
+- [x] **A3.5b** Real C4 on the AOI · 🔒 **H3.3** · *`grid_features_{2018,2023}.parquet` + `.gpkg`; checked by `scripts/verify_feature_table.py`.*
 - [ ] A3.6 Phase 4 gate passes on real data · 🔒 **H3.3**, 🔒 **G4** (Harsh's gate test)
 
 **A4. Labels and masks** · W4 · P5.5, FR-8.1
@@ -251,9 +251,9 @@ These are the only places the two tracks touch.
 - [x] **H2.3b** `cell_id` joined → real C6 for 2018 and current · 🔒 **A3.1** (real grid) · *H2.1–H2.3 done by Abhinav (Tasks.md assigns P3.4–P3.6 to Abhinav), 2026-10-01: `src/preprocess/vector.py`, C6 for both snapshots. This unblocks A5.4/A5.5 (needs C6).*
 
 **H3. Vector features** · W3–4 · P4.4, P4.5
-- [ ] H3.1 `src/features/distance.py`: rasterise roads, EDT at 10 m, sample at cell centres · 🔓 *(stub)*; unit test: single road → correct metres
-- [ ] H3.2 Road density (500 m), building count + area fraction (marked leaky) · 🔓 *(stub)*
-- [ ] **H3.3** Real C3 for both snapshots · 🔒 **A2.1** (reference grid), 🔒 **A3.1** (real grid)
+- [x] H3.1 `src/features/distance.py`: rasterise roads, EDT at 10 m, sample at cell centres · 🔓 *(stub)*; unit test: single road → correct metres
+- [x] H3.2 Road density (500 m), building count + area fraction (marked leaky) · 🔓 *(stub)*
+- [x] **H3.3** Real C3 for both snapshots · 🔒 **A2.1** (reference grid), 🔒 **A3.1** (real grid) · *H3.1–H3.3 done by Abhinav (`src/features/distance.py`; exact vector distances instead of EDT). `data/features/vector_features_{2018,current}.parquet`.*
 
 **H4. Clustering (3 classes)** · W4–5 · P5.1–P5.4, P5.6–P5.8
 - ⚠️ *Note for H4 (from A1.4):* ESRI tree cover jumps between years (7.0 % → 2.3 % → 8.4 %), and ESRI shows much of Bannerghatta as rangeland. Take the forest class from one year (`years.latest`) and cross-check with WorldCover 2021 (20 % trees). See notebook 01.

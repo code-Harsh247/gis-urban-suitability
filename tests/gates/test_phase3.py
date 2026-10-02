@@ -12,6 +12,7 @@ import geopandas as gpd
 import numpy as np
 import pytest
 import rasterio
+import shapely
 from rasterio.features import geometry_mask
 
 from src.config import load_config
@@ -77,12 +78,24 @@ def test_reference_grid_is_project_crs_and_whole_cells():
 
 
 @pytest.mark.parametrize("name", sorted(VECTORS))
-def test_vectors_project_crs_valid_non_empty(name):
+def test_vectors_project_crs_valid_non_empty_inside_grid(name):
     g = gpd.read_file(VECTORS[name])
     assert len(g) > 0, f"{name}: empty layer"
     assert g.crs == cfg.crs, f"{name}: CRS {g.crs}"
     assert g.is_valid.all(), f"{name}: {int((~g.is_valid).sum())} invalid geometries"
     assert not g.is_empty.any(), f"{name}: empty geometries"
+    # clipped to the reference grid (same 1 cm tolerance as scripts/verify_vectors.py)
+    extent = shapely.box(*load_reference_grid(cfg).bounds).buffer(0.01)
+    outside = int((~g.within(extent)).sum())
+    assert outside == 0, f"{name}: {outside} geometries outside the reference-grid extent"
+
+
+@pytest.mark.parametrize("name", sorted(n for n in VECTORS if n.endswith(("/roads", "/water"))))
+def test_lines_are_single_part(name):
+    """P3.4: multi-part lines are exploded (roads and waterways)."""
+    g = gpd.read_file(VECTORS[name])
+    multi = int((g.geom_type == "MultiLineString").sum())
+    assert multi == 0, f"{name}: {multi} MultiLineString features"
 
 
 @pytest.mark.parametrize("snapshot", sorted(snapshots(cfg)))
