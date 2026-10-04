@@ -40,10 +40,17 @@ exclusion:
   worldcover_codes: [70, 80, 90, 95]   # cross-check only: snow/ice, water, wetland, mangroves
   max_excluded_fraction: 0.5           # cell excluded if more than this share is excluded class
 
-clustering:
+clustering:                  # Phase 5 (PRD FR-5.1-5.3, §9.4)
+  # own-cell fractions + terrain; frac_snow (always 0), frac_flooded, frac_bare (~0) and
+  # slope_max (r = 0.95 with slope_mean) left out, see notebook 03
+  inputs: [frac_water, frac_tree, frac_crop, frac_built, frac_range, elev_mean, slope_mean]
   k_min: 3
   k_max: 10
+  method: kmeans             # kmeans | gmm; chosen from the scan in notebook 04
+  k: 7                       # best silhouette; adds steep rangeland and the low western valley
+  use_pca: false             # 7 standardised inputs; PCA is reported, not used
   pca_variance: 0.90
+  silhouette_sample: 10000   # silhouette on a seeded sample (exact is O(n²) memory)
 
 labeling:
   built_threshold: 0.3

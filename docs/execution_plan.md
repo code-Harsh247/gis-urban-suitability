@@ -257,11 +257,11 @@ These are the only places the two tracks touch.
 
 **H4. Clustering (3 classes)** · W4–5 · P5.1–P5.4, P5.6–P5.8
 - ⚠️ *Note for H4 (from A1.4):* ESRI tree cover jumps between years (7.0 % → 2.3 % → 8.4 %), and ESRI shows much of Bannerghatta as rangeland. Take the forest class from one year (`years.latest`) and cross-check with WorldCover 2021 (20 % trees). See notebook 01.
-- [ ] H4.1 `src/classify/cluster.py`: standardise, optional PCA, K-Means k = 3…10, GMM · 🔓 *(stub or prototype Pune table)*
+- [x] H4.1 `src/classify/cluster.py`: standardise, optional PCA, K-Means k = 3…10, GMM · 🔓 *(stub or prototype Pune table)*
 - [ ] H4.2 Elbow + silhouette + Davies–Bouldin plots · 🔓 *(stub)*
-- [ ] H4.3 Real clustering on the AOI; choose k and justify · 🔒 **A3.5b** (real C4)
+- [x] H4.3 Real clustering on the AOI; choose k and justify · 🔒 **A3.5b** (real C4) · *H4.1/H4.3 done by Abhinav (Tasks.md assigns P5.1–P5.3 to Abhinav): K-Means k = 7 for both runs, `outputs/clusters_{validation,final}.parquet`. H4.2 metrics computed; plots go in notebook 04.*
 - [ ] **H4.4** `src/classify/label.py`: cluster → class rules + exclusion mask → real C7 · 🔒 **A4.1**
-- [ ] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04
+- [~] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04 · *Abhinav: `src/classify/evaluate.py` + `export.py` + gate `tests/gates/test_phase5.py` written; waiting for C7 (H4.4).*
 - [ ] H4.6 Unit tests: labelling rules, mask removes water/steep, same seed = same labels · 🔓
 
 **H5. Learning models and ablation** · W6–7 · P6.5, P6.6
