@@ -26,6 +26,7 @@ import logging
 from pathlib import Path
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 
 from src.config import load_config
@@ -33,6 +34,7 @@ from src.download.stac import aoi_bounds_4326
 from src.io_utils import (
     DownloadError,
     Manifest,
+    manifest_key,
     needs_download,
     record_download,
     retry,
@@ -193,12 +195,21 @@ def download_layer(
 
     manifest = manifest or Manifest.for_config(cfg)
     out = osm_path(cfg, snapshot, layer)
+    bbox = aoi_bounds_4326(cfg)
     if not force and not needs_download(out, manifest, cfg.root):
-        log.info("skip %s/%s (exists, checksum matches)", snapshot, out.name)
-        return out
+        entry = manifest.get(manifest_key(out, cfg.root)) or {}
+        old = entry.get("source", {}).get("bbox_4326")
+        if old is not None and np.allclose(old, bbox, atol=1e-9):
+            log.info("skip %s/%s (exists, checksum matches)", snapshot, out.name)
+            return out
+        log.info(
+            "%s/%s covers a different area than requested (AOI or buffer changed); "
+            "re-downloading",
+            snapshot,
+            out.name,
+        )
     date = snapshots(cfg)[snapshot]
     tags, geom_types, columns = LAYERS[layer]
-    bbox = aoi_bounds_4326(cfg)
     ox.settings.use_cache = True
     ox.settings.cache_folder = str(Path(cfg.paths["data_raw"]) / "osm" / "cache")
     # one query per tag key: smaller historical queries time out far less often

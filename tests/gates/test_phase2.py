@@ -17,6 +17,7 @@ from rasterio.warp import transform_bounds
 
 from src.config import load_config
 from src.download import dem, lulc, osm
+from src.download.stac import aoi_bounds_4326
 from src.features.schema import ESRI_CLASSES, ESRI_NODATA
 from src.io_utils import Manifest, manifest_key, needs_download, sha256
 
@@ -129,6 +130,19 @@ def test_manifest_entry_and_checksum(name, manifest):
     entry = manifest.get(manifest_key(path, cfg.root))
     assert entry is not None, f"{path.name} is not in data/manifest.json"
     assert entry["sha256"] == sha256(path), f"{path.name} changed since download"
+
+
+@pytest.mark.parametrize("name", list(ALL_FILES))
+def test_download_covers_current_aoi_and_buffer(name, manifest):
+    """A download made for a smaller AOI / buffer must be redone (e.g. buffer 1 → 3 km)."""
+    entry = manifest.get(manifest_key(ALL_FILES[name], cfg.root)) or {}
+    bbox = entry.get("source", {}).get("bbox_4326")
+    assert bbox is not None, "no bbox_4326 recorded"
+    w, s, e, n = aoi_bounds_4326(cfg)
+    tol = 1e-6
+    assert (
+        bbox[0] <= w + tol and bbox[1] <= s + tol and bbox[2] >= e - tol and bbox[3] >= n - tol
+    ), f"downloaded for {bbox}, needs {[w, s, e, n]}: rerun the downloader"
 
 
 @pytest.mark.parametrize("name", list(ALL_FILES))

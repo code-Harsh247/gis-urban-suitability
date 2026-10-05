@@ -52,9 +52,11 @@ clustering:                  # Phase 5 (PRD FR-5.1-5.3, §9.4)
   pca_variance: 0.90
   silhouette_sample: 10000   # silhouette on a seeded sample (exact is O(n²) memory)
 
-labeling:
-  built_threshold: 0.3
-  forest_threshold: 0.5
+labeling:                    # cluster -> class rules, src/classify/label.py (P5.4)
+  water_threshold: 0.5       # water + flooded share -> excluded
+  built_threshold: 0.3       # and built must be the cluster's largest land group
+  forest_threshold: 0.5      # trees; or trees + rangeland on steep ground (below)
+  steep_natural_slope_deg: 8 # steep natural vegetation = forest (Bannerghatta hills, ~13°)
   cropland_usable: true      # decision D10 (Q5): usable, but flagged
 
 growth:                      # temporal-validation labels (execution_plan A4)

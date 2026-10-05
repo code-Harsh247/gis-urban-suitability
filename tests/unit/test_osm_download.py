@@ -100,6 +100,18 @@ def test_download_falls_back_to_next_mirror_and_skips_rerun(project, monkeypatch
     assert len(calls) == n_calls
 
 
+def test_redownloads_when_the_area_changes(project, monkeypatch):
+    calls = []
+    monkeypatch.setattr(osm, "_query", lambda *a: calls.append(a[0]) or _features())
+    osm.download_layer(project, "current", "roads")
+    osm.download_layer(project, "current", "roads")  # same area: skipped
+    assert len(calls) == 1
+    project.raw["aoi"]["buffer_m"] = float(project.raw["aoi"]["buffer_m"]) + 2000
+    osm.download_layer(project, "current", "roads")  # larger buffer: fetched again
+    assert len(calls) == 2
+    assert calls[1][0] < calls[0][0] and calls[1][3] > calls[0][3]  # wider bbox
+
+
 def test_all_mirrors_failing_is_a_clear_error(project, monkeypatch):
     def fail(*a, **k):
         raise ConnectionError("down")

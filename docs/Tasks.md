@@ -24,12 +24,12 @@ Task tracker for **GIS-Based Land Suitability Analysis for Urban Development**. 
 
 | Phase | Name | Harsh | Abhinav | Both | Gate test by | Gate passed |
 |---|---|---|---|---|---|---|
-| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35 (Abhinav signed; Harsh pending) |
-| 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ✅ 14/14 (Abhinav signed; Harsh pending) |
-| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 72/72 on both laptops (Abhinav signed; Harsh pending) |
-| 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ✅ 40/40 (Abhinav signed; Harsh pending) |
-| 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ☐ |
-| 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ☐ |
+| 0 | Setup and planning | 6 (6 done) | 4 (4 done) | 2 (1 done) | Harsh | ✅ 35/35, signed by both |
+| 1 | Literature review and data discovery | 3 | 3 | 2 | Abhinav | ✅ 14/14, signed by both |
+| 2 | Data acquisition | 4 | 4 | 1 | Harsh | ✅ 87/87 on Harsh's laptop (72/72 + area checks), signed by both |
+| 3 | Preprocessing | 3 | 4 | 2 | Abhinav | ✅ 44/44, signed by both |
+| 4 | Grid and feature engineering | 4 | 4 | 1 | Harsh | ✅ 19/19 (Harsh signed; Abhinav pending) |
+| 5 | Land classification (clustering) | 3 | 5 | 1 | Abhinav | ✅ 9/9 (Harsh signed; Abhinav pending) |
 | 6 | Building similarity | 4 | 4 | 1 | Harsh | ☐ |
 | 7 | Suitability mapping and validation | 4 | 4 | 1 | Abhinav | ☐ |
 | 8 | Visualisation, report and presentation | 5 | 5 | 3 | Harsh | ☐ |
@@ -79,7 +79,7 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 - [x] `docs/study_area.md` states the chosen AOI and the reason.
 - [x] Deadline is recorded in PRD, and phase dates in this file are adjusted.
 
-**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
+**Sign-off:** - [x] Harsh *(2026-10-05: gate passes on Harsh's laptop)*  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
 
 ---
 
@@ -109,12 +109,12 @@ Status on Harsh's laptop (2026-10-01, Windows, micromamba): **35 passed**; full 
 Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network). The gate was mutation-tested: 7 deliberate breakages of the docs (9 papers, 4 A-papers, synthesis unwritten, missing detail entry, missing licence / dataset / access method) were all caught.
 
 **Manual checklist:**
-- [~] Each teammate has read the other's paper summaries. *(Abhinav ☑ 2026-10-01: read and verified H1–H10, D1–D2; H2, H3, H5 and H8 checked against full texts, their "to verify" fields filled. Harsh ☐: A1–A6.)*
+- [x] Each teammate has read the other's paper summaries. *(Abhinav ☑ 2026-10-01: read and verified H1–H10, D1–D2; H2, H3, H5 and H8 checked against full texts, their "to verify" fields filled. Harsh ☑ 2026-10-05: A1–A6.)*
 - [x] The synthesis section clearly states what our project adds. *(Combined conclusion, points 1–4; Harsh to confirm at sign-off.)*
 - [x] Building data source decided (OSM only, or OSM + fallback). *(OSM only)*
 - [x] Temporal validation years fixed in `config.yaml`.
 
-**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
+**Sign-off:** - [x] Harsh *(2026-10-05: gate passes on Harsh's laptop)*  - [x] Abhinav *(2026-10-01: gate passes on Abhinav's laptop)*
 
 ---
 
@@ -147,10 +147,10 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 
 **Manual checklist:**
 - [x] Quick-look plots in notebook 01 visually match the real area (compare with Google Maps / OSM). *(Rasters, Abhinav 2026-10-01: notebook 01 maps, plus landmark checks against OSM Nominatim coordinates in `scripts/verify_raw_data.py`: Madiwala Lake = water, Electronic City and Koramangala = built; pixel values equal the source COGs. OSM: 2018 vs current quick-look checked by Harsh; layers line up with the AOI.)*
-- [x] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav ☑ 2026-10-01: all rasters and both OSM snapshots for the 3 km buffer, on a USB drive linked as `data/`. OSM was downloaded on another network, because Overpass is blocked on the campus network. Phase 2 gate 72/72. **Harsh:** your OSM files are for the old 1 km buffer; rerun `python -m src.download.osm`.)*
+- [x] Both teammates have the full raw data locally (via download or shared drive link recorded in `docs/data_sources.md`). *(Harsh: all files, gate 72/72 on 2026-10-01, for the old 1 km buffer. Abhinav ☑ 2026-10-01: all rasters and both OSM snapshots for the 3 km buffer, on a USB drive linked as `data/`. OSM was downloaded on another network, because Overpass is blocked on the campus network. Phase 2 gate 72/72. Harsh ☑ 2026-10-05: OSM re-downloaded for the 3 km buffer (the downloader now redoes files whose recorded area differs, and the gate checks every file covers the configured area). Overpass timed out behind a VPN; it worked once the VPN was off.)*
 - [x] Unit tests pass: `pytest tests/unit`. *(56 passed, 1 skipped, 2026-10-01)*
 
-**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate 72/72 on Abhinav's laptop; full suite 226 passed)*
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 87/87 on Harsh's laptop after re-downloading OSM for the 3 km buffer)*  - [x] Abhinav *(2026-10-01: gate 72/72 on Abhinav's laptop; full suite 226 passed)*
 
 ---
 
@@ -185,11 +185,11 @@ Status on Abhinav's laptop (2026-10-01): **14 passed** (11 offline + 3 network).
 Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_range_m` = 600–1,200 m). The gate was mutation-tested: 9 deliberate breakages of a scratch copy (raster shifted 10 m, invented class code, slope 95°, elevation 1,500 m, 12.6 % nodata, vector in EPSG:4326, road_class 'path', invalid polygon, C6 building outside the grid) were all caught.
 
 **Manual checklist:**
-- [~] Overlay plot (P3.9) reviewed by both: no misalignment visible. *(Abhinav ☑; Harsh ☐)*
+- [x] Overlay plot (P3.9) reviewed by both: no misalignment visible. *(Abhinav ☑; Harsh ☑ 2026-10-05: in `verify_vectors_zoom.png` (Electronic City) buildings sit on ESRI built-up pixels, roads run between them)*
 - [x] Slope map looks sensible (hills steep, plains flat). *(Steep only in the Bannerghatta hills (south-west); lakes 0°, the dense city under 2°: `scripts/verify_preprocessed.py`)*
 - [x] ESRI → WorldCover class mapping documented. *(`docs/data_sources.md` §6, `harmonise_worldcover`)*
 
-**Sign-off:** - [ ] Harsh  - [x] Abhinav *(2026-10-01: gate 40/40 on Abhinav's laptop)*
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 44/44 on Harsh's laptop)*  - [x] Abhinav *(2026-10-01: gate 40/40 on Abhinav's laptop)*
 
 ---
 
@@ -213,19 +213,22 @@ Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_ran
 ### Phase 4 Gate
 
 **Automated — `tests/gates/test_phase4.py`** (written by **Harsh**):
-- [ ] The feature table row count equals the number of grid cells minus logged drops; `cell_id` is unique.
-- [ ] All PRD §9.3 core columns are present (list defined in `src/features/build.py`).
-- [ ] For each cell, the LULC fractions sum to 1 ± 0.01.
-- [ ] Distances ≥ 0; slope in [0, 90]; no infinite values; NaN share per column < 1 %.
-- [ ] Leaky columns (`frac_built`, `bldg_count`, `bldg_area_frac`) are listed in a `LEAKY_FEATURES` constant.
-- [ ] Spot check: a cell containing a known major road has `dist_road_major` ≤ `cell_size`.
+- [x] The feature table row count equals the number of grid cells minus logged drops; `cell_id` is unique.
+- [x] All PRD §9.3 core columns are present *(list in `schema.RASTER_FEATURES + VECTOR_FEATURES`)*.
+- [x] For each cell, the LULC fractions sum to 1 ± 0.01.
+- [x] Distances ≥ 0; slope in [0, 90]; no infinite values; NaN share per column < 1 %. *(also: distances ≤ `distance_cap_m`, slope_mean ≤ slope_max)*
+- [x] Leaky columns (`frac_built`, `bldg_count`, `bldg_area_frac`) are listed in a `LEAKY_FEATURES` constant. *(also: no own-cell or leaky column is in `MODEL_INPUTS`; `check_model_inputs` rejects them)*
+- [x] Spot check: a cell containing a known major road has `dist_road_major` ≤ `cell_size`. *(every cell a major road crosses, both snapshots)*
+- [x] *(added)* Road distances equal `shapely.distance` for 300 random cells; the grid tiles the AOI; the baseline table's road / building columns come from the 2018 OSM snapshot (time-travel rule); OSM building counts agree with ESRI built-up.
+
+Status on Harsh's laptop (2026-10-05): **19 passed**. Mutation-tested: 10 deliberate breakages of in-memory copies (current OSM in the baseline table, a dropped row, fractions +0.05, infinite / over-cap distance, 2 % NaN, major-road distances +150 m (two checks), shuffled building counts, a grid cell outside the AOI) were all caught.
 
 **Manual checklist:**
 - [x] Feature maps in notebook 03 look spatially sensible (distance grows away from roads, etc.).
 - [x] Highly correlated features (|r| > 0.9) noted, with a decision on whether to drop them.
 - [x] Feature build runs in < 10 min. *(0.4 min)*
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 19/19 on Harsh's laptop)*  - [ ] Abhinav
 
 ---
 
@@ -239,29 +242,29 @@ Status on Abhinav's laptop (2026-10-01): **40 passed** (`config.qa.elevation_ran
 - [x] **P5.1** Write `src/classify/cluster.py`: feature selection, standardisation, optional PCA (≥ 90 % variance). — **Abhinav** · FR-5.1 · *Done: `src/classify/cluster.py`. Inputs in `config → clustering.inputs`: frac_water, frac_tree, frac_crop, frac_built, frac_range, elev_mean, slope_mean (frac_snow constant, frac_flooded/frac_bare ~0, slope_max r = 0.95 with slope_mean). Standardised; PCA reported (5 PCs for 90 %; the 7th explains 0.03 % because the fractions nearly sum to 1) but not used.*
 - [x] **P5.2** K-Means for k = 3…10: elbow (inertia) and silhouette plots; pick k with justification. — **Abhinav** · FR-5.2, FR-5.3 · *Done: scan k = 3…10 in `outputs/metrics/clustering.json`. Silhouette plateaus at k = 5–8 (0.57–0.61) and drops at k = 9 (0.45). **k = 7** (2018: 0.585, DB 0.819; 2023: 0.606, DB 0.827): best or within 0.003 of best in both years, and the two clusters beyond k = 5 are interpretable and appear in both years: steep rangeland (slope ~13°, Bannerghatta hills, 3–4 %) and the low western valley (≈ 760 m, mixed crop/built, 3–4 %). Plots in notebook 04 (P5.7).*
 - [x] **P5.3** Alternative: GMM (choose components by BIC) and/or HDBSCAN; compare with K-Means (silhouette, Davies–Bouldin, maps). — **Abhinav** · FR-5.2 · *Done: GMM (full covariance) scanned for k = 3…10; silhouette 0.26–0.36 and DB 1.6–2.9 at every k, BIC keeps falling up to k = 10 (no clear minimum), so K-Means is kept. HDBSCAN (optional) not run. Verified by `scripts/verify_clustering.py` (K-Means fixed point, Davies–Bouldin by hand, OSM landmarks: Bellandur Lake → water cluster, 96–98 % of Bannerghatta → tree/rangeland clusters).*
-- [ ] **P5.4** Write `src/classify/label.py`: rule table mapping clusters → built-up / forest / usable / excluded from centroids (PRD §9.4); thresholds in config. — **Harsh** · FR-5.4 · *Caveat (found in P4.8): inside Bannerghatta NP, ESRI has 47 % trees and 50 % rangeland (dry deciduous forest and scrub). A rule that maps rangeland → usable would mark half the park usable; the protected mask removes it from scoring, but the 3-class map should treat protected / steep rangeland as forest-like or excluded.* · *Handover from Abhinav (P5.1–P5.3 done): cluster assignments in `outputs/clusters_{validation,final}.parquet`, centroids in original units in `outputs/metrics/cluster_centroids_{run}.csv` (k = 7: built, western valley mixed crop/built, steep rangeland, water, crop, rangeland, trees; ids ordered by mean frac_built, so read the CSV, don't hard-code ids). Please write C7 at the contract path for the **final** run, keep `cluster_id` from `clusters_final` (-1 only where you don't cluster) and set excluded cells to 255; the gate checks both. C7 has one path but FR-5.8 wants one C7 per run: your call how to name the validation one. Then `python -m src.classify.export` and `python -m src.classify.evaluate` produce the GeoTIFF, `clusters.gpkg` and the agreement.*
-- [~] **P5.5** Exclusion mask: water, wetland, snow, mangroves and slope > threshold; applied after labelling. Save `outputs/exclusion_mask.tif`. — **Harsh** · FR-5.5
-- [~] **P5.6** Evaluation: confusion matrix vs WorldCover majority class (collapsed to 3), overall agreement, per-class precision/recall; centroid profile plots (radar or heatmap) to interpret clusters. — **Abhinav** · FR-5.6 · *Code done: `src/classify/evaluate.py` (ESRI of the run year, primary; WorldCover 2021, cross-check; PRD §6 collapse; confusion matrix, agreement, precision/recall; `all` = 4 classes, `land` = cells neither side excludes, 3 classes). References checked against raw pixels by `scripts/verify_evaluation.py`. **Finding:** the references disagree a lot: built-up 62 % (ESRI 2023) vs 33 % (WorldCover 2021), forest 7 % vs 17 %, usable 28 % vs 48 % (ESRI generalises urban areas). Expect high agreement with ESRI, much lower with WorldCover. Numbers and centroid plots once C7 exists (P5.4).*
-- [~] **P5.7** Export `outputs/lulc_3class.tif` and `outputs/clusters.gpkg`; create `notebooks/04_clustering.ipynb` with all plots and a written interpretation of each cluster. — **Abhinav** · PRD §13 · *Export code done: `src/classify/export.py` writes `lulc_3class.tif` (100 m cell lattice, same origin as the 10 m grid; 0 = outside AOI) and `clusters.gpkg` from C7. Notebook 04 waits for C7.*
-- [ ] **P5.8** Unit tests: labelling rules on synthetic centroids; mask removes all water/steep cells; same seed gives identical labels. — **Harsh** · FR-5.7
-- [ ] **P5.9** Decide on open questions Q5 (cropland) and Q6 (slope threshold); record in the PRD and config. — **Both**
+- [x] **P5.4** Write `src/classify/label.py`: rule table mapping clusters → built-up / forest / usable / excluded from centroids (PRD §9.4); thresholds in config. — **Harsh** · FR-5.4 · *Caveat (found in P4.8): inside Bannerghatta NP, ESRI has 47 % trees and 50 % rangeland (dry deciduous forest and scrub). A rule that maps rangeland → usable would mark half the park usable; the protected mask removes it from scoring, but the 3-class map should treat protected / steep rangeland as forest-like or excluded.* · *Handover from Abhinav (P5.1–P5.3 done): cluster assignments in `outputs/clusters_{validation,final}.parquet`, centroids in original units in `outputs/metrics/cluster_centroids_{run}.csv` (k = 7: built, western valley mixed crop/built, steep rangeland, water, crop, rangeland, trees; ids ordered by mean frac_built, so read the CSV, don't hard-code ids). Please write C7 at the contract path for the **final** run, keep `cluster_id` from `clusters_final` (-1 only where you don't cluster) and set excluded cells to 255; the gate checks both. C7 has one path but FR-5.8 wants one C7 per run: your call how to name the validation one. Then `python -m src.classify.export` and `python -m src.classify.evaluate` produce the GeoTIFF, `clusters.gpkg` and the agreement.* · *Done by Harsh (2026-10-05): `src/classify/label.py`. Rules on each cluster's mean fractions, in order: water + flooded ≥ 0.5 → excluded; built ≥ 0.3 **and** the largest land group → built-up (a threshold alone flips the mixed western valley: 13 % built in 2018, 31 % in 2023); trees ≥ 0.5 → forest; trees + rangeland ≥ 0.5 on slopes ≥ 8° → forest (the Bannerghatta hills, slope ≈ 13°); otherwise usable, flagged `agricultural` if crop dominates (D10). Thresholds in `config → labeling`. C7 (final) at the contract path, `lulc_3class_validation.parquet` for the validation run, rule tables in `metrics/class_rules_{run}.csv`. Final 2023: built-up 60 %, usable 24 %, excluded 11 %, forest 5 % (Bannerghatta's core is in the protected mask).*
+- [x] **P5.5** Exclusion mask: water, wetland, snow, mangroves and slope > threshold; applied after labelling. Save `outputs/exclusion_mask.tif`. — **Harsh** · FR-5.5 · *Done (2026-10-05): `label.py` applies `features.labels.exclusion_table(cfg, run)` last (wet, slope > 15°, nodata, protected) and writes `outputs/exclusion_mask.tif` / `exclusion_mask_validation.tif` (1 excluded, 0 kept, 255 outside the AOI) on the 100 m lattice.*
+- [x] **P5.6** Evaluation: confusion matrix vs WorldCover majority class (collapsed to 3), overall agreement, per-class precision/recall; centroid profile plots (radar or heatmap) to interpret clusters. — **Abhinav** · FR-5.6 · *Code done: `src/classify/evaluate.py` (ESRI of the run year, primary; WorldCover 2021, cross-check; PRD §6 collapse; confusion matrix, agreement, precision/recall; `all` = 4 classes, `land` = cells neither side excludes, 3 classes). References checked against raw pixels by `scripts/verify_evaluation.py`. **Finding:** the references disagree a lot: built-up 62 % (ESRI 2023) vs 33 % (WorldCover 2021), forest 7 % vs 17 %, usable 28 % vs 48 % (ESRI generalises urban areas). Expect high agreement with ESRI, much lower with WorldCover. Numbers and centroid plots once C7 exists (P5.4).* · *Numbers (2026-10-05): agreement on land cells (3 classes) **96.6 %** with ESRI in both runs; WorldCover 2021: 64.0 % (final), 71.0 % (validation). Confusion matrices and centroid heatmap in notebook 04.*
+- [x] **P5.7** Export `outputs/lulc_3class.tif` and `outputs/clusters.gpkg`; create `notebooks/04_clustering.ipynb` with all plots and a written interpretation of each cluster. — **Abhinav** · PRD §13 · *Export code done: `src/classify/export.py` writes `lulc_3class.tif` (100 m cell lattice, same origin as the 10 m grid; 0 = outside AOI) and `clusters.gpkg` from C7. Notebook 04 waits for C7.* · *Done (2026-10-05): `lulc_3class.tif` + `clusters.gpkg` exported; `notebooks/04_clustering.ipynb` written by Harsh: k scan, centroid heatmaps, a description of each cluster, rules, maps for both runs, agreement, visual check. Figures `outputs/figures/p5_*.png`. All cells run (checked in-process; Jupyter kernels can't start inside the Claude app on Harsh's laptop, a ZeroMQ issue).*
+- [x] **P5.8** Unit tests: labelling rules on synthetic centroids; mask removes all water/steep cells; same seed gives identical labels. — **Harsh** · FR-5.7 · *Done (2026-10-05): `tests/unit/test_classify_label.py` (15): rules on synthetic centroids (incl. the mixed valley and steep rangeland), cropland switch, exclusion applied last, unclustered cells → 255 / -1, same seed = same labels, mask raster.*
+- [x] **P5.9** Decide on open questions Q5 (cropland) and Q6 (slope threshold); record in the PRD and config. — **Both** · *Decided in D10 (`execution_plan.md` §2): cropland usable but flagged (`labeling.cropland_usable: true`, `agricultural` flag in the rule table); slope threshold 15° (`exclusion.slope_max_deg`). Both in the config.*
 
 ### Phase 5 Gate
 
 **Automated — `tests/gates/test_phase5.py`** (written by **Abhinav**): *Written: 9 tests; dry-run on a synthetic project passes, and an excluded cell labelled usable, a GeoTIFF shifted by one pixel and changed cluster labels each fail their test. On real data it fails until C7 exists (P5.4).*
-- [ ] `outputs/lulc_3class.tif` is aligned with the project grid and contains only {1, 2, 3, 255}.
-- [ ] Every class (built-up, forest, usable) covers ≥ 1 % of the AOI.
-- [ ] **Zero** cells inside the exclusion mask are labelled usable.
-- [ ] Two runs with the same seed give identical cluster labels.
-- [ ] Overall agreement with collapsed WorldCover ≥ 80 % (or the test logs the value and the manual checklist requires an explanation).
-- [ ] Silhouette score for the chosen k is computed and saved to `outputs/metrics/clustering.json`.
+- [x] `outputs/lulc_3class.tif` is aligned with the project grid and contains only {1, 2, 3, 255}.
+- [x] Every class (built-up, forest, usable) covers ≥ 1 % of the AOI. *(final: 60 / 5 / 24 %)*
+- [x] **Zero** cells inside the exclusion mask are labelled usable.
+- [x] Two runs with the same seed give identical cluster labels.
+- [x] Overall agreement with collapsed WorldCover ≥ 80 % (or the test logs the value and the manual checklist requires an explanation). *(gate checks ESRI: 96.6 %; WorldCover 64 %, explained in notebook 04 §5: the two products disagree, ESRI generalises urban areas)*
+- [x] Silhouette score for the chosen k is computed and saved to `outputs/metrics/clustering.json`. *(0.606 final, 0.585 validation)*`n`nStatus on Harsh's laptop (2026-10-05): **9 passed**.
 
 **Manual checklist:**
-- [ ] The 3-class map was visually compared with satellite imagery for 5 random locations.
-- [ ] Each cluster has a written description in notebook 04.
-- [ ] The choice of k and algorithm is justified in writing.
+- [x] The 3-class map was visually compared with satellite imagery for 5 random locations. *(Harsh 2026-10-05, notebook 04 §6: 4 of 5 clearly right; 1 debatable, farmland with houses on the fringe mapped built-up, which is ESRI's broad built-up class)*
+- [x] Each cluster has a written description in notebook 04.
+- [x] The choice of k and algorithm is justified in writing. *(notebook 04 §1)*
 
-**Sign-off:** - [ ] Harsh  - [ ] Abhinav
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 9/9 on Harsh's laptop)*  - [ ] Abhinav
 
 ---
 

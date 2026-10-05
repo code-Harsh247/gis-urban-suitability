@@ -145,7 +145,8 @@ Implemented in [`src/download/osm.py`](../src/download/osm.py). Run it with `pyt
   Each layer keeps the tag columns listed in `LAYERS` plus `osm_type` and `osm_id`.
 - **Files:** `data/raw/osm/<snapshot>/<layer>.gpkg` (EPSG:4326). Each one is recorded in `data/manifest.json` with the mirror used, tags, date, bbox, feature count and checksum.
 - **Mirrors:** tried in order from `osm.overpass_mirrors`: overpass-api.de → overpass.kumi.systems → overpass.private.coffee. Each mirror gets 2 attempts (`io_utils.retry`).
-- **Caching:** osmnx caches raw Overpass responses in `data/raw/osm/cache/`. Reruns skip any file whose checksum matches the manifest.
+- **Caching:** osmnx caches raw Overpass responses in `data/raw/osm/cache/`. Reruns skip a file only if its checksum matches the manifest **and** its recorded `bbox_4326` equals the current AOI + buffer.
+- **Area changes:** when `aoi.buffer_m` went from 1 to 3 km, the OSM files had to be downloaded again, the same rule the raster downloader uses. The Phase 2 gate checks that every raw file covers the configured area (`test_download_covers_current_aoi_and_buffer`).
 - **One query per tag key, key-only for history:**
   - Overpass history (`[date:]`) queries with a key=value filter, like `natural=water`, run through the global tag index. They fail with "Query run out of memory using about 2048 MB" on both overpass-api.de and kumi, even for a 6 km tile.
   - Key-only queries, like `natural=*` or `highway=*`, are bounded by the bbox and take seconds.

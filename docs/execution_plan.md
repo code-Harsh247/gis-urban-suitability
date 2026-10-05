@@ -260,8 +260,8 @@ These are the only places the two tracks touch.
 - [x] H4.1 `src/classify/cluster.py`: standardise, optional PCA, K-Means k = 3…10, GMM · 🔓 *(stub or prototype Pune table)*
 - [ ] H4.2 Elbow + silhouette + Davies–Bouldin plots · 🔓 *(stub)*
 - [x] H4.3 Real clustering on the AOI; choose k and justify · 🔒 **A3.5b** (real C4) · *H4.1/H4.3 done by Abhinav (Tasks.md assigns P5.1–P5.3 to Abhinav): K-Means k = 7 for both runs, `outputs/clusters_{validation,final}.parquet`. H4.2 metrics computed; plots go in notebook 04.*
-- [ ] **H4.4** `src/classify/label.py`: cluster → class rules + exclusion mask → real C7 · 🔒 **A4.1**
-- [~] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04 · *Abhinav: `src/classify/evaluate.py` + `export.py` + gate `tests/gates/test_phase5.py` written; waiting for C7 (H4.4).*
+- [x] **H4.4** `src/classify/label.py`: cluster → class rules + exclusion mask → real C7 · 🔒 **A4.1** · *2026-10-05: rules in `config → labeling` (built must be the largest land group; steep natural vegetation → forest); C7 final + `lulc_3class_validation.parquet`; `exclusion_mask[_validation].tif`; 15 unit tests; Phase 5 gate 9/9*
+- [x] H4.5 Evaluation vs ESRI (primary) and WorldCover 2021, collapsed to 3 classes; cluster descriptions in notebook 04 · *Abhinav: `src/classify/evaluate.py` + `export.py` + gate `tests/gates/test_phase5.py` written; waiting for C7 (H4.4).* · *Harsh 2026-10-05: ran `evaluate` (ESRI 96.6 %, WorldCover 64–71 % on land cells); notebook 04 with cluster descriptions, rules, maps and the satellite check*
 - [ ] H4.6 Unit tests: labelling rules, mask removes water/steep, same seed = same labels · 🔓
 
 **H5. Learning models and ablation** · W6–7 · P6.5, P6.6
@@ -290,7 +290,7 @@ These are the only places the two tracks touch.
 
 **Gate tests Harsh writes** (checks Abhinav's side of each phase)
 - [x] **G2** `tests/gates/test_phase2.py` · W2 · 🔓 · *72/72 on Harsh's laptop*
-- [ ] **G4** `tests/gates/test_phase4.py` · W3 · 🔓
+- [x] **G4** `tests/gates/test_phase4.py` · W3 · 🔓 · *2026-10-05: 19 checks incl. shapely distance spot checks and the time-travel rule; mutation-tested (10/10 caught)*
 - [ ] **G6** `tests/gates/test_phase6.py` · W6 · 🔓
 - [ ] **G8** `tests/gates/test_phase8.py` · W9 · 🔓
 
@@ -299,7 +299,7 @@ These are the only places the two tracks touch.
 ### Milestones (both tick to sign off)
 
 - [ ] **M1 Thin slice** (end W3): real grid (A3.1) + real C2 (A3.4) + real C3 (H3.3) + labels (A4.2) → distance-to-built baseline scored by the harness (A6.1) · Abhinav ☐ Harsh ☐
-- [ ] **M2 Full feature table** (end W4): A3.5b and A4.1 done; Phase 4 gate green · Abhinav ☐ Harsh ☐
+- [~] **M2 Full feature table** (end W4): A3.5b and A4.1 done; Phase 4 gate green · Abhinav ☐ Harsh ☑ (gate 19/19 on Harsh's laptop, 2026-10-05)
 - [ ] **M3 All scores** (end W7): A5.4, H5.2, H5.3, H6.2 written and passing the contract test · Abhinav ☐ Harsh ☐
 - [ ] **M4 Validation complete** (end W8): A7.3 done; `validation.json` has every model + baselines · Abhinav ☐ Harsh ☐
 
