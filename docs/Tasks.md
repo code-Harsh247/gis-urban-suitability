@@ -228,7 +228,7 @@ Status on Harsh's laptop (2026-10-05): **19 passed**. Mutation-tested: 10 delibe
 - [x] Highly correlated features (|r| > 0.9) noted, with a decision on whether to drop them.
 - [x] Feature build runs in < 10 min. *(0.4 min)*
 
-**Sign-off:** - [x] Harsh *(2026-10-05: gate 19/19 on Harsh's laptop)*  - [ ] Abhinav
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 19/19 on Harsh's laptop)*  - [x] Abhinav *(2026-10-22: gate 19/19 on Abhinav's laptop; `verify_feature_table.py` passes)*
 
 ---
 
@@ -264,7 +264,7 @@ Status on Harsh's laptop (2026-10-05): **19 passed**. Mutation-tested: 10 delibe
 - [x] Each cluster has a written description in notebook 04.
 - [x] The choice of k and algorithm is justified in writing. *(notebook 04 §1)*
 
-**Sign-off:** - [x] Harsh *(2026-10-05: gate 9/9 on Harsh's laptop)*  - [ ] Abhinav
+**Sign-off:** - [x] Harsh *(2026-10-05: gate 9/9 on Harsh's laptop)*  - [x] Abhinav *(2026-10-22: gate 9/9 on Abhinav's laptop after rebuilding C7; ESRI land agreement 96.6 %, WorldCover 64.0 %, recomputed by `verify_evaluation.py`)*
 
 ---
 
