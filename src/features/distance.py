@@ -78,6 +78,7 @@ def road_length_per_cell(lines, lat: Lattice) -> np.ndarray:
 
 
 def disk_kernel(radius_m: float, cell_m: float) -> np.ndarray:
+    """Square kernel of the cells whose centres lie within ``radius_m`` of the centre cell."""
     n = int(np.floor(radius_m / cell_m))
     i, j = np.mgrid[-n : n + 1, -n : n + 1]
     return (np.hypot(i, j) * cell_m <= radius_m + 1e-9).astype("float64")
@@ -135,6 +136,7 @@ def vector_features(cfg, snapshot: str) -> pd.DataFrame:
 
 
 def write_vector_features(cfg, only: list[str] | None = None) -> dict[str, pd.DataFrame]:
+    """Compute and write C3 for each OSM snapshot (``only``: a subset)."""
     out = {}
     for snap in only or list(snapshots(cfg)):
         df = vector_features(cfg, snap)

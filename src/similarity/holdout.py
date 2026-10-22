@@ -77,10 +77,11 @@ def _rf(cfg, seed: int) -> Scorer:
 
 
 def scorers(cfg) -> dict[str, Scorer]:
+    """The built-in scorers, by name (see the module docstring)."""
     seed = int(cfg["project"]["random_seed"])
     cols = list(schema.MODEL_INPUTS)
     return {
-        "dist_to_built": lambda X, train_ref, ids: -X.loc[ids, "log_dist_built"].to_numpy(),
+        "dist_to_built": lambda X, _train_ref, ids: -X.loc[ids, "log_dist_built"].to_numpy(),
         "rf": _rf(cfg, seed),
         "knn": _knn(cfg, cols),
         "knn_ring500": _knn(cfg, [c for c in cols if not c.startswith("ring250_")]),
@@ -141,6 +142,7 @@ def summarise(ranks: pd.DataFrame) -> dict:
 
 
 def run_holdout(cfg, run: str = "validation", names: list[str] | None = None) -> dict[str, dict]:
+    """Held-out summary for each scorer (``names``: a subset)."""
     res = {}
     for name, sc in scorers(cfg).items():
         if names and name not in names:
@@ -155,6 +157,7 @@ def run_holdout(cfg, run: str = "validation", names: list[str] | None = None) ->
 
 
 def write_holdout(cfg, run: str = "validation") -> dict:
+    """Run the check and store it in ``similarity.json`` under ``holdout.{run}``."""
     res = run_holdout(cfg, run)
     p = rm.metrics_path(cfg)
     allm = json.loads(p.read_text()) if p.exists() else {}

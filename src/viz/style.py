@@ -56,6 +56,7 @@ DIVERGING = LinearSegmentedColormap.from_list(
 
 
 def class_cmap(codes) -> ListedColormap:
+    """Colour map of the given class codes, in that order."""
     return ListedColormap([CLASS_COLORS[c] for c in codes])
 
 

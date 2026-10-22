@@ -95,6 +95,7 @@ def temporal_aucs(cfg, labels: pd.DataFrame) -> dict:
 
 
 def slope_sensitivity(slopes=SLOPES) -> list[dict]:
+    """Labels and temporal AUCs for each slope threshold."""
     rows = []
     for s in slopes:
         cfg = load_config()
@@ -113,6 +114,7 @@ def slope_sensitivity(slopes=SLOPES) -> list[dict]:
 
 
 def k_sensitivity(ks=KS) -> list[dict]:
+    """Cluster quality, class shares and agreement for each k (final run)."""
     rows = []
     for k in ks:
         cfg = load_config()
@@ -186,6 +188,7 @@ def cell_project(cell: int) -> Path:
 
 
 def cell_sensitivity(cells=CELLS) -> list[dict]:
+    """Temporal AUCs with features and labels rebuilt at each cell size."""
     rows = []
     for cell in cells:
         if cell == load_config().cell_size_m:
@@ -207,6 +210,7 @@ def cell_sensitivity(cells=CELLS) -> list[dict]:
 
 
 def write_sensitivity(only: list[str] | None = None) -> dict:
+    """Run the experiments (``only``: a subset) and merge them into ``sensitivity.json``."""
     p = Path(load_config().paths["metrics"]) / "sensitivity.json"
     res = json.loads(p.read_text()) if p.exists() else {}
     runs = {"slope": slope_sensitivity, "k": k_sensitivity, "cell": cell_sensitivity}

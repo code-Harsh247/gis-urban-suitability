@@ -26,7 +26,9 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 import rasterio  # noqa: E402
+from matplotlib.axes import Axes  # noqa: E402
 from matplotlib.colors import BoundaryNorm, ListedColormap  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402
 from matplotlib.patches import Patch  # noqa: E402
 from matplotlib_scalebar.scalebar import ScaleBar  # noqa: E402
 
@@ -67,7 +69,7 @@ def _basemap(cfg, ax) -> None:
         log.warning("basemap skipped: %s", exc)
 
 
-def base_map(cfg, title: str, subtitle: str | None = None):
+def base_map(cfg, title: str, subtitle: str | None = None) -> tuple[Figure, Axes]:
     """Figure + axes framed on the AOI, with basemap, outline, scale bar and north arrow."""
     style.apply()
     fig, ax = plt.subplots(figsize=(6.4, 6.4))
@@ -143,9 +145,7 @@ def save(fig, cfg, name: str) -> Path:
     return p
 
 
-def _categorical(
-    cfg, ax, img, codes: dict[int, tuple[str, str]], extent, legend_title: str, alpha=1.0
-):
+def _categorical(ax, img, codes: dict[int, tuple[str, str]], extent, legend_title: str, alpha=1.0):
     keys = sorted(codes)
     lut = {k: i for i, k in enumerate(keys)}
     idx = np.full(img.shape, np.nan)
@@ -199,7 +199,7 @@ def lulc_map(cfg, year: int) -> Path:
     arr[arr == 0] = np.nan
     b = ref.bounds
     fig, ax = base_map(cfg, f"Land cover {year}", "Esri 10 m Annual LULC (Impact Observatory)")
-    _categorical(cfg, ax, arr, dict(style.ESRI_COLORS), (b[0], b[2], b[1], b[3]), "ESRI class")
+    _categorical(ax, arr, dict(style.ESRI_COLORS), (b[0], b[2], b[1], b[3]), "ESRI class")
     _outline(cfg, ax)
     return save(fig, cfg, f"map_lulc_{year}")
 
@@ -214,7 +214,7 @@ def class3_map(cfg, run: str) -> Path:
         "K-Means clusters (k = 7) mapped by centroid rules; exclusion mask applied",
     )
     codes = {k: (style.CLASS_NAMES[k], style.CLASS_COLORS[k]) for k in style.CLASS_NAMES}
-    _categorical(cfg, ax, img, codes, lattice_extent(cfg), "Class")
+    _categorical(ax, img, codes, lattice_extent(cfg), "Class")
     _outline(cfg, ax)
     return save(fig, cfg, f"map_class3_{run}")
 
@@ -262,7 +262,7 @@ def labels_map(cfg) -> Path:
         "Validation labels (2018 → 2022/23)",
         "Persistent growth: non-built in 2018 and 2019, built in 2022 and 2023",
     )
-    _categorical(cfg, ax, img, codes, lattice_extent(cfg), "Cell")
+    _categorical(ax, img, codes, lattice_extent(cfg), "Cell")
     _outline(cfg, ax)
     return save(fig, cfg, "map_labels_growth")
 
@@ -319,7 +319,7 @@ def suitability_map(cfg) -> Path | None:
         "Suitability for urban development",
         "Classes S1-S3 on usable land; forest, built-up and excluded are N",
     )
-    _categorical(cfg, ax, img, codes, lattice_extent(cfg), "Class")
+    _categorical(ax, img, codes, lattice_extent(cfg), "Class")
     cand = Path(cfg.paths["outputs"]) / "candidates.gpkg"
     if cand.exists():
         gpd.read_file(cand).boundary.plot(ax=ax, color=style.INK, linewidth=0.6, zorder=4)

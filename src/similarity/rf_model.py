@@ -116,12 +116,14 @@ def training_set(labels: pd.DataFrame, model: str) -> tuple[np.ndarray, np.ndarr
 
 
 def param_combos(cfg) -> list[dict]:
+    """Every combination of ``rf.param_grid``."""
     grid = cfg["rf"]["param_grid"]
     keys = sorted(grid)
     return [dict(zip(keys, v, strict=True)) for v in itertools.product(*(grid[k] for k in keys))]
 
 
 def make_rf(cfg, params: dict, seed: int) -> RandomForestClassifier:
+    """Class-balanced random forest with the configured size and the given parameters."""
     return RandomForestClassifier(
         n_estimators=int(cfg["rf"]["n_estimators"]),
         class_weight=cfg["rf"]["class_weight"],
@@ -168,6 +170,7 @@ def cross_validate(
 
 
 def tune(cfg, X, y, folds, seed) -> tuple[dict, list[dict]]:
+    """Pick the ``rf.param_grid`` combination with the best spatial-CV AUC (training label only)."""
     table = []
     for params in param_combos(cfg):
         r = cross_validate(cfg, X, y, folds, params, seed)
@@ -194,6 +197,7 @@ def metrics_path(cfg) -> Path:
 
 
 def usable_cells(cfg) -> np.ndarray:
+    """Usable cells of the final 3-class map (C7 ``class_3 = 3``)."""
     c7 = schema.read_contract(c7_path(cfg, "final"), "C7")
     return c7.loc[c7["class_3"] == schema.CLASS_USABLE, "cell_id"].to_numpy()
 
@@ -266,6 +270,7 @@ def run_model(cfg, model: str) -> dict:
 
 
 def write_scores(cfg, model: str, run: str, df: pd.DataFrame, meta_extra: dict) -> Path:
+    """Write one model's scores for a run (C8 layout) with its metadata JSON."""
     schema.validate_frame(df, "C8")
     p = scores_path(cfg, model, run)
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -288,6 +293,7 @@ def write_scores(cfg, model: str, run: str, df: pd.DataFrame, meta_extra: dict) 
 
 
 def write_probability_raster(cfg, scores: pd.DataFrame, path: Path) -> Path:
+    """Write scores as a float32 GeoTIFF on the cell lattice (NaN elsewhere)."""
     lat = lattice(cfg)
     grid = schema.read_contract(schema.contract_path(cfg, "C1"), "C1").set_index("cell_id")
     g = grid.loc[scores["cell_id"]]
@@ -305,6 +311,7 @@ def write_probability_raster(cfg, scores: pd.DataFrame, path: Path) -> Path:
 
 
 def write_models(cfg, models: list[str] | None = None) -> dict[str, dict]:
+    """Run, score and write each model; merge its metrics into ``similarity.json``."""
     out = {}
     mpath = metrics_path(cfg)
     allm = json.loads(mpath.read_text()) if mpath.exists() else {}

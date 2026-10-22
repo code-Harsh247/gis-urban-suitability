@@ -29,7 +29,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
-from sklearn.metrics import roc_curve  # noqa: E402
+from sklearn.metrics import roc_auc_score, roc_curve  # noqa: E402
 
 from src.classify.label import c7_path  # noqa: E402
 from src.config import load_config  # noqa: E402
@@ -243,8 +243,6 @@ def roc(cfg) -> Path:
     fig, ax = plt.subplots(figsize=(5.2, 5))
     ax.plot([0, 1], [0, 1], color=style.INK_MUTED, lw=1, ls="--")
     ax.text(0.62, 0.55, "random", color=style.INK_MUTED, fontsize=8, rotation=40)
-    from sklearn.metrics import roc_auc_score
-
     for m in MODEL_STYLE:
         fpr, tpr, _ = roc_curve(y, scores[m])
         name, color = MODEL_STYLE[m]

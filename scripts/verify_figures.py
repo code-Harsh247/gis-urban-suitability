@@ -101,7 +101,7 @@ def main() -> int:
     ax.set_axis_off()
     img = static_maps.cell_image(cfg, c7["cell_id"], c7["class_3"])
     codes = {k: (style.CLASS_NAMES[k], style.CLASS_COLORS[k]) for k in style.CLASS_NAMES}
-    static_maps._categorical(cfg, ax, img, codes, static_maps.lattice_extent(cfg), "Class")
+    static_maps._categorical(ax, img, codes, static_maps.lattice_extent(cfg), "Class")
     fig.canvas.draw()  # ~5 px per 100 m cell, so a cell centre is never on a neighbour
     rgb = np.asarray(fig.canvas.buffer_rgba())[..., :3] / 255.0
     H = rgb.shape[0]

@@ -127,6 +127,7 @@ def criteria(cfg, df: pd.DataFrame) -> pd.DataFrame:
 
 
 def weights(cfg, use_lulc: bool = True) -> tuple[pd.Series, dict]:
+    """AHP weights of the criteria (optionally without land cover) and their consistency."""
     names = list(cfg["mcda"]["criteria"])
     A = parse_matrix(cfg["mcda"]["ahp"])
     if A.shape != (len(names), len(names)):
@@ -139,6 +140,7 @@ def weights(cfg, use_lulc: bool = True) -> tuple[pd.Series, dict]:
 
 
 def mcda_scores(cfg, year: int, cell_ids, use_lulc: bool = True) -> pd.DataFrame:
+    """Weighted-overlay score of ``cell_ids`` from the ``year`` feature table."""
     c4 = schema.read_contract(schema.contract_path(cfg, "C4", year=year), "C4").set_index("cell_id")
     w, _ = weights(cfg, use_lulc)
     crit = criteria(cfg, c4.loc[np.asarray(cell_ids)])
@@ -158,6 +160,7 @@ def metrics_path(cfg) -> Path:
 
 
 def write_mcda(cfg) -> dict:
+    """Score both MCDA variants for both runs; write C8 files, the GeoTIFF and ``mcda.json``."""
     labels = schema.read_contract(schema.contract_path(cfg, "C5"), "C5").set_index("cell_id")
     cand = labels.index[labels["candidate"]].to_numpy()
     use = usable_cells(cfg)

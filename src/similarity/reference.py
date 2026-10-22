@@ -53,12 +53,14 @@ TYPE_GROUPS = {
 
 
 def type_group(building_type: pd.Series) -> pd.Series:
+    """OSM ``building=*`` value -> coarse group (residential, commercial, industrial, ...)."""
     lut = {t: g for g, ts in TYPE_GROUPS.items() for t in ts}
     t = building_type.fillna("yes").astype(str).str.lower()
     return t.map(lut).where(t.isin(lut), np.where(t == "yes", "unknown", "other"))
 
 
 def run_snapshot(cfg, run: str) -> str:
+    """OSM snapshot of a run (time-travel rule: 2018 for validation, current for final)."""
     return schema.vector_snapshot_for(cfg, run_year(cfg, run))
 
 
@@ -73,6 +75,7 @@ def buildings(cfg, run: str) -> pd.DataFrame:
 
 
 def reference_cells(cfg, run: str) -> pd.DataFrame:
+    """Reference cells of a run: OSM building cells (+ ESRI built cells, per config)."""
     source = cfg["similarity"].get("reference_source", "osm+esri")
     if source not in SOURCES:
         raise ValueError(f"similarity.reference_source must be one of {SOURCES}, got {source!r}")
@@ -99,6 +102,7 @@ def reference_path(cfg, run: str) -> Path:
 
 
 def write_reference(cfg, runs: list[str] | None = None) -> dict[str, pd.DataFrame]:
+    """Write ``reference_{run}.parquet`` for each run."""
     out = {}
     for run in runs or list(RUNS):
         ref = reference_cells(cfg, run)
