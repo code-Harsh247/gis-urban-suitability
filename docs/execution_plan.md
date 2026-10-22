@@ -272,8 +272,8 @@ These are the only places the two tracks touch.
 - [ ] H5.5 Group drop-one ablation through the harness → ablation table · 🔒 **A6.1**
 
 **H6. MCDA / AHP baseline** · W7–8 · P7.3, P7.5
-- [ ] H6.1 `src/suitability/mcda.py`: criteria rescaling, AHP matrix, consistency ratio < 0.1 · 🔓 *(stub)*
-- [ ] **H6.2** Real MCDA score → C8 `mcda` · 🔒 **A3.5b**
+- [x] H6.1 `src/suitability/mcda.py`: criteria rescaling, AHP matrix, consistency ratio < 0.1 · 🔓 *(stub)*
+- [x] **H6.2** Real MCDA score → C8 `mcda` · 🔒 **A3.5b** · *H6.1/H6.2 done by Abhinav (Tasks.md assigns P7.3 to Abhinav): AUC on grew 0.636, CR 0.003; see Tasks P7.3.*
 - [ ] H6.3 MCDA section of `docs/validation.md` · 🔒 **A7.3**
 
 **H7. Sensitivity analysis** · W8 · P7.6
