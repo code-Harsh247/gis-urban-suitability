@@ -1,0 +1,66 @@
+% Owner: Abhinav (P8.5); details in docs/data_sources.md
+\section{Data}\label{sec:data}
+
+All data are free and openly licensed (Table~\ref{tab:data}). Rasters are read from the Microsoft
+Planetary Computer, and only the window needed for the study area plus a \SI{3}{\km} buffer is
+downloaded. The buffer equals the distance cap of the features, so distances from cells near the
+edge are exact. OpenStreetMap layers come from the Overpass API through OSMnx \citep{boeing2017}.
+Every download is recorded with its checksum and extent in a manifest, so a rerun reproduces or
+skips it.
+
+\begin{table}[ht]
+  \centering\small
+  \caption{Datasets.}
+  \label{tab:data}
+  \begin{tabularx}{\textwidth}{@{}X l l l X@{}}
+    \toprule
+    Dataset & Years & Resolution & Licence & Used for \\
+    \midrule
+    ESRI 10\,m Annual LULC v02 \citep{karra2021} & 2018--2023 & \SI{10}{\m} & CC BY 4.0 &
+      land-cover features, three-class map, growth labels \\
+    ESA WorldCover v200 \citep{zanaga2022} & 2021 & \SI{10}{\m} & CC BY 4.0 &
+      cross-check of the three-class map \\
+    Copernicus DEM GLO-30 \citep{copdem} & static & \SI{30}{\m} & Copernicus DEM licence &
+      elevation, slope \\
+    OpenStreetMap \citep{osm} & 2018-01-01, current & vector & ODbL 1.0 &
+      roads, water, buildings, protected areas \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\paragraph{Land use / land cover.} The ESRI (Impact Observatory) map is used for every year and
+every purpose, so that ``built'' has the same definition in the baseline and the test years. It
+has the highest overall accuracy of the global 10\,m products (75\,\%), and built area is one of
+its most reliable classes \citep{venter2022}. Its known bias, over-estimating scrub, matters
+here: much of the Bannerghatta forest appears as rangeland. Inside the park, ESRI classes 47\,\%
+of the land as trees and 50\,\% as rangeland. ESA WorldCover 2021 is used only as an independent
+cross-check. The two products disagree strongly on built-up land (62\,\% of the area in ESRI 2023
+vs 33\,\% in WorldCover), because ESRI generalises urban areas to include gardens and street
+trees. ESRI land cover also flickers between years: only 35--49\,\% of single-year ``new built''
+pixels are still built later. The growth labels therefore require two years at each end
+(Section~\ref{sec:validation_design}).
+
+\paragraph{Terrain.} The Copernicus DEM is warped to UTM at \SI{30}{\m}. Slope is computed with
+Horn's method \citep{horn1981} and then resampled to the \SI{10}{\m} grid. The DEM is a surface
+model, so heights include buildings and trees; slope is less reliable in dense built-up cells, but
+it matters most on open candidate land, where this effect is small.
+
+\paragraph{OpenStreetMap.} Roads, water and buildings are downloaded twice: as they were on
+1 January 2018 (an Overpass \texttt{[date:]} query) for the validation run, and as they are now
+for the final map. The difference is large. All-road length more than doubled between the two
+snapshots (\SI{3889}{\km} to \SI{8730}{\km}), partly new streets in growth areas and partly later
+mapping. Road features from today's map would therefore leak future growth into a 2018 analysis.
+OSM building coverage is also very uneven: buildings were mapped in 62--75\,\% of the built cells
+in the north but in about 1\,\% in the south in 2018, and almost all are untagged
+(\texttt{building=yes}). Protected areas (Bannerghatta, tagged as a national park) are a static
+layer and come from the current map.
+
+\paragraph{Preprocessing.} All rasters are aligned to one reference grid in EPSG:32643: \SI{10}{\m}
+pixels whose edges fall on whole \SI{100}{\m} cells, so every block of $10\times10$ pixels is one
+grid cell. Land cover is copied without resampling, because the ESRI tile is already on this
+lattice. OSM layers are reprojected, clipped to the grid, repaired and split into single-part
+geometries. Drivable roads are split into major (motorway to secondary) and minor. Buildings
+smaller than \SI{10}{\m\squared} or larger than \SI{10}{\hectare} are dropped. Each preparation
+step is checked independently against the source data, for example by comparing pixel values at
+random points, matching road lengths before and after clipping, and overlaying OSM lakes on ESRI
+water.
