@@ -1,0 +1,43 @@
+% Owner: Abhinav (P8.5); numbers from docs/study_area.md and the feature table (C4)
+\section{Study area}\label{sec:study-area}
+
+The study area is \textbf{Bengaluru South}, a \SI{582}{\km\squared} rectangle from
+\ang{77.52}\,E to \ang{77.74}\,E and \ang{12.72}\,N to \ang{12.94}\,N
+(Figure~\ref{fig:study-area}). It covers the south-eastern growth corridor along Hosur Road
+(Electronic City, Bommasandra), the Kanakapura Road fringe in the south-west, and
+\textbf{Bannerghatta National Park}, of which \SI{41.3}{\km\squared} lies inside the area. All
+analysis is done in UTM zone 43N (EPSG:32643) on a grid of 58{,}218 cells of
+\SI{100}{\m}.
+
+\paragraph{Why this area.} Fourteen candidate areas of 400--\SI{620}{\km\squared} around Indian
+cities were compared on their land-cover mix, their persistent growth since 2018 and their
+OpenStreetMap coverage (\texttt{docs/study\_area.md}). Bengaluru South was chosen for four
+reasons:
+\begin{itemize}
+  \item \textbf{strong, persistent growth:} 8.4\,\% of the land that was non-built in 2018 was
+        built in both 2022 and 2023, which gives enough change to validate against;
+  \item \textbf{a clear forest block} (Bannerghatta) next to cropland and scrub, which gives the
+        three-class map a real forest class;
+  \item \textbf{mostly gentle terrain:} elevations of \SIrange{727}{1022}{\m} (median
+        \SI{898}{\m}) and a median cell slope of \ang{2.5}; under 1\,\% of the cells are
+        steeper than \ang{15}, mostly in the Bannerghatta hills;
+  \item \textbf{good OpenStreetMap coverage in 2018:} about 151{,}000 building footprints
+        were already mapped on 1 January 2018. Several other candidates (Coimbatore,
+        Bhubaneswar) were mapped in bulk only later, so they could not supply buildings as of
+        the baseline date, which the temporal validation needs.
+\end{itemize}
+
+\paragraph{Land cover.} In 2018 the ESRI map classes 53.6\,\% of the area as built, 18.4\,\% as
+crops, 18.1\,\% as rangeland, 7.2\,\% as trees and 2.5\,\% as water. By 2023 built land had
+risen to 61.5\,\%, mostly at the expense of cropland (12.2\,\%). The built-up core lies in the
+north, toward central Bengaluru; growth is concentrated in the south and east. Many small lakes
+(tanks) are scattered across the area, and some of them are overgrown with vegetation, which the
+exclusion mask has to handle.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.78\textwidth]{map_lulc_2023}
+  \caption{Study area: ESRI land cover in 2023 \citep{karra2021}, with the area outline.
+           Bannerghatta National Park is the tree and rangeland block in the south-west.}
+  \label{fig:study-area}
+\end{figure}

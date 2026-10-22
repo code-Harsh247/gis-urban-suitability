@@ -1,0 +1,46 @@
+% Owner: Abhinav (P8.5)
+\section{Introduction}\label{sec:introduction}
+
+Indian cities are growing fast into the land around them. Bengaluru is a clear case: over four
+decades its built-up area grew by 584\,\%, while vegetation fell by 66\,\% and water bodies by
+74\,\% \citep{ramachandra2012}. Planners therefore keep facing the same question: \emph{where
+can new urban development reasonably go?}
+
+The classic GIS answer is a land suitability analysis. Factor maps such as slope, access to
+roads and current land cover are rated, weighted and overlaid into one suitability surface
+\citep{collins2001}. Since the 1990s the weights usually come from multi-criteria decision
+analysis (MCDA), most often the Analytic Hierarchy Process \citep[AHP;][]{saaty1980}, in which
+experts compare criteria in pairs \citep{malczewski2004}. The method is transparent and easy to
+explain, but it has two well-known weaknesses. The weights are subjective, and changing only the
+weighting method moves the boundaries of the suitable zones \citep{mosadeghi2015}. And the
+resulting maps are rarely checked against what actually happened on the ground
+\citep{malczewski2004, parry2018}.
+
+Freely available satellite land use / land cover (LULC) data now make a different approach
+possible. Annual 10\,m LULC maps \citep{karra2021} show where land has actually been built on,
+year by year. A model can learn which surroundings preceded new development, and its predictions
+can be tested against growth that happened later.
+
+This project builds such an analysis for \textbf{Bengaluru South}, entirely in Python. It answers
+three questions, set at the project meeting:
+\begin{enumerate}
+  \item \textbf{Land classification.} Which land is built-up, which is forest, and which is
+        usable (potential) land? The land is grouped by clustering LULC fractions and terrain
+        on a 100\,m grid.
+  \item \textbf{Building similarity.} Given an existing building at location~A, which
+        locations~B on usable land have similar surroundings (terrain, access to roads and
+        water, nearby land cover, built-up density)?
+  \item \textbf{Suitability.} How do data-driven scores (similarity to existing buildings and a
+        random forest that learns from recent change) compare with a classic MCDA/AHP overlay
+        when all of them are tested against real growth?
+\end{enumerate}
+
+The test is strict: every score is computed with data as of 2018 only and compared with growth
+that persisted through 2022 and 2023. Rules against leakage of future information are enforced
+in code. The result is a three-class land map, a graded suitability map with candidate sites, and
+an honest comparison of the methods, including where they fail.
+
+Section~\ref{sec:literature} reviews related work. Sections~\ref{sec:study-area}
+and~\ref{sec:data} describe the study area and the data. The methods and the validation design
+follow in Sections~\ref{sec:methodology} and~\ref{sec:validation_design}, the results in
+Section~\ref{sec:results}, and a discussion and conclusion close the report.

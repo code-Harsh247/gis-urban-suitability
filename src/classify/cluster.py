@@ -53,6 +53,7 @@ def run_year(cfg, run: str) -> int:
 
 
 def cluster_inputs(cfg) -> list[str]:
+    """Clustering inputs (``clustering.inputs``, else ``schema.CLUSTER_INPUTS``); must be in C4."""
     cols = list(cfg["clustering"].get("inputs") or schema.CLUSTER_INPUTS)
     unknown = set(cols) - set(schema.CONTRACTS["C4"].columns)
     if unknown:
@@ -83,7 +84,9 @@ def prepare(cfg, X: pd.DataFrame) -> tuple[np.ndarray, dict]:
     return Z, info
 
 
-def fit(Z: np.ndarray, method: str, k: int, seed: int):
+def fit(
+    Z: np.ndarray, method: str, k: int, seed: int
+) -> tuple[KMeans | GaussianMixture, np.ndarray]:
     """Fitted model and labels."""
     if method == "kmeans":
         model = KMeans(n_clusters=k, init="k-means++", n_init=10, random_state=seed).fit(Z)
@@ -95,6 +98,7 @@ def fit(Z: np.ndarray, method: str, k: int, seed: int):
 
 
 def scores(Z: np.ndarray, labels: np.ndarray, sample: int, seed: int) -> dict[str, float]:
+    """Silhouette (on a seeded sample of ``sample`` cells) and Davies-Bouldin of a labelling."""
     if len(np.unique(labels)) < 2:
         return {"silhouette": float("nan"), "davies_bouldin": float("nan")}
     n = min(sample, len(Z))
@@ -180,6 +184,7 @@ def metrics_path(cfg) -> Path:
 
 
 def write_clusters(cfg, runs: list[str] | None = None, do_scan: bool = True) -> dict[str, dict]:
+    """Cluster each run and write assignments, centroids and ``clustering.json``."""
     out = {}
     mpath = metrics_path(cfg)
     metrics = json.loads(mpath.read_text()) if mpath.exists() else {}

@@ -69,6 +69,7 @@ def collapse_fractions(fr: pd.DataFrame) -> np.ndarray:
 
 
 def esri_reference(cfg, year: int) -> pd.DataFrame:
+    """ESRI reference class per cell for ``year``, from the own-cell fractions in C4."""
     c4 = schema.read_contract(schema.contract_path(cfg, "C4", year=year), "C4")
     return pd.DataFrame({"cell_id": c4["cell_id"], "ref": collapse_fractions(c4)})
 
@@ -78,6 +79,7 @@ def worldcover_path(cfg) -> Path:
 
 
 def worldcover_reference(cfg) -> pd.DataFrame:
+    """WorldCover reference class per grid cell (harmonised to ESRI codes, then collapsed)."""
     lat = lattice(cfg)
     with rasterio.open(worldcover_path(cfg)) as ds:
         esri = harmonise_worldcover(ds.read(1))
@@ -117,6 +119,7 @@ def compare(pred: np.ndarray, ref: np.ndarray, classes=CLASSES) -> dict:
 
 
 def evaluate(cfg, c7: pd.DataFrame, run: str) -> dict:
+    """Compare a C7 frame with the ESRI (run year) and WorldCover references."""
     refs = {
         f"esri_{run_year(cfg, run)}": esri_reference(cfg, run_year(cfg, run)),
         f"worldcover_{cfg['lulc']['worldcover_check']}": worldcover_reference(cfg),
@@ -142,6 +145,7 @@ def eval_path(cfg) -> Path:
 
 
 def write_evaluation(cfg, run: str = "final", c7_path: Path | None = None) -> dict:
+    """Evaluate one run's C7 and store the result in ``classification_eval.json``."""
     c7 = schema.read_contract(Path(c7_path) if c7_path else schema.contract_path(cfg, "C7"), "C7")
     res = evaluate(cfg, c7, run)
     p = eval_path(cfg)

@@ -31,6 +31,7 @@ NODATA = 0
 
 
 def lattice_transform(lat: Lattice) -> Affine:
+    """Affine transform of the 100 m cell lattice (same origin as the 10 m grid)."""
     return Affine(lat.cell_m, 0.0, lat.left, 0.0, -lat.cell_m, lat.top)
 
 
@@ -43,6 +44,7 @@ def clusters_gpkg_path(cfg) -> Path:
 
 
 def class_image(cfg, c7: pd.DataFrame) -> np.ndarray:
+    """C7 classes on the cell lattice (uint8, 0 outside the AOI); every grid cell needs a class."""
     lat = lattice(cfg)
     grid = schema.read_contract(schema.contract_path(cfg, "C1"), "C1")
     g = grid.merge(c7[["cell_id", "class_3"]], on="cell_id", how="left", validate="1:1")
@@ -54,6 +56,7 @@ def class_image(cfg, c7: pd.DataFrame) -> np.ndarray:
 
 
 def write_class_raster(cfg, c7: pd.DataFrame, path: Path | None = None) -> Path:
+    """Write the 3-class GeoTIFF on the 100 m cell lattice."""
     path = Path(path or class_raster_path(cfg))
     img = class_image(cfg, c7)
     profile = {
@@ -69,6 +72,7 @@ def write_class_raster(cfg, c7: pd.DataFrame, path: Path | None = None) -> Path:
 
 
 def write_clusters_gpkg(cfg, c7: pd.DataFrame, path: Path | None = None) -> Path:
+    """Write the cell squares with cluster id, class code and class name."""
     path = Path(path or clusters_gpkg_path(cfg))
     grid = schema.read_contract(schema.contract_path(cfg, "C1"), "C1")
     g = grid.merge(

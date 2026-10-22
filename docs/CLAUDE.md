@@ -104,4 +104,4 @@ outputs/     maps, rasters, metrics (git-ignored)
 ## Conventions
 
 - Keep large data files (`.tif`, `.shp`, `.gpkg`, `data/`) out of git.
-- `data/` may be a **symlink to an external drive**. On Abhinav's laptop: `data -> /media/abhinav/7E87-ECF8/gis-urban-suitability/data` (exFAT USB drive). Code must not follow symlinks when building repo-relative paths (use `io_utils.manifest_key`, not `Path.resolve()`). The drive must be mounted before running anything that reads or writes data.
+- `data/` may be a **symlink to an external drive**. On Abhinav's laptop: `data -> /run/media/abhinav/7E87-ECF8/gis-urban-suitability/data` (exFAT USB drive; before an OS update in Oct 2026 it mounted at `/media/abhinav/...`, so if `ls data/` fails, find the mount with `lsblk` and re-point the link). Code must not follow symlinks when building repo-relative paths (use `io_utils.manifest_key`, not `Path.resolve()`). The drive must be mounted before running anything that reads or writes data.

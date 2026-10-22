@@ -1,0 +1,95 @@
+% Owner: Abhinav (P8.5); synthesis written with Harsh (docs/literature_review.md)
+\section{Literature review}\label{sec:literature}
+
+Two families of methods rank land for urban development: expert MCDA and learned suitability.
+Table~\ref{tab:literature} summarises the papers reviewed; the full notes are in
+\texttt{docs/literature\_review.md}.
+
+\subsection{Expert multi-criteria suitability}
+
+Land-use suitability analysis began with hand-drawn overlays and moved to GIS, while its core
+idea stayed the same: map the factors, rate them, and overlay them into a composite
+\citep{collins2001}. \citet{malczewski2004} groups GIS methods into overlay mapping, MCDA
+(weighted linear combination, often with AHP weights) and soft-computing approaches. He notes
+that results depend heavily on subjective choices of criteria, standardisation and weights, and
+that suitability maps are rarely validated. The weighting method alone matters: on the same
+criteria, AHP and Fuzzy-AHP ranked development options the same way but drew different zone
+boundaries \citep{mosadeghi2015}. A typical Indian study, \citet{parry2018}, combines slope,
+altitude, LULC and the status of existing amenities with AHP weights at ward level for Srinagar
+and Jammu, without validation.
+
+The criteria are similar across studies: terrain (slope, elevation), current land cover, and
+proximity to roads, existing built-up land and water. Our feature table has the same core, at
+100\,m cells instead of wards, and our MCDA baseline uses exactly these criteria.
+
+\subsection{LULC change in Bengaluru and Indian cities}
+
+\citet{ramachandra2012} classified Landsat images of Bangalore from 1973 to 2010: built-up area
+grew 584\,\% while vegetation fell 66\,\% and water bodies 74\,\%. Growth has eaten into exactly
+the land our exclusion mask protects (lakes and forest). Across five other Indian mega cities,
+\citet{bharath2018} find that industrial, infrastructural and socio-economic drivers influence
+growth more than biophysical factors. This matches our design, in which road access and nearby
+built-up land are the main context features and terrain is secondary.
+
+\subsection{Learning suitability from data}
+
+A second line of work learns a suitability surface from where development already is or recently
+happened: neural networks \citep{pijanowski2002, liu2017flus}, random forests
+\citep{ahmadlou2016, li2024} and presence-only maximum entropy \citep{wang2021}. They share a
+core of predictors with ours: distances to roads, rivers and existing urban land, terrain, and
+neighbourhood land use.
+
+\textbf{Validation is the weak point.} Studies that test on a random split of a single date
+report very high accuracy, such as AUC 0.99 for urban suitability in Yulin \citep{li2024}, where
+the cell's own land use is also an input. Studies that test against \emph{later observed change}
+report more modest values, such as AUC 0.82 in Rasht \citep{ahmadlou2016}. Random
+cross-validation over-states performance on spatially structured data
+\citep{roberts2017, ploton2020}; spatial blocks give more honest estimates \citep{valavi2019}.
+Growth type also matters: growth away from existing urban land is much harder to predict than
+growth next to it \citep{wang2021}, which can be measured with the Landscape Expansion Index
+\citep{liu2010lei}. The total operating characteristic complements ROC for maps where change is
+a small share of the land \citep{pontius2014}.
+
+\textbf{Data quality} shapes the design as well. Among the global 10\,m LULC products, the Esri
+map has the highest overall accuracy, but it over-estimates scrub \citep{venter2022}. OSM
+building completeness varies strongly between cities and over time \citep{herfort2023}.
+
+\subsection{The gap this project addresses}
+
+Expert MCDA is transparent but subjective and almost never tested against real growth. Learned
+models remove the hand-set weights but are often validated optimistically. This project:
+\begin{itemize}
+  \item tests \emph{every} score, including the expert MCDA baseline, the same way: against
+        persistent growth from 2018/19 to 2022/23, always next to simple baselines (random and
+        distance to built-up);
+  \item enforces leakage rules: no own-cell land cover in model inputs, OSM data as of the
+        baseline date, a time-travel rule, and out-of-fold scores with spatial blocks;
+  \item adds a per-building similarity query (``find land whose surroundings resemble
+        building~A''), which none of the reviewed papers offers.
+\end{itemize}
+
+\begin{table}[ht]
+  \centering\small
+  \caption{Papers reviewed. Validation: how the paper tests its result.}
+  \label{tab:literature}
+  \begin{tabularx}{\textwidth}{@{}l l X X@{}}
+    \toprule
+    Paper & Area & Method & Validation \\
+    \midrule
+    \citet{malczewski2004} & review & GIS-MCDA methods & rarely done (noted) \\
+    \citet{collins2001} & USA (review) & history of suitability analysis & --- \\
+    \citet{mosadeghi2015} & Gold Coast & AHP vs Fuzzy-AHP overlay & two outputs compared \\
+    \citet{parry2018} & Srinagar, Jammu & GIS-AHP, ward level & none reported \\
+    \citet{ramachandra2012} & Bangalore & Landsat LULC change, 1973--2010 & classification accuracy \\
+    \citet{bharath2018} & 5 Indian cities & CA-Markov with growth agents & not reported in the abstract \\
+    \citet{li2024} & Yulin & random forest, 25 factors & random 70/30 split, AUC 0.99 \\
+    \citet{wang2021} & Luoyang & MaxEnt + cellular automaton & 2009$\to$2018, Kappa 0.78 \\
+    \citet{ahmadlou2016} & Rasht & random forest & later change, AUC 0.82, TOC \\
+    \citet{liu2017flus} & China & neural network + CA (FLUS) & 2000$\to$2010 simulation \\
+    \citet{pijanowski2002} & Michigan & neural network (LTM), 100\,m & same period \\
+    \citet{roberts2017}, \citet{ploton2020} & methods & blocked cross-validation & random vs blocked CV \\
+    \citet{liu2010lei}, \citet{pontius2014} & methods & LEI growth types; TOC curve & --- \\
+    \citet{venter2022}, \citet{herfort2023} & global & LULC accuracy; OSM completeness & ground truth; ML estimate \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
