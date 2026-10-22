@@ -70,6 +70,26 @@ similarity:
   top_n: 20
   knn_k: 10
   metric: euclidean          # decision D5; cosine only as a comparison
+  # reference cells (P6.2): cells with an OSM building, plus ESRI built cells
+  # (frac_built >= growth.built_min) where OSM has none. OSM alone covers 62-75 % of
+  # built cells in the north but ~1 % in the south (2018), so it would bias the profile.
+  reference_source: osm+esri # osm | osm+esri
+
+rf:                          # random forests, src/similarity/rf_model.py (P6.5)
+  n_estimators: 300
+  n_folds: 5                 # spatial-block folds (validation.spatial_block_m blocks)
+  class_weight: balanced_subsample
+  param_grid:                # tuned by spatial CV on the training label only
+    min_samples_leaf: [1, 5, 20]
+    max_features: [sqrt, 0.5]
+  # features as within-year percentiles: OSM mapping grew a lot between the 2018 and
+  # current snapshots (median road density 3.0 -> 12.4 km/km²); a model trained on 2018
+  # values would read that as development everywhere when applied to today's features.
+  # Within one year the transform keeps every tree's partition of its training sample;
+  # predictions shift only where a value falls between split points (~6 % of cells by
+  # < 0.06 in a test), so the learned model is essentially the same.
+  feature_scaling: percentile # percentile | none
+  permutation_repeats: 5
 
 qa:                          # plausibility ranges checked by the phase gates
   elevation_range_m: [600, 1200]   # Bengaluru plateau; observed 717-1033 m in the AOI + buffer

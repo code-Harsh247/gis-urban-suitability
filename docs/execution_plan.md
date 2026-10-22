@@ -265,10 +265,10 @@ These are the only places the two tracks touch.
 - [ ] H4.6 Unit tests: labelling rules, mask removes water/steep, same seed = same labels · 🔓
 
 **H5. Learning models and ablation** · W6–7 · P6.5, P6.6
-- [ ] H5.1 `src/similarity/rf_model.py`: change RF + state RF, class-balanced, `MODEL_INPUTS` only · 🔓 *(stub)*
-- [ ] **H5.2** Real change RF (2018 features, `chg_train_pos`) → C8 `rf_change` · 🔒 **A3.5b**, 🔒 **A4.2**
-- [ ] **H5.3** Real state RF → C8 `rf_state` · 🔒 **A3.5b**, 🔒 **A4.2**
-- [ ] H5.4 Spatial-block CV (2 km) for hyperparameters only
+- [x] H5.1 `src/similarity/rf_model.py`: change RF + state RF, class-balanced, `MODEL_INPUTS` only · 🔓 *(stub)*
+- [x] **H5.2** Real change RF (2018 features, `chg_train_pos`) → C8 `rf_change` · 🔒 **A3.5b**, 🔒 **A4.2**
+- [x] **H5.3** Real state RF → C8 `rf_state` · 🔒 **A3.5b**, 🔒 **A4.2**
+- [x] H5.4 Spatial-block CV (2 km) for hyperparameters only · *H5.1–H5.4 done by Abhinav (Tasks.md assigns P6.5 to Abhinav): out-of-fold validation scores, final scores, `rf_probability.tif`; see Tasks P6.5.*
 - [ ] H5.5 Group drop-one ablation through the harness → ablation table · 🔒 **A6.1**
 
 **H6. MCDA / AHP baseline** · W7–8 · P7.3, P7.5
