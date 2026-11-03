@@ -2,8 +2,8 @@
 
 - pages, style and scripts from ``site/`` (landing page, "find places like A");
 - the tool's data (``python -m src.viz.web_data``; re-exported with ``--data``, or if missing);
-- the interactive map ``outputs/map.html``, the report and slides PDFs (compile them first),
-  and the figures shown on the landing page.
+- the interactive map ``outputs/map.html``, the report and both slide decks as PDFs
+  (compile them first), and the figures shown on the landing page.
 
 Run: python scripts/build_site.py [--data]
 Preview: python -m http.server -d outputs/site   (the tool fetches its data, so file:// fails)
@@ -36,6 +36,7 @@ def build(cfg, data: bool = False) -> Path:
         "map.html": outputs / "map.html",
         "report.pdf": ROOT / "report" / "final" / "report.pdf",
         "slides.pdf": ROOT / "report" / "final_slides" / "slides.pdf",
+        "slides-map-sheet.pdf": ROOT / "report" / "final_slides_gis" / "slides.pdf",
         **{f"img/{f}": outputs / "figures" / f for f in FIGURES},
     }
     missing = [str(src) for src in files.values() if not src.exists()]
