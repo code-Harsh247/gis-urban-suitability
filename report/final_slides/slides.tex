@@ -1,12 +1,13 @@
-% Final presentation (P8.8). Build (twice): xelatex slides.tex
+% Final presentation (P8.8), 15 minutes; mid-term work is recapped in two slides. Build (twice): xelatex slides.tex
 % Figures come from outputs/figures (run python -m src.viz.static_maps and src.viz.charts first).
-% Frames marked [Harsh] are his to fill; each person presents the parts they built.
 \documentclass[aspectratio=169,11pt]{beamer}
 \usetheme[progressbar=frametitle,numbering=fraction]{metropolis}
 
 \usepackage{booktabs}
+\usepackage{appendixnumberbeamer}  % backup slides keep the main count
 \usepackage{graphicx}
-\graphicspath{{../../outputs/figures/}}
+\graphicspath{{../../outputs/figures/}{img/}}
+\newcommand{\livelink}{\href{https://iamabhinav-dev.github.io/gis-urban-suitability/}{\texttt{iamabhinav-dev.github.io/gis-urban-suitability}}}
 
 % same colours as the maps (src/viz/style.py)
 \definecolor{built}{HTML}{EB6834}
@@ -20,121 +21,122 @@
 \setlength{\leftmargini}{1.2em}
 
 \title{GIS-Based Land Suitability Analysis for Urban Development\\using Land Use Land Cover}
-\subtitle{Final presentation}
 \author{Harsh Chattar (22CS30028) \quad Abhinav (22CS30005)}
 \institute{CS60111 Geographical Information Systems}
-\date{October 2026}
+\date{October 2026\\[0.6em]\textbf{Live demo:} \livelink}
 
 \begin{document}
 
 \maketitle
 
-% ------------------------------------------------------------------ both
-\begin{frame}{Problem and approach}
-  \small
+% ------------------------------------------------------------------
+
+% ------------------------------------------------------------------
+
+% ------------------------------------------------------------------
+\begin{frame}{Mid-term recap (1/2): problem, study area and data}
   \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.56\textwidth}
+      \footnotesize
       \textbf{Where can new development reasonably go?}
       \begin{itemize}
         \item Classic GIS answer: weighted overlay with \hl{expert (AHP) weights},
-              rarely checked against reality.
-        \item Ours: \hl{learn from where building actually happened}, and test every
-              method against \hl{real growth}.
+              rarely checked against reality
+        \item Ours: \hl{learn from where building actually happened}, and test every method
+              against \hl{real growth}; all in Python
       \end{itemize}
+      \textbf{Three questions}: which land is \textcolor{built}{\textbf{built-up}},
+      \textcolor{forest}{\textbf{forest}} or \textcolor{usable}{\textbf{usable}}?
+      Where is land like building \textbf{A}? Do data-driven scores beat MCDA?\\[0.4em]
+      \textbf{Bengaluru South}: 582\,km\textsuperscript{2}, 58,218 cells of 100\,m
+      (Hosur Road, Kanakapura Road, Bannerghatta NP)\\[0.3em]
+      \textbf{Open data}: ESRI 10\,m LULC 2018--2023 (WorldCover: cross-check),
+      Copernicus DEM, OSM roads, water and buildings (\hl{as of 1 Jan 2018} for the test)
     \end{column}
-    \begin{column}{0.47\textwidth}
-      \textbf{Three questions}
-      \begin{enumerate}
-        \item Which land is \textcolor{built}{\textbf{built-up}},
-              \textcolor{forest}{\textbf{forest}} or \textcolor{usable}{\textbf{usable}}?
-        \item Given a building at \textbf{A}, where are similar locations \textbf{B}?
-        \item Do data-driven scores beat a classic MCDA overlay?
-      \end{enumerate}
-      \vspace{0.3em}
-      All in \textbf{Python}; 2018 data only $\rightarrow$ tested on growth by 2022/23.
+    \begin{column}{0.42\textwidth}
+      \centering\includegraphics[width=\textwidth,height=0.78\textheight,keepaspectratio]{map_lulc_2023}
     \end{column}
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------ Abhinav
-\begin{frame}{Study area and data}
-  \footnotesize
+% ------------------------------------------------------------------
+\begin{frame}{Mid-term recap (2/2): land classification and growth labels}
   \begin{columns}[T]
     \begin{column}{0.44\textwidth}
-      \centering\includegraphics[width=\textwidth]{map_lulc_2023}
+      \centering\includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{map_class3_final}
     \end{column}
     \begin{column}{0.54\textwidth}
-      \small
-      \textbf{Bengaluru South}: 582\,km\textsuperscript{2}, 58,218 cells of 100\,m
+      \footnotesize
+      \textbf{K-Means, \hl{k = 7}} on land-cover shares, elevation and slope (silhouette
+      0.61; GMM worse); steep scrub = forest (Bannerghatta)
       \begin{itemize}
-        \item Hosur Road corridor, Kanakapura Road, Bannerghatta NP
-        \item 8.4\,\% of non-built land became \hl{persistently} built by 2022/23
+        \item 2018 $\rightarrow$ 2023: \textcolor{built}{\textbf{built-up}} 306 $\rightarrow$ 348,
+              \textcolor{usable}{\textbf{usable}} 182 $\rightarrow$ 138,
+              \textcolor{forest}{\textbf{forest}} 29\,km\textsuperscript{2}
+        \item Agreement with ESRI \hl{96.6\,\%}; WorldCover 64\,\% (the products disagree)
       \end{itemize}
-      \textbf{Open data}
-      \begin{itemize}
-        \item ESRI 10\,m LULC 2018--2023 (WorldCover 2021: cross-check)
-        \item Copernicus DEM; OSM roads, water, buildings
-        \item OSM \hl{as of 1 Jan 2018} for the test: today's roads are 2.2$\times$ longer
-      \end{itemize}
+      \textbf{Growth labels}: non-built in 2018 \emph{and} 2019, built in 2022 \emph{and}
+      2023 $\rightarrow$ \hl{1,125 of 12,777} cells grew (8.8\,\%)
     \end{column}
   \end{columns}
+  \vspace{0.3em}
+  \footnotesize\textbf{Since the mid-term:} validation design $\rightarrow$ building similarity
+  $\rightarrow$ learned models $\rightarrow$ MCDA baseline $\rightarrow$ suitability map
+  $\rightarrow$ validation $\rightarrow$ live demo
 \end{frame}
 
-% ------------------------------------------------------------------ Harsh
+% ------------------------------------------------------------------
 \begin{frame}{Validation design and leakage rules}
-  \todo{Harsh: 2018 $\rightarrow$ 2022/23 persistent growth; time-travel rule; no own-cell
-  land cover in models; out-of-fold scores with 2\,km blocks; baselines random and distance to
-  built-up}
-\end{frame}
-
-% ------------------------------------------------------------------ Abhinav
-\begin{frame}{Land classification: clustering}
-  \begin{columns}[T]
-    \begin{column}{0.62\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{chart_cluster_profiles}
-    \end{column}
-    \begin{column}{0.36\textwidth}
-      \small
-      \begin{itemize}
-        \item K-Means on 5 land-cover shares + elevation + slope
-        \item \hl{k = 7}: best silhouette (0.61); GMM worse at every k
-        \item Two extra clusters: \textbf{steep scrub forest} (Bannerghatta hills, 13\textdegree)
-              and the \textbf{low western valley}
-        \item Centroid rules $\rightarrow$ classes; steep natural vegetation = forest
-      \end{itemize}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Land classification: three-class map}
+  \small
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
-      \centering\includegraphics[height=0.8\textheight]{map_class3_final}
+      \textbf{Two runs}
+      \begin{itemize}
+        \item \hl{Validation run}: only data up to 2019 (LULC 2018, OSM 2018-01-01)
+              $\rightarrow$ tested on growth by 2022/23
+        \item \textbf{Final run}: same models on 2023 data $\rightarrow$ the map
+      \end{itemize}
+      \textbf{Tested on} the persistent-growth labels: \hl{1,125 of 12,777} cells
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Leakage rules}
+      \begin{itemize}
+        \item no model sees the cell's own land cover
+        \item nothing after 2019 feeds a 2018 score
+        \item trained models scored \hl{out of fold} (2\,km blocks)
+      \end{itemize}
+      \textbf{Always shown}: random and distance to built-up (the bar to beat)\\[0.2em]
+      \textbf{Metrics}: AUC, lift in the top 10\,\%, TOC, adjacent vs outlying growth
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------
+
+
+% ------------------------------------------------------------------
+\begin{frame}{Building similarity: A $\rightarrow$ B}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{map_similarity_query_school_1019}
     \end{column}
     \begin{column}{0.48\textwidth}
       \small
-      \textbf{2018 $\rightarrow$ 2023}
+      \textbf{Profile}: land cover in 250 / 500\,m rings, distances to built-up, roads and
+      water, road density, terrain (never the cell itself)
       \begin{itemize}
-        \item \textcolor{built}{\textbf{Built-up}} 306 $\rightarrow$ \textbf{348}\,km\textsuperscript{2}
-        \item \textcolor{usable}{\textbf{Usable}} 182 $\rightarrow$ 138\,km\textsuperscript{2}
-        \item \textcolor{forest}{\textbf{Forest}} 29\,km\textsuperscript{2}; excluded 66\,km\textsuperscript{2}
+        \item Query a building $\rightarrow$ top 20 \textcolor{usable}{\textbf{usable}} cells by
+              Euclidean distance
+        \item Each match explained: closest and most different features
+        \item Self-check: a building's own location is always in the top 1\,\%
       \end{itemize}
-      \textbf{Agreement} on land cells
-      \begin{itemize}
-        \item ESRI: \hl{96.6\,\%}
-        \item WorldCover: 64\,\%; the products disagree (built-up 62\,\% vs 33\,\%)
-      \end{itemize}
+      \textbf{Aggregate}: mean distance to the 10 nearest building profiles\\
+      $\rightarrow$ \hl{AUC 0.773} on growth, without ever seeing a growth label
     \end{column}
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------ Harsh
-\begin{frame}{Building similarity: A $\rightarrow$ B}
-  \todo{Harsh: example query maps and per-feature explanation; aggregate kNN similarity}
-\end{frame}
-
-% ------------------------------------------------------------------ Abhinav
+% ------------------------------------------------------------------
 \begin{frame}{Learned models: predicting growth from 2018}
   \begin{columns}[T]
     \begin{column}{0.45\textwidth}
@@ -150,17 +152,12 @@
       \textbf{State RF} (built vs non-built): 0.998 on its own task, only 0.702 on growth
       \vspace{0.4em}
 
-      \textbf{Held-out buildings} (2\,km blocks): RF finds unseen building cells with AUC 0.98
+      \textbf{Held-out buildings} (2\,km blocks): RF finds unseen building cells with AUC 0.98\\[0.3em]
+      Combined with the similarity: \hl{AUC 0.797}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{What the change RF relies on}
-  \centering
-  \includegraphics[height=0.66\textheight]{chart_rf_importance}\\[0.2em]
-  \small Built-up land within 500\,m dominates; trees, crops and distance to built-up follow;
-  terrain and water add little.
-\end{frame}
 
 \begin{frame}{The classic baseline: MCDA / AHP}
   \small
@@ -193,20 +190,79 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Sensitivity}
-  \centering
-  \includegraphics[width=0.85\textwidth]{chart_sensitivity}\\[0.2em]
-  \small Slope threshold and $k$ barely matter (AUC within 0.01). AUC across cell sizes isn't
-  comparable (the label changes), but the \hl{ranking holds everywhere}:
-  change RF $>$ distance to built-up $>$ MCDA.
-\end{frame}
 
-% ------------------------------------------------------------------ Harsh
+% ------------------------------------------------------------------
 \begin{frame}{Suitability map and candidate sites}
-  \todo{Harsh: combined score, S1--S3 classes, candidate patches; lift, TOC, LEI split}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering\includegraphics[width=\textwidth]{map_suitability_classes}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \small
+      \textbf{Combined score} = 0.3 $\times$ similarity + 0.7 $\times$ change RF
+      (weight chosen on the 2020/21 label, not the test label)
+      \begin{itemize}
+        \item Classes on usable land: S1 top 10\,\%, S2, S3, N
+        \item S1 cells merged into \textbf{557 patches} (1,382\,ha)
+        \item \hl{Top 20 sites} ($\geq$ 5\,ha): flat, next to built-up land, rangeland or crops;
+              none in a lake or the national park
+      \end{itemize}
+      Interactive map with all layers: \href{https://iamabhinav-dev.github.io/gis-urban-suitability/map.html}{\texttt{\dots/map.html}} (live demo)
+    \end{column}
+  \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------ both
+\begin{frame}{Validation: every score against real growth}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{chart_toc}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \footnotesize
+      \begin{tabular}{@{}lcc@{}}
+        \toprule
+        Score & AUC & Lift top 10\,\% \\
+        \midrule
+        \textbf{Combined} & \textbf{0.797} & \textbf{3.45} \\
+        Change RF & 0.779 & 3.23 \\
+        Similarity & 0.773 & 2.99 \\
+        Dist. to built-up & 0.763 & 3.04 \\
+        MCDA / AHP & 0.636 & 1.86 \\
+        Random & 0.50 & 1.00 \\
+        \bottomrule
+      \end{tabular}
+      \vspace{0.4em}
+      \begin{itemize}
+        \item S1 + S2 hold \hl{65\,\%} of the growth
+        \item Adjacent growth AUC 0.82; \textbf{outlying growth 0.51} (chance)
+        \item Built-up nearby carries the signal; roads and water add nothing
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------
+\begin{frame}{Live demo}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      \centering\href{https://iamabhinav-dev.github.io/gis-urban-suitability/find.html}{\includegraphics[width=\textwidth]{demo_find}}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \footnotesize
+      \href{https://iamabhinav-dev.github.io/gis-urban-suitability/}{\texttt{iamabhinav-dev.github.io/}\\
+        \texttt{gis-urban-suitability}}
+      \begin{itemize}
+        \item \hl{Find places like A}: click any building $\rightarrow$ the 20 most similar
+              \textcolor{usable}{\textbf{usable}} cells, each explained feature by feature
+        \item Same answer as the Python query (checked on 30 buildings)
+        \item Suitability map with the \textbf{top 20 sites}, the full interactive map,
+              report and slides; the query runs in the browser
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------
 \begin{frame}{Limitations}
   \small
   \begin{itemize}
@@ -222,12 +278,43 @@
 \end{frame}
 
 \begin{frame}{Conclusion}
-  \todo{both: one slide with the answers to the three questions}
+  \small
+  \begin{enumerate}
+    \item \textbf{Land classes}: K-Means (k = 7) $\rightarrow$
+          \textcolor{built}{\textbf{built-up}} 348, \textcolor{forest}{\textbf{forest}} 29,
+          \textcolor{usable}{\textbf{usable}} 138\,km\textsuperscript{2} (2023); 96.6\,\% agreement with ESRI
+    \item \textbf{Building similarity}: any building $\rightarrow$ similar usable locations,
+          explained; predicts growth (AUC 0.773) without labels
+    \item \textbf{Suitability}: the combined score (\hl{AUC 0.797}, lift 3.45) beats distance to
+          built-up (0.763) and a classic AHP overlay (0.636)
+  \end{enumerate}
+  \vspace{0.5em}
+  \textbf{Lesson}: honest validation (leakage rules, baselines) matters more than the model:
+  most of the signal is ``next to existing built-up land''; growth away from it is not predicted.
 \end{frame}
 
 \begin{frame}[standout]
   Thank you\\[0.5em]
-  \normalsize Questions?
+  \normalsize Questions?\\[1.2em]
+  \footnotesize Live demo: \livelink
+\end{frame}
+
+
+\appendix
+% backup slides (not in the 15-minute talk)
+\begin{frame}{Backup: what the change RF relies on}
+  \centering
+  \includegraphics[height=0.66\textheight]{chart_rf_importance}\\[0.2em]
+  \small Built-up land within 500\,m dominates; trees, crops and distance to built-up follow;
+  terrain and water add little.
+\end{frame}
+
+\begin{frame}{Backup: sensitivity}
+  \centering
+  \includegraphics[width=0.85\textwidth]{chart_sensitivity}\\[0.2em]
+  \small Slope threshold, $k$ and cell size barely matter (AUC within 0.02), and the
+  \hl{ranking holds everywhere}:
+  change RF $>$ distance to built-up $>$ MCDA.
 \end{frame}
 
 \end{document}
