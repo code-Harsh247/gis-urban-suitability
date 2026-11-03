@@ -1,0 +1,153 @@
+% Beamer theme "Sheet": slides drawn like a survey map sheet.
+% Paper background with a faint graticule, a neatline with ticks, a sheet header
+% (section eyebrow, title, double rule, sheet number) and a footer whose progress
+% indicator is a scale bar. Colours are the project's map colours (src/viz/style.py),
+% the same as the website. Needs XeLaTeX (fontspec); fonts are in fonts/ (SIL OFL).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeSheet}[2026/11/03 survey-sheet theme]
+
+\RequirePackage{fontspec}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,positioning,arrows.meta}
+\RequirePackage{booktabs}
+\RequirePackage[document]{ragged2e}  % ragged-right text
+\AtBeginDocument{\hyphenpenalty=10000 \exhyphenpenalty=10000}  % and no hyphenation
+
+% ------------------------------------------------------------------ colours
+\definecolor{paper}{HTML}{EFF1EC}
+\definecolor{sheet}{HTML}{FAFBF8}
+\definecolor{ink}{HTML}{14212C}
+\definecolor{ink2}{HTML}{4A5661}
+\definecolor{ink3}{HTML}{6F7A83}
+\definecolor{rule}{HTML}{D3D8D1}
+\definecolor{accent}{HTML}{1F5FAE}
+\definecolor{built}{HTML}{EB6834}
+\definecolor{forest}{HTML}{1BAF7A}
+\definecolor{usable}{HTML}{2A78D6}
+\definecolor{sone}{HTML}{0D366B}
+\definecolor{stwo}{HTML}{256ABF}
+\definecolor{sthree}{HTML}{6DA7EC}
+\definecolor{excluded}{HTML}{B8B7B1}
+
+% ------------------------------------------------------------------ fonts
+\usefonttheme{professionalfonts}
+\setsansfont{Barlow}[Path=fonts/, Extension=.ttf, UprightFont=*-Regular,
+  BoldFont=*-SemiBold, ItalicFont=*-Italic, Numbers=Lining]
+\setmainfont{Barlow}[Path=fonts/, Extension=.ttf, UprightFont=*-Regular,
+  BoldFont=*-SemiBold, ItalicFont=*-Italic, Numbers=Lining]
+\newfontfamily\display{BarlowCondensed}[Path=fonts/, Extension=.ttf,
+  UprightFont=*-SemiBold, BoldFont=*-Bold, Numbers=Lining]
+\newfontfamily\displaymed{BarlowCondensed}[Path=fonts/, Extension=.ttf, UprightFont=*-Medium]
+\setmonofont{IBMPlexMono}[Path=fonts/, Extension=.ttf, UprightFont=*-Regular,
+  BoldFont=*-Medium, Scale=0.88]
+\newcommand{\tabnums}{\addfontfeatures{Numbers={Tabular,Lining}}}
+
+% ------------------------------------------------------------------ beamer colours
+\setbeamercolor{background canvas}{bg=paper}
+\setbeamercolor{normal text}{fg=ink}
+\setbeamercolor{structure}{fg=ink}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{frametitle}{fg=ink}
+\setbeamercolor{item}{fg=accent}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=0.8cm, text margin right=0.8cm}
+
+% backup slides: the footer says so instead of drawing the scale bar
+\newif\ifsheetbackup
+
+% ------------------------------------------------------------------ background: graticule + neatline
+\newcommand{\sheetgraticule}[3]{% #1 paper, #2 line colour, #3 neatline colour
+  \fill[#1] (0,0) rectangle (\paperwidth,\paperheight);
+  \foreach \x in {1,...,15} \draw[#2, line width=0.25pt] (\x cm,0.3cm) -- (\x cm,\paperheight-0.3cm);
+  \foreach \y in {1,...,8} \draw[#2, line width=0.25pt] (0.3cm,\y cm) -- (\paperwidth-0.3cm,\y cm);
+  \draw[#3, line width=0.6pt] (0.3cm,0.3cm) rectangle (\paperwidth-0.3cm,\paperheight-0.3cm);
+  \foreach \x in {1,...,15} {
+    \draw[#3, line width=0.4pt] (\x cm,\paperheight-0.3cm) -- ++(0,0.12cm);
+    \draw[#3, line width=0.4pt] (\x cm,0.3cm) -- ++(0,-0.12cm);}
+  \foreach \y in {1,...,8} {
+    \draw[#3, line width=0.4pt] (0.3cm,\y cm) -- ++(-0.12cm,0);
+    \draw[#3, line width=0.4pt] (\paperwidth-0.3cm,\y cm) -- ++(0.12cm,0);}
+}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,\paperheight);
+    \sheetgraticule{paper}{rule!70}{ink}
+  \end{tikzpicture}}
+
+% ------------------------------------------------------------------ frame title: the sheet header
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.4cm}%
+  \begin{beamercolorbox}[wd=\paperwidth, leftskip=0.8cm, rightskip=0.8cm]{frametitle}
+    {\ttfamily\fontsize{5.4}{6}\selectfont\color{ink3}%
+      \MakeUppercase{\insertsectionhead}\hfill
+      \ifsheetbackup BACKUP\else SHEET \insertframenumber\,/\,\inserttotalframenumber\fi}\par
+    \vspace{0.5pt}%
+    {\display\fontsize{16.5}{18}\selectfont\color{ink}\insertframetitle\par}
+    \nointerlineskip\vspace{4pt}%
+    \tikz{\draw[ink, line width=0.8pt] (0,0) -- (\paperwidth-1.6cm-1pt,0);
+          \draw[ink, line width=0.25pt] (0,-1.6pt) -- (\paperwidth-1.6cm-1pt,-1.6pt);}
+  \end{beamercolorbox}%
+  \vspace{-0.12cm}}
+
+% ------------------------------------------------------------------ footer: marginalia + scale bar
+\setbeamertemplate{footline}{%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,0.82cm);
+    \node[anchor=west, inner sep=0, text=ink3, font=\ttfamily\fontsize{5.2}{6}\selectfont]
+      at (0.8cm,0.56cm) {BENGALURU SOUTH \,·\, URBAN LAND SUITABILITY \,·\, CS60111};
+    \node[anchor=east, inner sep=0, text=ink3, font=\ttfamily\fontsize{5.2}{6}\selectfont]
+      at (\paperwidth-0.8cm,0.56cm) {UTM 43N \,·\, EPSG:32643 \,·\, 100 M GRID};
+    \ifsheetbackup\else
+      \pgfmathtruncatemacro{\tot}{max(\inserttotalframenumber,1)}
+      \pgfmathtruncatemacro{\cur}{\insertframenumber}
+      \pgfmathsetmacro{\seg}{3.3/\tot}
+      \begin{scope}[shift={(\paperwidth/2-1.65cm,0.5cm)}]
+        \foreach \i in {1,...,\tot} {
+          \pgfmathsetmacro{\xa}{(\i-1)*\seg}
+          \ifnum\i>\cur
+            \draw[rule, line width=0.3pt, fill=sheet] (\xa cm,0) rectangle ++(\seg cm,0.11cm);
+          \else
+            \ifodd\i \def\segfill{ink}\else\def\segfill{sheet}\fi
+            \draw[ink, line width=0.3pt, fill=\segfill] (\xa cm,0) rectangle ++(\seg cm,0.11cm);
+          \fi}
+        \node[anchor=north, inner sep=1pt, text=ink3, font=\ttfamily\fontsize{4.6}{5}\selectfont] at (0,0) {0};
+        \node[anchor=north, inner sep=1pt, text=ink3, font=\ttfamily\fontsize{4.6}{5}\selectfont]
+          at (3.3cm,0) {\tot};
+      \end{scope}
+    \fi
+  \end{tikzpicture}}
+
+% ------------------------------------------------------------------ lists: legend swatches and map pins
+\setbeamertemplate{itemize item}{\raisebox{0.2ex}{\color{accent}\rule{0.85ex}{0.85ex}}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.25ex}{\color{ink3}\rule{0.7ex}{0.7ex}}}
+\setbeamertemplate{enumerate item}{%
+  \tikz[baseline=(n.base)]\node[circle, fill=sone, draw=white, line width=0.6pt, inner sep=0pt,
+    minimum size=1.45em, text=white, font=\ttfamily\bfseries\fontsize{7}{7}\selectfont] (n)
+    {\insertenumlabel};}
+\setlength{\leftmargini}{1.3em}
+\addtobeamertemplate{itemize/enumerate body begin}{}{\setlength{\itemsep}{2.5pt}}
+
+% ------------------------------------------------------------------ helpers
+\newcommand{\hl}[1]{{\color{accent}\textbf{#1}}}
+% a sub-heading inside a slide
+\newcommand{\subhead}[1]{{\display\fontsize{11.5}{13}\selectfont\color{ink}#1}\par\vspace{1pt}}
+% a small uppercase label (eyebrow)
+\newcommand{\eyebrow}[1]{{\ttfamily\fontsize{5.6}{7}\selectfont\color{ink3}\MakeUppercase{#1}}}
+% a figure on a white map plate with an ink border; #1: includegraphics options
+\newcommand{\plate}[2][]{{\setlength{\fboxsep}{2.2pt}\setlength{\fboxrule}{0.5pt}%
+  \fcolorbox{ink}{white}{\includegraphics[#1]{#2}}}}
+% a key figure: big number and its caption
+\newcommand{\stat}[3][2.6cm]{%
+  \begin{minipage}[t]{#1}
+    {\display\fontsize{18}{19}\selectfont\color{ink}#2}\par\vspace{2pt}
+    {\fontsize{7}{8.2}\selectfont\color{ink2}#3}
+  \end{minipage}}
+% a legend swatch
+\newcommand{\swatch}[1]{\raisebox{-0.1ex}{\tikz\draw[black!20, line width=0.3pt, fill=#1] (0,0) rectangle (0.75em,0.75em);}}
+% a horizontal bar on one scale: #1 value, #2 max value, #3 full length, #4 colour
+\newcommand{\valbar}[4]{\tikz[baseline=-0.55ex]{%
+  \fill[rule] (0,-0.45ex) rectangle (#3,0.45ex);
+  \fill[#4] (0,-0.45ex) rectangle ({#1/#2*#3},0.45ex);}}
+% AUC bar on the 0.5 (chance) to 1 scale
+\newcommand{\aucbarlen}{1.4cm}
+\newcommand{\aucbar}[2][stwo]{\valbar{(#2-0.5)}{0.5}{\aucbarlen}{#1}}
